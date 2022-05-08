@@ -1,3 +1,5 @@
+import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:ea_frontend/main.dart';
 import 'package:ea_frontend/models/login.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:ea_frontend/views/dashboard_page.dart';
@@ -12,7 +14,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-    
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -27,21 +28,25 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: ListView(
           children: [
-            isLoading ? const LinearProgressIndicator() : const SizedBox(height: 0),
+            isLoading
+                ? const LinearProgressIndicator()
+                : const SizedBox(height: 0),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.25, vertical: 0.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.25, vertical: 0.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   const SizedBox(height: 50),
                   Image.asset("public/logo.png"),
-                  const Text(
-                    'Sign in',
+                  Text(
+                    //TODO poner esta cosa en todos los sitios que quieras traducir
+                    getTranslated(context, 'signIn')!,
                     style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold
-                    ),
+                        color: Colors.white,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
                   TextField(
@@ -50,8 +55,9 @@ class _LoginPageState extends State<LoginPage> {
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white, width: 2.0),
                       ),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
                       ),
                       hintText: 'Username',
                     ),
@@ -64,8 +70,9 @@ class _LoginPageState extends State<LoginPage> {
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white, width: 2.0),
                       ),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
                       ),
                       hintText: 'Password',
                     ),
@@ -73,29 +80,31 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 10),
                   ElevatedButton(
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(MediaQuery.of(context).size.width , 60)),
+                      minimumSize: MaterialStateProperty.all(
+                          Size(MediaQuery.of(context).size.width, 60)),
                     ),
-                    child: const Text('Submit', 
-                      style: TextStyle (fontSize: 20, fontWeight: FontWeight.bold),
+                    child: const Text(
+                      'Submit',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     onPressed: () async {
                       setState(() {
                         isLoading = true;
                       });
-                      var response = await authService.login(LoginModel(username: usernameController.text, password: passwordController.text));
+                      var response = await authService.login(LoginModel(
+                          username: usernameController.text,
+                          password: passwordController.text));
                       setState(() {
                         isLoading = false;
                       });
-                      if(response == "200") {
+                      if (response == "200") {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DashboardPage()
-                          )
-                        );
-                      }
-                      else {
-                        showDialog (
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const DashboardPage()));
+                      } else {
+                        showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
@@ -127,15 +136,37 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: () async {
                           Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterPage()
-                          )
-                        );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RegisterPage()));
                         },
                       ),
                     ],
                   ),
+                  DropdownButton(
+                      value: 'es',
+                      items: const [
+                        DropdownMenuItem<String>(
+                            value: 'es',
+                            child: Text(
+                              'es',
+                              style: TextStyle(color: Colors.white),
+                            )),
+                        DropdownMenuItem<String>(
+                            value: 'en',
+                            child: Text('en',
+                                style: TextStyle(color: Colors.white))),
+                        DropdownMenuItem<String>(
+                            value: 'ca',
+                            child: Text(
+                              'ca',
+                              style: TextStyle(color: Colors.white),
+                            ))
+                      ],
+                      onChanged: (String? value) async {
+                        Locale _locale = await setLocale(value!);
+                        MyApp.setLocale(context, _locale);
+                      }),
                 ],
               ),
             ),
