@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 30),
                   TextField(
                     controller: usernameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white, width: 2.0),
                       ),
@@ -59,14 +59,14 @@ class _LoginPageState extends State<LoginPage> {
                         borderSide: BorderSide(
                             color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
                       ),
-                      hintText: 'Username',
+                      hintText: getTranslated(context, 'username')!,
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white, width: 2.0),
                       ),
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderSide: BorderSide(
                             color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
                       ),
-                      hintText: 'Password',
+                      hintText: getTranslated(context, 'password')!,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -83,8 +83,8 @@ class _LoginPageState extends State<LoginPage> {
                       minimumSize: MaterialStateProperty.all(
                           Size(MediaQuery.of(context).size.width, 60)),
                     ),
-                    child: const Text(
-                      'Submit',
+                    child: Text(
+                      getTranslated(context, 'submit')!,
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -119,16 +119,16 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Still without account?',
+                      Text(
+                        getTranslated(context, 'stillWithoutAccount')!,
                         style: TextStyle(
                           fontSize: 20,
                         ),
                       ),
                       const SizedBox(width: 5),
                       TextButton(
-                        child: const Text(
-                          'Register',
+                        child: Text(
+                          getTranslated(context, 'register')!,
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.orange,
@@ -143,30 +143,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  DropdownButton(
-                      value: 'es',
-                      items: const [
-                        DropdownMenuItem<String>(
-                            value: 'es',
-                            child: Text(
-                              'es',
-                              style: TextStyle(color: Colors.white),
-                            )),
-                        DropdownMenuItem<String>(
-                            value: 'en',
-                            child: Text('en',
-                                style: TextStyle(color: Colors.white))),
-                        DropdownMenuItem<String>(
-                            value: 'ca',
-                            child: Text(
-                              'ca',
-                              style: TextStyle(color: Colors.white),
-                            ))
-                      ],
-                      onChanged: (String? value) async {
-                        Locale _locale = await setLocale(value!);
-                        MyApp.setLocale(context, _locale);
-                      }),
                 ],
               ),
             ),
