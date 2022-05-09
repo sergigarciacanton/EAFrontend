@@ -3,6 +3,9 @@ import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
+import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:ea_frontend/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -12,7 +15,6 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  
   final LocalStorage storage = LocalStorage('BookHub');
 
   @override
@@ -22,19 +24,17 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
         children: [
           const SizedBox(height: 50),
-          const Text(
-            'Te puede interesar',
+          Text(
+            getTranslated(context, 'interest')!,
             style: TextStyle(
-              color: Colors.orange,
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-            ),
+                color: Colors.orange,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
           ),
           Container(
             height: 250,
@@ -43,13 +43,36 @@ class _DashboardPageState extends State<DashboardPage> {
               itemCount: 4,
               itemBuilder: (context, index) {
                 return BookCard(
-                  title: "Book " + index.toString(),
-                  rate: (5 - index).toString(),
-                  imageUrl: ""
-                );
+                    title: "Book " + index.toString(),
+                    rate: (5 - index).toString(),
+                    imageUrl: "");
               },
             ),
           ),
+          DropdownButton(
+              value: getTranslated(context, 'lenguageCode')!,
+              items: const [
+                DropdownMenuItem<String>(
+                    value: 'es',
+                    child: Text(
+                      'Español',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                DropdownMenuItem<String>(
+                    value: 'en',
+                    child:
+                        Text('English', style: TextStyle(color: Colors.white))),
+                DropdownMenuItem<String>(
+                    value: 'ca',
+                    child: Text(
+                      'Català',
+                      style: TextStyle(color: Colors.white),
+                    ))
+              ],
+              onChanged: (String? value) async {
+                Locale _locale = await setLocale(value!);
+                MyApp.setLocale(context, _locale);
+              }),
         ],
       ),
     );
