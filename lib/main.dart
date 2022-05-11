@@ -1,3 +1,4 @@
+import 'package:ea_frontend/views/club_event_page.dart';
 import 'package:ea_frontend/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -70,6 +71,6 @@ class _MyAppState extends State<MyApp> {
           }
           return supportedLocales.first;
         },
-        home: const LoginPage());
+        home: const ClubEventPage());
   }
 }

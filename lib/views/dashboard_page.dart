@@ -97,6 +97,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 }),
           ],
         ),
+        const Text("GRUP"),
+        const Text("EVENT"),
+        const Text("CHAT"),
+        const Text("USER"),
       ]),
     );
   }
