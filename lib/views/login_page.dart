@@ -3,6 +3,7 @@ import 'package:ea_frontend/main.dart';
 import 'package:ea_frontend/models/login.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:ea_frontend/views/dashboard_page.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/register_page.dart';
 import 'package:flutter/material.dart';
 
@@ -102,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const DashboardPage()));
+                                builder: (context) => const HomeScaffold()));
                       } else {
                         showDialog(
                           context: context,
