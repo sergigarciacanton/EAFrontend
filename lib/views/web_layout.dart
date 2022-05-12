@@ -1,5 +1,5 @@
-import 'package:ea_frontend/views/dashboard_page.dart';
 import 'package:ea_frontend/views/help.dart';
+import 'package:ea_frontend/views/home.dart';
 import 'package:ea_frontend/views/settings_profile.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
@@ -13,7 +13,7 @@ class WebLayout extends StatefulWidget {
 }
 
 class _WebLayoutState extends State<WebLayout> {
-  Widget mainComponent = DashboardPage();
+  Widget mainComponent = Home();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _WebLayoutState extends State<WebLayout> {
                 tooltip: 'Home',
                 onPressed: () {
                   setState(() {
-                    mainComponent = DashboardPage();
+                    mainComponent = Home();
                   });
                 },
               ),
