@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     //TODO poner esta cosa en todos los sitios que quieras traducir
                     getTranslated(context, 'signIn')!,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 50,
                         fontWeight: FontWeight.bold),
