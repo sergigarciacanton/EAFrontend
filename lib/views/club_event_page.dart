@@ -28,34 +28,24 @@ class _ClubEventPageState extends State<ClubEventPage> {
             children: <Widget>[
               _buildCoverImage(screenSize),
               SafeArea(
-                child: SingleChildScrollView(
-                    child: Container(
-                  color: Colors.black,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(height: screenSize.height / 13),
-                        _buildEntityImage(),
-                        Container(
-                            color: Colors.blue,
-                            child: _club(
-                                context) /*Column(
-                              children: [
-                                _buildName(),
-                                _buildStatus(context),
-                                _buildStatContainer(),
-                                _buildBio(context),
-                                _buildSeparator(screenSize),
-                                SizedBox(height: 10.0),
-                                _buildGetInTouch(context),
-                                SizedBox(height: 8.0),
-                                _buildButtons(),
-                              ],
-                            )*/
-                            )
-                      ]),
-                )),
-              )
+                  child: SingleChildScrollView(
+                child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minHeight: 20,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                              height: 210,
+                              child: _buildEntityImage(),
+                            ),
+                            Expanded(child: Container(child: _club(context)))
+                          ]),
+                    )),
+              ))
             ],
           )),
     );
@@ -75,33 +65,57 @@ class _ClubEventPageState extends State<ClubEventPage> {
   }
 
   Widget _buildEntityImage() {
-    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-      Container(
-        width: 140.0,
-        height: 140.0,
-        decoration: BoxDecoration(
-          image: const DecorationImage(
-            image: NetworkImage(
-                'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
-            fit: BoxFit.cover,
+    return Container(
+        padding: const EdgeInsets.all(20),
+        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Container(
+            width: 140.0,
+            height: 140.0,
+            decoration: BoxDecoration(
+              image: const DecorationImage(
+                image: NetworkImage(
+                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.circular(80.0),
+              border: Border.all(
+                color: Colors.white,
+                width: 4.0,
+              ),
+            ),
           ),
-          borderRadius: BorderRadius.circular(80.0),
-          border: Border.all(
-            color: Colors.white,
-            width: 4.0,
-          ),
-        ),
-      ),
-    ]);
+        ]));
+  }
+
+  Widget _buildAdmin() {
+    return Container(
+        padding: const EdgeInsets.all(5),
+        color: Colors.grey,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text('Tesesita   '),
+            Image(
+              height: 40,
+              width: 40,
+              image: NetworkImage(
+                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+            )
+          ],
+        ));
   }
 
   Widget _club(BuildContext context) {
     return Column(
       children: [
+        Container(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [_buildName(), _buildAdmin()],
+            )),
         Row(
-          children: [_buildName()],
-        ),
-        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildCategory(context, "ROMANCE"),
             _buildCategory(context, "ACTION"),
@@ -109,7 +123,15 @@ class _ClubEventPageState extends State<ClubEventPage> {
           ],
         ),
         _buildStatContainer("Followers", "200", "Comments", "59"),
-        _buildDescription(context)
+        _buildDescription(context),
+        Column(
+          children: [
+            _buildUser(),
+            _buildUser(),
+            _buildUser(),
+          ],
+        ),
+        _buildButtons()
       ],
     );
   }
@@ -128,7 +150,7 @@ class _ClubEventPageState extends State<ClubEventPage> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Colors.blueGrey,
         borderRadius: BorderRadius.circular(4.0),
       ),
       child: Text(
@@ -138,6 +160,28 @@ class _ClubEventPageState extends State<ClubEventPage> {
           fontSize: 20.0,
           fontWeight: FontWeight.w300,
         ),
+      ),
+    );
+  }
+
+  Widget _buildUser() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        children: <Widget>[
+          Container(
+            height: 40,
+            width: 40,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: Image.network(
+                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          const Text('    Teresita (teresita@gmail.com)'),
+        ],
       ),
     );
   }

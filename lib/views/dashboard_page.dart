@@ -1,4 +1,5 @@
 import 'package:ea_frontend/models/book.dart';
+import 'package:ea_frontend/views/club_event_page.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -97,7 +98,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 }),
           ],
         ),
-        const Text("GRUP"),
+        const ClubEventPage(),
         const Text("EVENT"),
         const Text("CHAT"),
         const Text("USER"),
