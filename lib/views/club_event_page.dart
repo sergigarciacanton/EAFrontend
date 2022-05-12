@@ -20,35 +20,30 @@ class _ClubEventPageState extends State<ClubEventPage> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Club/Event'),
-          ),
-          body: Stack(
-            children: <Widget>[
-              _buildCoverImage(screenSize),
-              SafeArea(
-                  child: SingleChildScrollView(
-                child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minHeight: 20,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                              height: 210,
-                              child: _buildEntityImage(),
-                            ),
-                            Expanded(child: Container(child: _club(context)))
-                          ]),
-                    )),
-              ))
-            ],
-          )),
-    );
+        home: Stack(
+      children: <Widget>[
+        _buildCoverImage(screenSize),
+        SafeArea(
+            child: SingleChildScrollView(
+          child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: 20,
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        height: 210,
+                        child: _buildEntityImage(),
+                      ),
+                      Expanded(child: Container(child: _club(context)))
+                    ]),
+              )),
+        ))
+      ],
+    ));
   }
 
   Widget _buildCoverImage(Size screenSize) {
