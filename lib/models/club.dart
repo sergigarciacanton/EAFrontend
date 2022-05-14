@@ -6,7 +6,7 @@ class Club {
   String name;
   String description;
   dynamic admin;
-  Chat chat;
+  dynamic chat;
   List<dynamic> usersList;
   List<dynamic> category;
 
@@ -37,12 +37,9 @@ class Club {
   }
 
   static List<Club> clubsFromSnapshot(List snapshot) {
-    print(snapshot);
     var list = snapshot.map((data) {
-      print(data);
       return Club.fromJson(data);
     }).toList();
-    print("in CLUB ");
     return list;
   }
 }

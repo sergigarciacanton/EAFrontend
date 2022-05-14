@@ -9,7 +9,9 @@ class ChatMessage {
 
   factory ChatMessage.fromJson(dynamic json) {
     return ChatMessage(
-        user: User.fromJson(json['user']),
+        user: json['user'].toString().contains('{')
+            ? User.fromJson(json['user'])
+            : json['user'],
         message: json['message'] as String,
         date: DateTime.parse(['date'] as String));
   }
