@@ -2,6 +2,7 @@ import 'package:ea_frontend/models/book.dart';
 import 'package:ea_frontend/views/club_event_page.dart';
 import 'package:ea_frontend/views/home.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
+import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
@@ -59,7 +60,7 @@ class _MobileLayoutState extends State<MobileLayout> {
         const Home(),
         const ClubEventPage(),
         const Text("EVENT"),
-        const Text("CHAT"),
+        const ChatList(),
         const Text("USER"),
       ]),
     );

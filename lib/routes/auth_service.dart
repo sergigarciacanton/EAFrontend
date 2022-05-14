@@ -6,30 +6,39 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AuthService {
   final LocalStorage storage = LocalStorage('BookHub');
-  var baseUrl = 'http://localhost:3000/auth/'; //10.0.2.2 (emulador Android)
-  
-  Future<String> login(LoginModel credentials) async {
+  static var baseUrl =
+      'http://localhost:3000/auth/'; //10.0.2.2 (emulador Android)
+
+  static Future<String> verifyToken(String token) async {
     baseUrl = checkPlatform();
-    var res = await http.post(
-      Uri.parse(baseUrl + 'singin'), 
-      headers: {'content-type': 'application/json'},
-      body: json.encode(LoginModel.toJson(credentials))
-    );
-    if(res.statusCode == 200) {
-      var token = Token.fromJson(await jsonDecode(res.body));
-      storage.setItem('token', token.toString());
+    var res = await http.post(Uri.parse(baseUrl + 'verifyToken'),
+        headers: {'content-type': 'application/json'},
+        body: json.encode({'token': token}));
+    if (res.statusCode == 200) {
       return "200";
-    }
-    else {
+    } else {
       return Message.fromJson(await jsonDecode(res.body)).message;
     }
   }
 
-  String checkPlatform() {
-    if(kIsWeb) {
-      return 'http://localhost:3000/auth/';
+  Future<String> login(LoginModel credentials) async {
+    baseUrl = checkPlatform();
+    var res = await http.post(Uri.parse(baseUrl + 'singin'),
+        headers: {'content-type': 'application/json'},
+        body: json.encode(LoginModel.toJson(credentials)));
+    if (res.statusCode == 200) {
+      var token = Token.fromJson(await jsonDecode(res.body));
+      storage.setItem('token', token.toString());
+      return "200";
+    } else {
+      return Message.fromJson(await jsonDecode(res.body)).message;
     }
-    else {
+  }
+
+  static String checkPlatform() {
+    if (kIsWeb) {
+      return 'http://localhost:3000/auth/';
+    } else {
       return 'http://10.0.2.2:3000/auth/';
     }
   }
