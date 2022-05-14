@@ -71,6 +71,6 @@ class _MyAppState extends State<MyApp> {
           }
           return supportedLocales.first;
         },
-        home: const HomeScaffold());
+        home: const LoginPage());
   }
 }

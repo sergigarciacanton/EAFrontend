@@ -1,5 +1,7 @@
+import 'dart:async';
+import 'dart:developer';
+import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
-import 'package:ea_frontend/main.dart';
 import 'package:ea_frontend/models/login.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:ea_frontend/views/home_scaffold.dart';
@@ -18,6 +20,31 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   bool isLoading = false;
+
+  void checkToken() async {
+    var token = LocalStorage('BookHub').getItem('token');
+    if (token == null) {
+      return;
+    }
+    var response = await AuthService.verifyToken(token);
+    if (response == '200') {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const HomeScaffold()));
+    } else {
+      log(response.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    var storage = LocalStorage('BookHub');
+    storage.ready.then(((value) => checkToken()));
+
+    //AuthService.verifyToken(token);
+  }
 
   @override
   Widget build(BuildContext context) {
