@@ -1,12 +1,11 @@
 {
-  "lenguage": "Español",
-  "lenguageCode": "es",
-  "signIn": "Iniciar sesión",
-  "username": "Nombre usuario",
-  "password": "Contraseña",
-  "submit": "Entrar",
-  "stillWithoutAccount": "¿Todavía sin cuenta?",
-  "register": "Registrarse",
-  "interest": "Te puede interesar",
-  "chatTitle": "Chat"
+    "lenguage": "Español",
+    "lenguageCode": "es",
+    "signIn": "Iniciar sesión",
+    "username": "Nombre usuario",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "stillWithoutAccount": "¿Todavía sin cuenta?",
+    "register": "Registrarse",
+    "interest": "Te puede interesar"
 }
