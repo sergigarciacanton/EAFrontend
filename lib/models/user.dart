@@ -12,11 +12,11 @@ class User {
   DateTime birthDate;
   String mail;
   Location? location;
-  List<Book> books;
-  List<Event> events;
-  List<Club> clubs;
-  List<Chat> chats;
-  List<myCategory.Category> categories;
+  List<dynamic> books;
+  List<dynamic> events;
+  List<dynamic> clubs;
+  List<dynamic> chats;
+  List<dynamic> categories;
   String photoURL;
   List<String> roles;
 
@@ -35,24 +35,31 @@ class User {
       required this.roles});
 
   factory User.fromJson(dynamic json) {
-    log(json.toString());
-    print(json);
-
     var name = json['name'] as String;
     var userName = json['userName'] as String;
     var birthDate = DateTime.parse(json['birthDate']);
     var mail = json['mail'] as String;
     var location =
         json['location'] == null ? null : Location.fromJson(json['location']);
-    var books = Book.booksFromSnapshot(json['books']);
-    var events = Event.eventsFromSnapshot(json['events']);
-    log("AQUI");
-    var clubs = Club.clubsFromSnapshot(json['clubs']);
-    var chats = Chat.chatsFromSnapshot(json['chats']);
+    var books = json['books'].toString().contains('{')
+        ? Book.booksFromSnapshot(json['books'])
+        : json['books'];
+    var events = json['books'].toString().contains('{')
+        ? Event.eventsFromSnapshot(json['events'])
+        : json['books'];
+    var clubs = json['clubs'].toString().contains('{')
+        ? Club.clubsFromSnapshot(json['clubs'])
+        : json['clubs'];
+    log('premessage');
+    var chats = json['chats'].toString().contains('{')
+        ? Chat.chatsFromSnapshot(json['chats'])
+        : json['chats'];
+    log('message');
     var categories =
         myCategory.Category.categoriesFromSnapshot(json['categories']);
+    log('message2');
     var photoURL = json['photoURL'] as String;
-    var roles = json['roles'] as List<String>;
+    var roles = json['role'].cast<String>() as List<String>;
 
     var u = User(
         name: name,
@@ -67,8 +74,7 @@ class User {
         categories: categories,
         photoURL: photoURL,
         roles: roles);
-
-    log("lets pring");
+    log("user: $u");
     return u;
   }
 

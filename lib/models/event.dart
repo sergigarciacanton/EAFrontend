@@ -7,11 +7,11 @@ class Event {
   String name;
   String description;
   Location location;
-  User admin;
-  Chat chat;
+  dynamic admin;
+  dynamic chat;
   DateTime eventDate;
-  List<User> usersList;
-  List<Category> category;
+  List<dynamic> usersList;
+  List<dynamic> category;
 
   Event(
       {required this.name,
@@ -28,11 +28,19 @@ class Event {
         name: json['name'] as String,
         description: json['description'] as String,
         location: Location.fromJson(json['location']),
-        admin: User.fromJson(json['user']),
-        chat: Chat.fromJson(json['chat']),
+        admin: json['user'].toString().contains('{')
+            ? User.fromJson(json['user'])
+            : json['user'],
+        chat: json['chat'].toString().contains('{')
+            ? Chat.fromJson(json['chat'])
+            : json['chat'],
         eventDate: DateTime.parse(['eventDate'] as String),
-        usersList: User.usersFromSnapshot(json['usersList']),
-        category: Category.categoriesFromSnapshot(json['category']));
+        usersList: json['users'].toString().contains('{')
+            ? User.usersFromSnapshot(json['users'])
+            : json['users'],
+        category: json['category'].toString().contains('{')
+            ? Category.categoriesFromSnapshot(json['category'])
+            : json['category']);
   }
 
   static List<Event> eventsFromSnapshot(List snapshot) {

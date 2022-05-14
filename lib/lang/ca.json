@@ -1,11 +1,12 @@
 {
-    "lenguage": "Català",
-    "lenguageCode": "ca",
-    "signIn": "Inicieu la sessió",
-    "username": "Nom usuari",
-    "password": "Contrasenya",
-    "submit": "Entra",
-    "stillWithoutAccount": "Encara sense compte?",
-    "register": "Registrar-se",
-    "interest": "Et pot interessar"
+  "lenguage": "Català",
+  "lenguageCode": "ca",
+  "signIn": "Inicieu la sessió",
+  "username": "Nom usuari",
+  "password": "Contrasenya",
+  "submit": "Entra",
+  "stillWithoutAccount": "Encara sense compte?",
+  "register": "Registrar-se",
+  "interest": "Et pot interessar",
+  "chatTitle": "Xat"
 }

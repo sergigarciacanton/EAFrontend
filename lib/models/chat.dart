@@ -1,23 +1,30 @@
 import 'user.dart';
 import 'chat_message.dart';
+import 'dart:developer';
 
 class Chat {
   String name;
-  List<ChatMessage> messages;
-  List<User> users;
+  List<dynamic> messages;
+  List<dynamic> users;
 
   Chat({required this.name, required this.messages, required this.users});
 
   factory Chat.fromJson(dynamic json) {
     return Chat(
         name: json['name'] as String,
-        messages: ChatMessage.chatMessageFromSnapshot(json['messages']),
-        users: User.usersFromSnapshot(json['users']));
+        messages: json['messages'].toString().contains('{')
+            ? ChatMessage.chatMessageFromSnapshot(json['messages'])
+            : json['messages'],
+        users: json['users'].toString().contains('{')
+            ? User.usersFromSnapshot(json['users'])
+            : json['users']);
   }
 
   static List<Chat> chatsFromSnapshot(List snapshot) {
-    return snapshot.map((data) {
+    var a = snapshot.map((data) {
       return Chat.fromJson(data);
     }).toList();
+
+    return a;
   }
 }
