@@ -1,11 +1,12 @@
 {
-    "language": "English",
-    "lenguageCode": "en",
-    "signIn": "Sign in",
-    "username": "Username",
-    "password": "Password",
-    "submit": "Submit",
-    "stillWithoutAccount": "Still without account?",
-    "register": "Register",
-    "interest": "It may interest you"
+  "language": "English",
+  "lenguageCode": "en",
+  "signIn": "Sign in",
+  "username": "Username",
+  "password": "Password",
+  "submit": "Submit",
+  "stillWithoutAccount": "Still without account?",
+  "register": "Register",
+  "interest": "It may interest you",
+  "chatTitle": "Chat"
 }
