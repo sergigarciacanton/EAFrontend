@@ -11,18 +11,10 @@ class HomeScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 1100) {
-          return Container(
-            child: MobileLayout(),
-            height: constraints.maxHeight,
-            width: constraints.maxWidth,
-          );
+        if (constraints.maxWidth < 600) {
+          return Container(child: MobileLayout(), height: constraints.maxHeight, width: constraints.maxWidth,);
         } else {
-          return Container(
-            child: WebLayout(),
-            height: constraints.maxHeight,
-            width: constraints.maxWidth,
-          );
+          return Container(child: WebLayout(), height: constraints.maxHeight, width: constraints.maxWidth,);
         }
       },
     );
