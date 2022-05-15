@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:convert';
 import 'package:ea_frontend/models/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthService {
   final LocalStorage storage = LocalStorage('BookHub');
@@ -29,6 +31,9 @@ class AuthService {
     if (res.statusCode == 200) {
       var token = Token.fromJson(await jsonDecode(res.body));
       storage.setItem('token', token.toString());
+      Map<String, dynamic> payload = Jwt.parseJwt(token.toString());
+
+      storage.setItem('userId', payload['id']);
       return "200";
     } else {
       return Message.fromJson(await jsonDecode(res.body)).message;

@@ -8,5 +8,7 @@
   "stillWithoutAccount": "Still without account?",
   "register": "Register",
   "interest": "It may interest you",
-  "chatTitle": "Chat"
+  "chatTitle": "Chat",
+  "clubTitle": "Club",
+  "eventTitle": "Event"
 }

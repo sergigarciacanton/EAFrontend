@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:ea_frontend/localization/language_constants.dart';
-import 'package:ea_frontend/models/chat.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/views/chat_page.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 
 class ChatList extends StatefulWidget {
   final Function? setMainComponent;
@@ -18,33 +18,24 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
-  List<Chat> entries = <Chat>[];
-  final String id = "626956edac92b2cdd46f10f0";
+  late String id;
   final List<int> colorCodes = <int>[600, 500, 400];
 
-  late Future<User> user;
+  var storage;
+  Future<User> fetchUser() async {
+    storage = LocalStorage('BookHub');
+    await storage.ready;
 
-  @override
-  void initState() {
-    super.initState();
-    try {
-      user = UserService.getUser(id);
-    } catch (err) {
-      log(err.toString());
-      throw err.hashCode;
-    }
-
-    log("im here");
-    print(user);
+    id = LocalStorage('BookHub').getItem('userId');
+    return UserService.getUser(id);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: user,
+        future: fetchUser(),
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data);
             return Column(
               children: [
                 Text(
