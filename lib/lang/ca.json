@@ -1,5 +1,6 @@
 {
   "lenguage": "Català",
+  "language2": "Idioma",
   "lenguageCode": "ca",
   "signIn": "Inicieu la sessió",
   "username": "Nom usuari",
@@ -8,5 +9,18 @@
   "stillWithoutAccount": "Encara sense compte?",
   "register": "Registrar-se",
   "interest": "Et pot interessar",
-  "chatTitle": "Xat"
+  "chatTitle": "Xat",
+  "settings": "Configuracions",
+  "general": "GENERAL",
+  "accountSettings": "Configuració del compte",
+  "logout":"Tancar sessió",
+  "deleteAccount": "Suprimeix el compte",
+  "feedback" : "COMMENTARIS",
+  "reportABug": "Informa d'un error",
+  "sendFeedback": "Envia comentaris",
+  "accountSettingsSub": "Privadesa, seguretat, idioma",
+  "privacy": "Privadesa",
+  "security": "Seguretat",
+  "accountInfo": "Informació del compte"
+
 }

@@ -1,5 +1,6 @@
 {
   "language": "English",
+  "language2": "Language",
   "lenguageCode": "en",
   "signIn": "Sign in",
   "username": "Username",
@@ -8,5 +9,17 @@
   "stillWithoutAccount": "Still without account?",
   "register": "Register",
   "interest": "It may interest you",
-  "chatTitle": "Chat"
+  "chatTitle": "Chat",
+  "settings": "Settings",
+  "general": "GENERAL",
+  "accountSettings": "Account Settings",
+  "logout":"Logout",
+  "deleteAccount": "Delete Account",
+  "feedback" : "FEEDBACK",
+  "reportABug": "Report A Bug",
+  "sendFeedback": "Send Feedback",
+  "accountSettingsSub": "Privacy, Security, Language",
+  "privacy": "Privacy",
+  "security": "Security",
+  "accountInfo": "Account Info"
 }

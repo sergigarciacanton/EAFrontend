@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.4
   localstorage: ^4.0.0+1
   shared_preferences: ^2.0.13
+  flutter_settings_screens: ^0.3.2-null-safety
 
 dev_dependencies:
   flutter_test:
