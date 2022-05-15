@@ -4,6 +4,7 @@ import 'package:ea_frontend/models/login.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:ea_frontend/views/dashboard_page.dart';
 import 'package:ea_frontend/views/register_page.dart';
+import 'package:ea_frontend/views/book_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -102,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const DashboardPage()));
+                                builder: (context) => const BookPage()));
                       } else {
                         showDialog(
                           context: context,
@@ -138,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const RegisterPage()));
+                                  builder: (context) => const DashboardPage()));
                         },
                       ),
                     ],
