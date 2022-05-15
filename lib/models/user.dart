@@ -44,20 +44,18 @@ class User {
     var books = json['books'].toString().contains('{')
         ? Book.booksFromSnapshot(json['books'])
         : json['books'];
-    var events = json['books'].toString().contains('{')
+    var events = json['events'].toString().contains('{')
         ? Event.eventsFromSnapshot(json['events'])
-        : json['books'];
+        : json['events'];
+
     var clubs = json['clubs'].toString().contains('{')
         ? Club.clubsFromSnapshot(json['clubs'])
         : json['clubs'];
-    log('premessage');
     var chats = json['chats'].toString().contains('{')
         ? Chat.chatsFromSnapshot(json['chats'])
         : json['chats'];
-    log('message');
     var categories =
         myCategory.Category.categoriesFromSnapshot(json['categories']);
-    log('message2');
     var photoURL = json['photoURL'] as String;
     var roles = json['role'].cast<String>() as List<String>;
 
@@ -74,7 +72,6 @@ class User {
         categories: categories,
         photoURL: photoURL,
         roles: roles);
-    log("user: $u");
     return u;
   }
 

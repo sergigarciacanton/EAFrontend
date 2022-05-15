@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ClubEventPage extends StatefulWidget {
-  const ClubEventPage({Key? key}) : super(key: key);
+  final String? elementId;
+
+  const ClubEventPage({
+    Key? key,
+    this.elementId,
+  }) : super(key: key);
 
   @override
   State<ClubEventPage> createState() => _ClubEventPageState();
 }
 
 class _ClubEventPageState extends State<ClubEventPage> {
+  //GET ELEMENTID WITH widget.elementId;
   final String _name = "Teresita Lecture Club";
   final String _category = "ROMANCE";
   final String _bio =
@@ -90,8 +96,8 @@ class _ClubEventPageState extends State<ClubEventPage> {
         color: Colors.grey,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text('Tesesita   '),
+          children: [
+            Text('Tesesita   ' + widget.elementId!),
             Image(
               height: 40,
               width: 40,

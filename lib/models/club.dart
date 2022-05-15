@@ -3,6 +3,7 @@ import 'chat.dart';
 import 'category.dart';
 
 class Club {
+  String id;
   String name;
   String description;
   dynamic admin;
@@ -11,7 +12,8 @@ class Club {
   List<dynamic> category;
 
   Club(
-      {required this.name,
+      {required this.id,
+      required this.name,
       required this.description,
       required this.admin,
       required this.chat,
@@ -20,6 +22,7 @@ class Club {
 
   factory Club.fromJson(dynamic json) {
     return Club(
+        id: json['_id'] as String,
         name: json['name'] as String,
         description: json['description'] as String,
         admin: json['admin'].toString().contains('{')
