@@ -7,14 +7,14 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _HomeState extends State<Home> {
   final LocalStorage storage = LocalStorage('BookHub');
 
   @override
