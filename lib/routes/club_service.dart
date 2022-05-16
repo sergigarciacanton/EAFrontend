@@ -6,6 +6,7 @@ import 'package:localstorage/localstorage.dart';
 
 class ClubService {
   static Future<Club> getClub(String id) async {
+
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000/') +
         '/club/$id/';

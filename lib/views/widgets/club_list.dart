@@ -68,6 +68,12 @@ class _ClubListState extends State<ClubList> {
                                           elementId:
                                               snapshot.data?.clubs[index].id));
                                     } else {
+                                      Route route = MaterialPageRoute(
+                                          builder: (context) => ClubEventPage(
+                                              elementId: snapshot
+                                                  .data?.clubs[index].id));
+                                      Navigator.of(context).push(route);
+
                                       //DO SOMETHING TO CHANGE PAGE IN MOBILE FORM
 
                                       // print(context);
