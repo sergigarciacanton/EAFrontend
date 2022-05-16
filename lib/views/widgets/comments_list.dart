@@ -6,22 +6,12 @@ import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'book_profile.dart';
 
-class BookCard extends StatelessWidget {
-  final String title;
-  final String rate;
-  final String imageUrl;
-  BookCard({
-    required this.title,
-    required this.rate,
-    required this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
+@override
+Widget build(BuildContext context) {
+  // TODO: implement build
+  throw UnimplementedError();
 }
 
 class BookPage extends StatefulWidget {
@@ -46,19 +36,17 @@ class _BookPageState extends State<BookPage> {
           const SizedBox(height: 20),
           buildRowTitle(),
           const SizedBox(height: 50),
-          buildRowAutor(),
-          const SizedBox(height: 20),
           Container(
             child: const Align(
-              alignment: Alignment.center,
+              alignment: Alignment.centerLeft,
               child: Text(
-                'Especificaciones',
+                'AquiVaElComentario:',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline),
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -66,12 +54,13 @@ class _BookPageState extends State<BookPage> {
             child: const Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Descripción:',
+                'AquiVaLaDate',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
+                  //decoration: TextDecoration.underline
                 ),
               ),
             ),
@@ -81,20 +70,6 @@ class _BookPageState extends State<BookPage> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Fecha de publicación:',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Comentarios:',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.white,
@@ -117,7 +92,7 @@ class _BookPageState extends State<BookPage> {
           width: 20,
         ),
         Text(
-          'Book',
+          'UserName',
           textAlign: TextAlign.left,
           style: TextStyle(
               color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
@@ -135,29 +110,6 @@ class _BookPageState extends State<BookPage> {
           Icons.star,
           color: Colors.amber,
           size: 36.0,
-        ),
-      ],
-    );
-  }
-
-  Widget buildRowAutor() {
-    return Row(
-      children: const <Widget>[
-        SizedBox(
-          height: 80,
-          width: 80,
-          child: FittedBox(
-            fit: BoxFit.fill, // otherwise the logo will be tiny
-            child: FlutterLogo(),
-          ),
-        ),
-        Expanded(
-          child: Text(
-            'Nombre Autor',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
-          ),
         ),
       ],
     );

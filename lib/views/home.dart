@@ -6,6 +6,7 @@ import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ea_frontend/views/widgets/book_profile.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> {
           const SizedBox(height: 50),
           Text(
             getTranslated(context, 'interest')!,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.orange,
                 fontSize: 20,
                 fontWeight: FontWeight.bold),
