@@ -4,7 +4,6 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
-import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/club_event_page.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -62,33 +61,33 @@ class _ClubListState extends State<ClubList> {
                         itemCount: snapshot.data?.clubs.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
-                            child: ListTile(
-                                onTap: () {
-                                  if (widget.setMainComponent != null) {
-                                    widget.setMainComponent!(ClubEventPage(
-                                        elementId:
-                                            snapshot.data?.clubs[index].id));
-                                  } else {
-                                    //DO SOMETHING TO CHANGE PAGE IN MOBILE FORM
+                              child: ListTile(
+                                  onTap: () {
+                                    if (widget.setMainComponent != null) {
+                                      widget.setMainComponent!(ClubEventPage(
+                                          elementId:
+                                              snapshot.data?.clubs[index].id));
+                                    } else {
+                                      //DO SOMETHING TO CHANGE PAGE IN MOBILE FORM
 
-                                    // print(context);
-                                    // ((Scaffold.of(context) as ScaffoldState)
-                                    //         .widget
-                                    //         .body as PageView)
-                                    //     .controller
-                                    //     .animateToPage(3,
-                                    //         duration:
-                                    //             Duration(milliseconds: 500),
-                                    //         curve: Curves.bounceIn);
-                                  }
-                                },
-                                leading: const FlutterLogo(size: 56.0),
-                                title: Text(snapshot.data?.clubs[index].name),
-                                subtitle: concatCategory(
-                                    snapshot.data?.clubs[index].category)
-                                //trailing: Icon(Icons.more_vert),
-                                ),
-                          );
+                                      // print(context);
+                                      // ((Scaffold.of(context) as ScaffoldState)
+                                      //         .widget
+                                      //         .body as PageView)
+                                      //     .controller
+                                      //     .animateToPage(3,
+                                      //         duration:
+                                      //             Duration(milliseconds: 500),
+                                      //         curve: Curves.bounceIn);
+                                    }
+                                  },
+                                  leading: const FlutterLogo(size: 56.0),
+                                  title: Text(snapshot.data?.clubs[index].name),
+                                  subtitle: concatCategory(
+                                      snapshot.data?.clubs[index].category)
+                                  //trailing: Icon(Icons.more_vert),
+
+                                  ));
                         }),
                   ),
                 ),
