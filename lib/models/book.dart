@@ -40,6 +40,10 @@ class Book {
     }).toList();
   }
 
+  static Book booksFromJson(data) {
+    return Book.fromJson(data);
+  }
+
   // @override
   // String toString() {
   //   return 'Book {title: $title, imageURL: $photoURL, rate: $rate}';

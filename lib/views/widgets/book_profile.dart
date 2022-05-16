@@ -27,22 +27,13 @@ class BookPage extends StatefulWidget {
 
 class _BookPageState extends State<BookPage> {
   final String id = "62696a7f776cb2959215c4a5";
-  late Future<Book> book;
 
-  @override
-  void initState() {
-    super.initState();
-    try {
-      print("hola");
-      book = BookService.getBook(id);
-    } catch (err) {
-      print("holaMAL2");
-      log(err.toString());
-      throw err.hashCode;
-    }
-
-    log("im here");
-    print(book);
+  var bookStorage;
+  Future<Book> fetchBook() async {
+    bookStorage = LocalStorage('BookHub');
+    await bookStorage.ready;
+    print("check");
+    return BookService.getBook(id);
   }
 
   @override
@@ -123,7 +114,7 @@ class _BookPageState extends State<BookPage> {
 
   Widget buildRowTitle(BuildContext context) {
     return FutureBuilder(
-        future: book,
+        future: fetchBook(),
         builder: (context, AsyncSnapshot<Book> snapshot) {
           if (snapshot.hasData) {
             log("hola");
@@ -135,7 +126,7 @@ class _BookPageState extends State<BookPage> {
                   width: 20,
                 ),
                 Text(
-                  snapshot.data!.title,
+                  snapshot.data?.category[0].name,
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                       color: Colors.white,

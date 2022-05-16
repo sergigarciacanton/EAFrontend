@@ -11,12 +11,14 @@ class UserService {
     if (!kIsWeb) {
       url = Uri.parse('http://10.0.2.2:3000/user/$id');
     }
+    print(url);
 
     final response = await http.get(
       url,
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
+    print(data);
     return User.fromJson(data);
   }
 }
