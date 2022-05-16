@@ -8,5 +8,15 @@
   "stillWithoutAccount": "Encara sense compte?",
   "register": "Registrar-se",
   "interest": "Et pot interessar",
+  "newClub": "N E W  C L U B",
+  "name": "Nom",
+  "description": "Descripció",
+  "category": "Categoria",
+  "addNewClub": "Crear nou club",
+  "addNewBook": "Crear nou llibre",
+  "newBook": "N O U  L L I B R E",
+  "title": "Títol",
+  "ISBN": "ISBN",
+  "new": "Nou",
   "chatTitle": "Xat"
 }

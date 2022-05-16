@@ -8,5 +8,15 @@
   "stillWithoutAccount": "Still without account?",
   "register": "Register",
   "interest": "It may interest you",
+  "newClub": "N O U  C L U B",
+  "name": "name",
+  "description": "Description",
+  "category": "Category",
+  "addNewClub": "Add new club",
+  "addNewBook": "Add new book",
+  "newBook": "N E W  B O O K",
+  "title": "Title",
+  "ISBN": "ISBN",
+  "new": "New",
   "chatTitle": "Chat"
 }
