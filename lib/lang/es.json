@@ -21,5 +21,7 @@
   "accountSettingsSub": "Privacidad, Seguridad, Idioma",
   "privacy": "Privacidad",
   "security": "Seguridad",
-  "accountInfo": "Información de la cuenta"
+  "accountInfo": "Información de la cuenta",
+  "clubTitle": "Club",
+  "eventTitle": "Evento"
 }
