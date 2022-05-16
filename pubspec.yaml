@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.0.13
   flutter_settings_screens: ^0.3.2-null-safety
   jwt_decode: ^0.3.1
+  date_time_picker: "^2.1.0"
 
 dev_dependencies:
   flutter_test:

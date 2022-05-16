@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:convert';
 import 'package:ea_frontend/models/login.dart';
+import 'package:ea_frontend/models/register.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -35,6 +36,23 @@ class AuthService {
 
       storage.setItem('userId', payload['id']);
       return "200";
+    } else {
+      return Message.fromJson(await jsonDecode(res.body)).message;
+    }
+  }
+
+  Future<String> register(RegisterModel credentials) async {
+    baseUrl = checkPlatform();
+    var res = await http.post(Uri.parse(baseUrl + 'singup'),
+        headers: {'content-type': 'application/json'},
+        body: json.encode(RegisterModel.toJson(credentials)));
+    if (res.statusCode == 201) {
+      var token = Token.fromJson(await jsonDecode(res.body));
+      storage.setItem('token', token.toString());
+      Map<String, dynamic> payload = Jwt.parseJwt(token.toString());
+
+      storage.setItem('userId', payload['id']);
+      return "201";
     } else {
       return Message.fromJson(await jsonDecode(res.body)).message;
     }
