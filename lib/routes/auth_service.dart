@@ -8,11 +8,12 @@ import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthService {
   final LocalStorage storage = LocalStorage('BookHub');
-  static var baseUrl =
-      'http://localhost:3000/auth/'; //10.0.2.2 (emulador Android)
+  static var baseUrl = checkPlatform();
+  //10.0.2.2 (emulador Android)
 
   static Future<String> verifyToken(String token) async {
     baseUrl = checkPlatform();
+
     var res = await http.post(Uri.parse(baseUrl + 'verifyToken'),
         headers: {'content-type': 'application/json'},
         body: json.encode({'token': token}));
@@ -42,7 +43,9 @@ class AuthService {
 
   static String checkPlatform() {
     if (kIsWeb) {
-      return 'http://localhost:3000/auth/';
+      return const String.fromEnvironment('API_URL',
+              defaultValue: 'http://localhost:3000') +
+          '/auth/';
     } else {
       return 'http://10.0.2.2:3000/auth/';
     }
