@@ -1,6 +1,7 @@
 import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/help.dart';
 import 'package:ea_frontend/views/home.dart';
+import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/settings_profile.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
@@ -47,7 +48,7 @@ class _WebLayoutState extends State<WebLayout> {
               tooltip: 'Profile and App settings',
               onPressed: () {
                 setState(() {
-                  mainComponent = SettingsProfile();
+                  mainComponent = SettingPage();
                 });
               },
             ),
