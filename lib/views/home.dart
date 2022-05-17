@@ -83,27 +83,27 @@ class _HomeState extends State<Home> {
                 },
               ),
               child: _isLoadingBook
-                ? Column(
-                  children: const [
-                    SizedBox(height: 10),
-                    LinearProgressIndicator(),
-                    SizedBox(height: 200),
-                  ],
-                )
-                : ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  controller: _controller,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _books.length,
-                  itemBuilder: (context, index) {
-                    return BookCard(
-                      title: _books[index].title,
-                      author: "Some author",
-                      rate: _books[index].rate,
-                      imageUrl: _books[index].photoURL,
-                    );
-                  },
-                ),
+                  ? Column(
+                      children: const [
+                        SizedBox(height: 10),
+                        LinearProgressIndicator(),
+                        SizedBox(height: 200),
+                      ],
+                    )
+                  : ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _controller,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _books.length,
+                      itemBuilder: (context, index) {
+                        return BookCard(
+                          title: _books[index].title,
+                          author: "Some author",
+                          rate: _books[index].rate,
+                          imageUrl: _books[index].photoURL,
+                        );
+                      },
+                    ),
             ),
           ),
           const SizedBox(height: 50),
@@ -125,38 +125,37 @@ class _HomeState extends State<Home> {
                   PointerDeviceKind.mouse,
                 },
               ),
-              child:_isLoadingEvent
-              ? Column(
-                children: const [
-                  SizedBox(height: 10),
-                  LinearProgressIndicator(),
-                  SizedBox(height: 200),
-                ],
-              )
-              : ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                controller: _controller,
-                scrollDirection: Axis.horizontal,
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return BookCard(
-                    title: _events[index].name,
-                    author: _events[index].eventDate.toString(),
-                    rate: _events[index].usersList.length.toString(),
-                    imageUrl: "",
-                  );
-                },
-              ),
+              child: _isLoadingEvent
+                  ? Column(
+                      children: const [
+                        SizedBox(height: 10),
+                        LinearProgressIndicator(),
+                        SizedBox(height: 200),
+                      ],
+                    )
+                  : ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _controller,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _events.length,
+                      itemBuilder: (context, index) {
+                        return BookCard(
+                          title: _events[index].name,
+                          author: _events[index].eventDate.toString(),
+                          rate: _events[index].usersList.length.toString(),
+                          imageUrl: "",
+                        );
+                      },
+                    ),
             ),
           ),
           const SizedBox(height: 50),
           Text(
             getTranslated(context, 'interestClub')!,
             style: const TextStyle(
-              color: Colors.orange,
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-            ),
+                color: Colors.orange,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           Container(
@@ -169,27 +168,27 @@ class _HomeState extends State<Home> {
                 },
               ),
               child: _isLoadingClub
-              ? Column(
-                children: const [
-                  SizedBox(height: 10),
-                  LinearProgressIndicator(),
-                  SizedBox(height: 200),
-                ],
-              )
-              : ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                controller: _controller,
-                scrollDirection: Axis.horizontal,
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return BookCard(
-                    title: _clubs[index].name,
-                    author: _clubs[index].category.toString(),
-                    rate: _clubs[index].usersList.length.toString(),
-                    imageUrl: "",
-                  );
-                },
-              ),
+                  ? Column(
+                      children: const [
+                        SizedBox(height: 10),
+                        LinearProgressIndicator(),
+                        SizedBox(height: 200),
+                      ],
+                    )
+                  : ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _controller,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _clubs.length,
+                      itemBuilder: (context, index) {
+                        return BookCard(
+                          title: _clubs[index].name,
+                          author: _clubs[index].category.toString(),
+                          rate: _clubs[index].usersList.length.toString(),
+                          imageUrl: "",
+                        );
+                      },
+                    ),
             ),
           ),
         ],
@@ -197,4 +196,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
