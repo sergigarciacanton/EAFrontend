@@ -21,19 +21,6 @@ class Book {
       required this.category});
 
   factory Book.fromJson(dynamic json) {
-    print("HOLA AQUI ESTEM");
-    print(json['title'] as String);
-    print(json['ISBN'] as String);
-    print(json['photoURL'] as String);
-    print(json['description'] as String);
-    String data = (json['publishedDate'] as String).replaceAll("T", " ");
-    print(DateTime.parse(data));
-    print(json['editorial'] as String);
-    print(json['rate']);
-    print(json['category'].toString().contains('{')
-        ? Category.categoriesFromSnapshot(json['category'])
-        : json['category']);
-
     return Book(
         title: json['title'] as String,
         ISBN: json['ISBN'] as String,

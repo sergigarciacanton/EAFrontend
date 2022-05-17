@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:js';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
@@ -38,118 +39,168 @@ class _BookPageState extends State<BookPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Return to dashboard'),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          buildRowTitle(context),
-          const SizedBox(height: 50),
-          buildRowAutor(),
-          const SizedBox(height: 20),
-          Container(
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Descripción:',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Especificaciones',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  //decoration: TextDecoration.underline
-                ),
-              ),
-            ),
-          ),
-          Container(
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Fecha de publicación:',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Comentarios:',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildRowTitle(BuildContext context) {
     return FutureBuilder(
         future: fetchBook(),
         builder: (context, AsyncSnapshot<Book> snapshot) {
           if (snapshot.hasData) {
-            log("hola");
-            print(snapshot.data);
-            return Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  snapshot.data?.category[0].name,
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  width: 310,
-                ),
-                const Text(
-                  '4/5',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                ),
-                const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                  size: 36.0,
-                ),
-              ],
+            return Scaffold(
+              backgroundColor: Colors.black,
+              appBar: AppBar(
+                title: const Text('Return to dashboard'),
+              ),
+              body: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        snapshot.data!.title,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      for (int i = 0;
+                          i < ((snapshot.data!.rate / 2) - 0.1).round();
+                          i++)
+                        (const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 36.0,
+                        )),
+                      // No funciona el detectar si es par convencional asi que esto
+                      if ((snapshot.data!.rate) == 1 ||
+                          (snapshot.data!.rate) == 3 ||
+                          (snapshot.data!.rate) == 5 ||
+                          (snapshot.data!.rate) == 7 ||
+                          (snapshot.data!.rate) == 9)
+                        (const Icon(
+                          Icons.star_half,
+                          color: Colors.amber,
+                          size: 36.0,
+                        )),
+                    ],
+                  ),
+                  const SizedBox(height: 50),
+                  buildRowAutor(),
+                  const SizedBox(height: 20),
+                  Container(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Descripción: ' + snapshot.data!.description,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Container(
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Especificaciones',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Fecha de publicación: ' +
+                            snapshot.data!.publishedDate.day.toString() +
+                            "-" +
+                            snapshot.data!.publishedDate.month.toString() +
+                            "-" +
+                            snapshot.data!.publishedDate.year.toString(),
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Editorial: ' + snapshot.data!.editorial,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        child: const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Categorias: ',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      for (int i = 0; i < snapshot.data!.category.length; i++)
+                        (Text(
+                          snapshot.data?.category[i].name + "  ",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ))
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Comentarios: PROXIMAMENTE',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           } else if (snapshot.hasError) {
             print("holaMAL");
