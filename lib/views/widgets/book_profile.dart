@@ -46,7 +46,7 @@ class _BookPageState extends State<BookPage> {
             return Scaffold(
               backgroundColor: Colors.black,
               appBar: AppBar(
-                title: const Text('Return to dashboard'),
+                title: Text(getTranslated(context, 'returnToHome')!),
               ),
               body: Column(
                 children: [
@@ -95,7 +95,9 @@ class _BookPageState extends State<BookPage> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Descripción: ' + snapshot.data!.description,
+                        getTranslated(context, 'description')! +
+                            ' : ' +
+                            snapshot.data!.description,
                         textAlign: TextAlign.left,
                         style: const TextStyle(
                           color: Colors.white,
@@ -107,12 +109,12 @@ class _BookPageState extends State<BookPage> {
                   ),
                   const SizedBox(height: 30),
                   Container(
-                    child: const Align(
+                    child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Especificaciones',
+                        getTranslated(context, 'specs')!,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -125,7 +127,8 @@ class _BookPageState extends State<BookPage> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Fecha de publicación: ' +
+                        getTranslated(context, 'publishDate')! +
+                            ': ' +
                             snapshot.data!.publishedDate.day.toString() +
                             "-" +
                             snapshot.data!.publishedDate.month.toString() +
@@ -145,7 +148,9 @@ class _BookPageState extends State<BookPage> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Editorial: ' + snapshot.data!.editorial,
+                        getTranslated(context, 'editorial')! +
+                            ': ' +
+                            snapshot.data!.editorial,
                         textAlign: TextAlign.left,
                         style: const TextStyle(
                           color: Colors.white,
@@ -159,12 +164,12 @@ class _BookPageState extends State<BookPage> {
                   Row(
                     children: [
                       Container(
-                        child: const Align(
+                        child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Categorias: ',
+                            getTranslated(context, 'categories')! + ': ',
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -186,12 +191,12 @@ class _BookPageState extends State<BookPage> {
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    child: const Align(
+                    child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Comentarios: PROXIMAMENTE',
+                        getTranslated(context, 'comments')! + ': PROXIMAMENTE',
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -227,7 +232,7 @@ class _BookPageState extends State<BookPage> {
         ),
         Expanded(
           child: Text(
-            'Nombre Autor',
+            'Nombre Autor va aqui',
             textAlign: TextAlign.left,
             style: TextStyle(
                 color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),

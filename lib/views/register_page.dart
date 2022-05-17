@@ -13,37 +13,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-<<<<<<< HEAD
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.25),
-          child: Column(children: [
-            const SizedBox(height: 25),
-            const Text(
-              'Register',
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              style: ButtonStyle(
-                minimumSize: MaterialStateProperty.all(
-                    Size(MediaQuery.of(context).size.width, 60)),
-              ),
-              child: const Text(
-                'Return',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ]),
-=======
-
   bool isLoading = false;
   bool isChecked = false;
 
@@ -88,11 +57,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: nameController,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'name')!,
                       ),
@@ -105,11 +76,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: usernameController,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'username')!,
                       ),
@@ -138,11 +111,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: mailController,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'mail')!,
                       ),
@@ -156,11 +131,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'password')!,
                       ),
@@ -169,16 +146,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 10),
                   Container(
                     constraints: const BoxConstraints(maxWidth: 600),
-                      child: TextField(
+                    child: TextField(
                       controller: repeatPasswordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'repeatPassword')!,
                       ),
@@ -216,41 +195,42 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       child: Text(
                         getTranslated(context, 'submit')!,
-                        style:
-                            const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
-                        if(passwordController.text != repeatPasswordController.text) {
+                        if (passwordController.text !=
+                            repeatPasswordController.text) {
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                content: Text(getTranslated(context, 'passwordError')!),
+                                content: Text(
+                                    getTranslated(context, 'passwordError')!),
                               );
                             },
                           );
-                        }
-                        else if(!isChecked) {
+                        } else if (!isChecked) {
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                content: Text(getTranslated(context, 'termsError')!),
+                                content:
+                                    Text(getTranslated(context, 'termsError')!),
                               );
                             },
                           );
-                        }
-                        else {
+                        } else {
                           setState(() {
                             isLoading = true;
                           });
-                          var response = await authService.register(RegisterModel(
-                              username: usernameController.text,
-                              password: passwordController.text, 
-                              birthDate: DateTime.parse(birthDate), 
-                              mail: mailController.text, 
-                              name: nameController.text)
-                          );
+                          var response = await authService.register(
+                              RegisterModel(
+                                  username: usernameController.text,
+                                  password: passwordController.text,
+                                  birthDate: DateTime.parse(birthDate),
+                                  mail: mailController.text,
+                                  name: nameController.text));
                           setState(() {
                             isLoading = false;
                           });
@@ -258,7 +238,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const HomeScaffold()));
+                                    builder: (context) =>
+                                        const HomeScaffold()));
                           } else {
                             showDialog(
                               context: context,
@@ -285,17 +266,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(width: 5),
                       TextButton(
-                        child: Text(
-                          getTranslated(context, 'signIn')!,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.orange,
+                          child: Text(
+                            getTranslated(context, 'signIn')!,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.orange,
+                            ),
                           ),
-                        ),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        }
-                      ),
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          }),
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -303,7 +283,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
           ],
->>>>>>> ecc091350d52160aede95b137313a6130eb45b1d
         ),
       ),
     );

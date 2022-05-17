@@ -33,5 +33,12 @@
   "birthDate": "Data de naixement",
   "alreadyWithAccount": "Ja tens un compte?",
   "termsAndConditions": "Acceptar terminis i condicions",
-  "termsError": "Si us plau, accepta els terminis i condicions."
+  "termsError": "Si us plau, accepta els terminis i condicions.",
+  "returnToHome": "Tornar",
+  "description": "Descripció",
+  "specs":"Especificacions",
+  "publishDate": "Data de publicació",
+  "editorial": "Editorial",
+  "categories": "Categories",
+  "comments": "Comentaris"
 }

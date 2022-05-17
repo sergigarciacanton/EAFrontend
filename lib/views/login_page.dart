@@ -6,7 +6,6 @@ import 'package:ea_frontend/models/login.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/register_page.dart';
-import 'package:ea_frontend/views/widgets/book_profile.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -82,11 +81,13 @@ class _LoginPageState extends State<LoginPage> {
                       controller: usernameController,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'username')!,
                       ),
@@ -100,11 +101,13 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'password')!,
                       ),
@@ -120,8 +123,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Text(
                         getTranslated(context, 'submit')!,
-                        style:
-                            const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
                         setState(() {
@@ -174,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const BookPage()));
+                                  builder: (context) => const RegisterPage()));
                         },
                       ),
                     ],
