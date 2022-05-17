@@ -7,7 +7,7 @@ import 'package:localstorage/localstorage.dart';
 class ChatService {
   static Future<List<Chat>> getChats() async {
     String baseUrl = const String.fromEnvironment('API_URL',
-            defaultValue: 'http://localhost:3000/') +
+            defaultValue: 'http://localhost:3000') +
         '/chat/';
     Uri url = Uri.parse(baseUrl);
 

@@ -26,7 +26,8 @@ class Book {
         ISBN: json['ISBN'] as String,
         photoURL: json['photoURL'] as String,
         description: json['description'] as String,
-        publishedDate: DateTime.parse(['publishedDate'] as String),
+        publishedDate:
+            DateTime.parse((['publishedDate'] as String).replaceAll("T", " ")),
         editorial: json['editorial'] as String,
         rate: json['rate'],
         category: json['category'].toString().contains('{')

@@ -7,7 +7,7 @@ import 'package:localstorage/localstorage.dart';
 class UserService {
   static Future<User> getUser(String id) async {
     String baseUrl = const String.fromEnvironment('API_URL',
-            defaultValue: 'http://localhost:3000/') +
+            defaultValue: 'http://localhost:3000') +
         '/user/$id';
     Uri url = Uri.parse(baseUrl);
     if (!kIsWeb) {
