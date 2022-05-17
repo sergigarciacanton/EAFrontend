@@ -3,8 +3,11 @@ import 'package:ea_frontend/views/club_event_page.dart';
 import 'package:ea_frontend/views/home.dart';
 import 'package:ea_frontend/views/new_book_page.dart';
 import 'package:ea_frontend/views/new_club_page.dart';
+import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
+import 'package:ea_frontend/views/widgets/club_list.dart';
+import 'package:ea_frontend/views/widgets/event_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
@@ -59,13 +62,13 @@ class _MobileLayoutState extends State<MobileLayout> {
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.grey,
           onTap: onTapped),
-      body: PageView(controller: pageController, children: [
-        const Home(),
-        const ClubEventPage(),
-        const Text("EVENT"),
-        const ChatList(),
-        const NewBookPage(),
-        const Text("USER"),
+      body: PageView(controller: pageController, children: const [
+        Home(),
+        ClubList(),
+        EventList(),
+        ChatList(),
+        NewBookPage(),
+        SettingPage(),
       ]),
     );
   }

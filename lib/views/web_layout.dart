@@ -1,6 +1,7 @@
 import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/help.dart';
 import 'package:ea_frontend/views/home.dart';
+import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/settings_profile.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
@@ -47,7 +48,7 @@ class _WebLayoutState extends State<WebLayout> {
               tooltip: 'Profile and App settings',
               onPressed: () {
                 setState(() {
-                  mainComponent = SettingsProfile();
+                  mainComponent = SettingPage();
                 });
               },
             ),
@@ -85,14 +86,18 @@ class _WebLayoutState extends State<WebLayout> {
                           padding: const EdgeInsets.all(10.0),
                           height: constraints.maxHeight / 3,
                           width: constraints.maxWidth / 5,
-                          color: Colors.blue,
-                          child: EventList()),
+                          //    color: Colors.blue,
+                          child: EventList(
+                            setMainComponent: setMainComponent,
+                          )),
                       Container(
                           padding: const EdgeInsets.all(10.0),
                           height: constraints.maxHeight / 3,
                           width: constraints.maxWidth / 5,
-                          color: Colors.green,
-                          child: ClubList())
+                          //   color: Colors.green,
+                          child: ClubList(
+                            setMainComponent: setMainComponent,
+                          ))
                     ]))
           ]);
         }));

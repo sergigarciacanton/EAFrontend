@@ -1,8 +1,112 @@
-import 'package:flutter/material.dart';import 'package:flutter/material.dart';
+import 'dart:developer';
 
-class ClubList extends StatelessWidget {
+import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:ea_frontend/models/category.dart';
+import 'package:ea_frontend/routes/user_service.dart';
+import 'package:ea_frontend/models/user.dart';
+import 'package:ea_frontend/views/club_event_page.dart';
+import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
+
+class ClubList extends StatefulWidget {
+  final Function? setMainComponent;
+  const ClubList({
+    Key? key,
+    this.setMainComponent,
+  }) : super(key: key);
+  @override
+  State<ClubList> createState() => _ClubListState();
+}
+
+class _ClubListState extends State<ClubList> {
+  late String id;
+  final List<int> colorCodes = <int>[600, 500, 400];
+
+  var storage;
+  Future<User> fetchUser() async {
+    storage = LocalStorage('BookHub');
+    await storage.ready;
+
+    id = LocalStorage('BookHub').getItem('userId');
+    return UserService.getUser(id);
+  }
+
+  concatCategory(List<Category> categories) {
+    String txt = "";
+    categories.forEach((element) {
+      txt = txt + element.name! + ", ";
+    });
+    return Text(txt);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Text('im club list widget');
+    return FutureBuilder(
+        future: fetchUser(),
+        builder: (context, AsyncSnapshot<User> snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: [
+                Text(
+                  getTranslated(context, 'clubTitle')!,
+                  style: const TextStyle(
+                      color: Colors.orange,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    child: ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: snapshot.data?.clubs.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                              child: ListTile(
+                                  onTap: () {
+                                    if (widget.setMainComponent != null) {
+                                      widget.setMainComponent!(ClubEventPage(
+                                          elementId:
+                                              snapshot.data?.clubs[index].id));
+                                    } else {
+                                      Route route = MaterialPageRoute(
+                                          builder: (context) => ClubEventPage(
+                                              elementId: snapshot
+                                                  .data?.clubs[index].id));
+                                      Navigator.of(context).push(route);
+
+                                      //DO SOMETHING TO CHANGE PAGE IN MOBILE FORM
+
+                                      // print(context);
+                                      // ((Scaffold.of(context) as ScaffoldState)
+                                      //         .widget
+                                      //         .body as PageView)
+                                      //     .controller
+                                      //     .animateToPage(3,
+                                      //         duration:
+                                      //             Duration(milliseconds: 500),
+                                      //         curve: Curves.bounceIn);
+                                    }
+                                  },
+                                  leading: const FlutterLogo(size: 56.0),
+                                  title: Text(snapshot.data?.clubs[index].name),
+                                  subtitle: concatCategory(
+                                      snapshot.data?.clubs[index].category)
+                                  //trailing: Icon(Icons.more_vert),
+
+                                  ));
+                        }),
+                  ),
+                ),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            log(snapshot.error.toString());
+            print(snapshot.error);
+            //   throw snapshot.error.hashCode;
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
   }
 }

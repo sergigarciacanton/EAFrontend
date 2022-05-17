@@ -1,51 +1,73 @@
+import 'dart:developer';
+
+import 'package:ea_frontend/models/category.dart';
+import 'package:ea_frontend/models/club.dart';
+import 'package:ea_frontend/routes/club_service.dart';
 import 'package:flutter/material.dart';
 
 class ClubEventPage extends StatefulWidget {
-  const ClubEventPage({Key? key}) : super(key: key);
+  final String? elementId;
+
+  const ClubEventPage({
+    Key? key,
+    this.elementId,
+  }) : super(key: key);
 
   @override
   State<ClubEventPage> createState() => _ClubEventPageState();
 }
 
 class _ClubEventPageState extends State<ClubEventPage> {
-  final String _name = "Teresita Lecture Club";
-  final String _category = "ROMANCE";
-  final String _bio =
-      "\"Tesesita Lecture Club is an association that wants to achive the highest scores in EA aubject, because it's funy to do this tipe of things.\"";
-  final String _followers = "173";
+  //GET ELEMENTID WITH widget.elementId;
+  Future<Club> fetchClub() async {
+    return ClubService.getClub(widget.elementId!);
+  }
+
   final String _posts = "24";
-  final String _scores = "450";
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    return MaterialApp(
-      home: Scaffold(
-          body: Stack(
-        children: <Widget>[
-          _buildCoverImage(screenSize),
-          SafeArea(
-              child: SingleChildScrollView(
-            child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: 20,
-                ),
-                child: IntrinsicHeight(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                          height: 210,
-                          child: _buildEntityImage(),
-                        ),
-                        Expanded(child: Container(child: _club(context)))
-                      ]),
-                )),
-          ))
-        ],
-      )),
-    );
+    return FutureBuilder(
+        future: fetchClub(),
+        builder: (context, AsyncSnapshot<Club> snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+                body: Stack(
+              children: <Widget>[
+                _buildCoverImage(screenSize),
+                SafeArea(
+                    child: SingleChildScrollView(
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minHeight: 20,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                                height: 210,
+                                child: _buildEntityImage(),
+                              ),
+                              Expanded(
+                                  child: Container(
+                                      child: _club(context, snapshot)))
+                            ]),
+                      )),
+                ))
+              ],
+            ));
+          } else if (snapshot.hasError) {
+            log(snapshot.error.toString());
+            print(snapshot.error);
+            //   throw snapshot.error.hashCode;
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
   }
 
   Widget _buildCoverImage(Size screenSize) {
@@ -71,7 +93,7 @@ class _ClubEventPageState extends State<ClubEventPage> {
             decoration: BoxDecoration(
               image: const DecorationImage(
                 image: NetworkImage(
-                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
+                    'https://media.istockphoto.com/photos/group-of-friends-taking-part-in-book-club-at-home-picture-id499373254?k=20&m=499373254&s=612x612&w=0&h=Vd4LsLqIJqG6wtVVyy2590-lndlHh4j3tHn7pj4hq90='),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(80.0),
@@ -84,63 +106,64 @@ class _ClubEventPageState extends State<ClubEventPage> {
         ]));
   }
 
-  Widget _buildAdmin() {
+  Widget _buildAdmin(AsyncSnapshot<Club> snapshot) {
     return Container(
         padding: const EdgeInsets.all(5),
         color: Colors.grey,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text('Tesesita   '),
-            Image(
+          children: [
+            Text(snapshot.data?.admin.userName + '   '),
+            const Image(
               height: 40,
               width: 40,
               image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
             )
           ],
         ));
   }
 
-  Widget _club(BuildContext context) {
+  Widget _club(BuildContext context, AsyncSnapshot<Club> snapshot) {
     return Column(
       children: [
         Container(
             padding: const EdgeInsets.all(10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_buildName(), _buildAdmin()],
+              children: [_buildName(snapshot), _buildAdmin(snapshot)],
             )),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildCategory(context, "ROMANCE"),
-            _buildCategory(context, "ACTION"),
-            _buildCategory(context, "ADVENTURE")
-          ],
+          children: concatCategory(snapshot),
         ),
-        _buildStatContainer("Followers", "200", "Comments", "59"),
-        _buildDescription(context),
+        _buildStatContainer("Followers",
+            snapshot.data!.usersList.length.toString(), "Comments", "59"),
+        _buildDescription(context, snapshot),
         Column(
-          children: [
-            _buildUser(),
-            _buildUser(),
-            _buildUser(),
-          ],
+          children: userList(snapshot),
         ),
         _buildButtons()
       ],
     );
   }
 
-  Widget _buildName() {
-    return Text(_name,
+  Widget _buildName(AsyncSnapshot<Club> snapshot) {
+    return Text(snapshot.data!.name,
         textAlign: TextAlign.right,
         style: const TextStyle(
           color: Colors.black,
           fontSize: 28.0,
           fontWeight: FontWeight.w700,
         ));
+  }
+
+  concatCategory(AsyncSnapshot<Club> snapshot) {
+    List<Widget> lista = [];
+    snapshot.data?.category.forEach((element) {
+      lista.add(_buildCategory(context, element.name!));
+    });
+    return lista;
   }
 
   Widget _buildCategory(BuildContext context, String category) {
@@ -161,7 +184,15 @@ class _ClubEventPageState extends State<ClubEventPage> {
     );
   }
 
-  Widget _buildUser() {
+  userList(AsyncSnapshot<Club> snapshot) {
+    List<Widget> lista = [];
+    snapshot.data?.usersList.forEach((element) {
+      lista.add(_buildUser(element.userName!, element.mail!));
+    });
+    return lista;
+  }
+
+  Widget _buildUser(String userName, String mail) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
@@ -172,12 +203,12 @@ class _ClubEventPageState extends State<ClubEventPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
               child: Image.network(
-                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
                 fit: BoxFit.contain,
               ),
             ),
           ),
-          const Text('    Teresita (teresita@gmail.com)'),
+          Text('    ' + userName + '(' + mail + ')'),
         ],
       ),
     );
@@ -229,9 +260,9 @@ class _ClubEventPageState extends State<ClubEventPage> {
     );
   }
 
-  Widget _buildDescription(BuildContext context) {
+  Widget _buildDescription(BuildContext context, AsyncSnapshot<Club> snapshot) {
     TextStyle bioTextStyle = const TextStyle(
-      fontWeight: FontWeight.w400, //try changing weight to w500 if not thin
+      fontWeight: FontWeight.w500, //try changing weight to w500 if not thin
       fontStyle: FontStyle.italic,
       color: Color(0xFF799497),
       fontSize: 16.0,
@@ -241,7 +272,7 @@ class _ClubEventPageState extends State<ClubEventPage> {
       color: Theme.of(context).scaffoldBackgroundColor,
       padding: EdgeInsets.all(8.0),
       child: Text(
-        _bio,
+        snapshot.data!.description,
         textAlign: TextAlign.center,
         style: bioTextStyle,
       ),
@@ -254,17 +285,6 @@ class _ClubEventPageState extends State<ClubEventPage> {
       height: 2.0,
       color: Colors.black54,
       margin: EdgeInsets.only(top: 4.0),
-    );
-  }
-
-  Widget _buildGetInTouch(BuildContext context) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Text(
-        "Get in Touch with ${_name.split(" ")[0]},",
-        style: const TextStyle(fontSize: 16.0),
-      ),
     );
   }
 

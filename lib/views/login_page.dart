@@ -68,7 +68,6 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 50),
                   Image.asset("public/logo.png"),
                   Text(
-                    //TODO poner esta cosa en todos los sitios que quieras traducir
                     getTranslated(context, 'signIn')!,
                     style: const TextStyle(
                         color: Colors.white,
@@ -76,71 +75,80 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
-                  TextField(
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: TextField(
+                      controller: usernameController,
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                        ),
+                        hintText: getTranslated(context, 'username')!,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
-                      ),
-                      hintText: getTranslated(context, 'username')!,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                        ),
+                        hintText: getTranslated(context, 'password')!,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
-                      ),
-                      hintText: getTranslated(context, 'password')!,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(
-                          Size(MediaQuery.of(context).size.width, 60)),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(
+                            Size(MediaQuery.of(context).size.width, 60)),
+                      ),
+                      child: Text(
+                        getTranslated(context, 'submit')!,
+                        style:
+                            const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        var response = await authService.login(LoginModel(
+                            username: usernameController.text,
+                            password: passwordController.text));
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (response == "200") {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomeScaffold()));
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Text(response.toString()),
+                              );
+                            },
+                          );
+                        }
+                      },
                     ),
-                    child: Text(
-                      getTranslated(context, 'submit')!,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      var response = await authService.login(LoginModel(
-                          username: usernameController.text,
-                          password: passwordController.text));
-                      setState(() {
-                        isLoading = false;
-                      });
-                      if (response == "200") {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomeScaffold()));
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text(response.toString()),
-                            );
-                          },
-                        );
-                      }
-                    },
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -148,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Text(
                         getTranslated(context, 'stillWithoutAccount')!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                         ),
                       ),
@@ -156,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         child: Text(
                           getTranslated(context, 'register')!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             color: Colors.orange,
                           ),

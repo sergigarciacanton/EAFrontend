@@ -1,7 +1,6 @@
 import 'package:ea_frontend/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'localization/demo_localization.dart';
 import 'localization/language_constants.dart';
 
