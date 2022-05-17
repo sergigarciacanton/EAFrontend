@@ -1,3 +1,4 @@
+import 'package:ea_frontend/models/userPopulate.dart';
 import 'user.dart';
 import 'chat.dart';
 import 'category.dart';
@@ -26,13 +27,13 @@ class Club {
         name: json['name'] as String,
         description: json['description'] as String,
         admin: json['admin'].toString().contains('{')
-            ? User.fromJson(json['admin'])
+            ? UserPopulate.fromJson(json['admin'])
             : json['admin'],
         chat: json['chat'].toString().contains('{')
             ? Chat.fromJson(json['chat'])
             : json['chat'],
         usersList: json['usersList'].toString().contains('{')
-            ? User.usersFromSnapshot(json['usersList'])
+            ? UserPopulate.usersFromSnapshot(json['usersList'])
             : json['usersList'],
         category: json['category'].toString().contains('{')
             ? Category.categoriesFromSnapshot(json['category'])

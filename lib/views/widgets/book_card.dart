@@ -3,10 +3,12 @@ import 'book_profile.dart';
 
 class BookCard extends StatelessWidget {
   final String title;
+  final String author;
   final String rate;
   final String imageUrl;
   BookCard({
     required this.title,
+    required this.author,
     required this.rate,
     required this.imageUrl,
   });
@@ -15,8 +17,8 @@ class BookCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: 180,
+      width: 300,
+      height: 250,
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(15),
@@ -45,7 +47,7 @@ class BookCard extends StatelessWidget {
         children: [
           Align(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
                 title,
                 style: const TextStyle(
@@ -56,7 +58,22 @@ class BookCard extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
+          ),
+          Align(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 0.0),
+              child: Text(
+                author,
+                style: const TextStyle(
+                  fontSize: 19,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            alignment: Alignment.bottomCenter,
           ),
           Align(
             child: Row(

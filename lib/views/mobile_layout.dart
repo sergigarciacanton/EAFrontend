@@ -59,12 +59,12 @@ class _MobileLayoutState extends State<MobileLayout> {
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.grey,
           onTap: onTapped),
-      body: PageView(controller: pageController, children: [
-        const Home(),
-        const ClubList(),
-        const EventList(),
-        const ChatList(),
-        const SettingPage(),
+      body: PageView(controller: pageController, children: const [
+        Home(),
+        ClubList(),
+        EventList(),
+        ChatList(),
+        SettingPage(),
       ]),
     );
   }
