@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/login.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
@@ -20,31 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   bool isLoading = false;
-
-  void checkToken() async {
-    var token = LocalStorage('BookHub').getItem('token');
-    if (token == null) {
-      return;
-    }
-    var response = await AuthService.verifyToken(token);
-    if (response == '200') {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const HomeScaffold()));
-    } else {
-      log(response.toString());
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    var storage = LocalStorage('BookHub');
-    storage.ready.then(((value) => checkToken()));
-
-    //AuthService.verifyToken(token);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +53,13 @@ class _LoginPageState extends State<LoginPage> {
                       controller: usernameController,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'username')!,
                       ),
@@ -99,11 +73,13 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 2.0),
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1), width: 2.0),
+                              color: Color.fromRGBO(247, 151, 28, 1),
+                              width: 2.0),
                         ),
                         hintText: getTranslated(context, 'password')!,
                       ),
@@ -119,8 +95,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Text(
                         getTranslated(context, 'submit')!,
-                        style:
-                            const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
                         setState(() {
