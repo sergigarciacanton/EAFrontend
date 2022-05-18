@@ -7,7 +7,6 @@ import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/register_page.dart';
 import 'package:flutter/material.dart';
-import 'package:ea_frontend/views/widgets/book_profile.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -178,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const BookPage()));
+                                  builder: (context) => const RegisterPage()));
                         },
                       ),
                     ],
