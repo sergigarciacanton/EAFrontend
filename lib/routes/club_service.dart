@@ -38,4 +38,52 @@ class ClubService {
     List data = jsonDecode(response.body);
     return Club.clubsFromSnapshot(data);
   }
+
+  static Future<bool> subscribeClub(String idClub) async {
+    Uri url = Uri.parse('http://localhost:3000/club/');
+
+    if (!kIsWeb) {
+      url = Uri.parse('http://10.0.2.2:3000/club/');
+    }
+
+    final response = await http.put(
+      url,
+      headers: {
+        'authorization': LocalStorage('BookHub').getItem('token'),
+        "Content-Type": "application/json"
+      },
+      body: json.encode({
+        'idUser': LocalStorage('BookHub').getItem('userId'),
+        'idClub': idClub
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> unsubscribeClub(String idClub) async {
+    Uri url = Uri.parse('http://localhost:3000/club/unsubscribe');
+
+    if (!kIsWeb) {
+      url = Uri.parse('http://10.0.2.2:3000/club/unsubscribe');
+    }
+
+    final response = await http.put(
+      url,
+      headers: {
+        'authorization': LocalStorage('BookHub').getItem('token'),
+        "Content-Type": "application/json"
+      },
+      body: json.encode({
+        'idUser': LocalStorage('BookHub').getItem('userId'),
+        'idClub': idClub
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 }
