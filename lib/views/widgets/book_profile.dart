@@ -27,7 +27,7 @@ class BookPage extends StatefulWidget {
 }
 
 class _BookPageState extends State<BookPage> {
-  final String id = "62696a7f776cb2959215c4a5";
+  final String id = "6284b7ef2fa88c877a78dcd2";
 
   var bookStorage;
   Future<Book> fetchBook() async {
@@ -89,7 +89,28 @@ class _BookPageState extends State<BookPage> {
                     ],
                   ),
                   const SizedBox(height: 50),
-                  buildRowAutor(),
+                  Row(
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: FittedBox(
+                          fit: BoxFit.fill, // otherwise the logo will be tiny
+                          child: FlutterLogo(),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          snapshot.data!.writer,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   Container(
                     child: Align(
