@@ -1,4 +1,5 @@
 import 'package:ea_frontend/models/book.dart';
+import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/models/event.dart';
 import 'package:ea_frontend/routes/event_service.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
@@ -58,6 +59,14 @@ class _HomeState extends State<Home> {
     });
   }
 
+  String getStringCategories(List<dynamic> categories) {
+    String output = "";
+    for (var category in categories) {
+      output = output + ", " + category.name;
+    }
+    return output.substring(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +84,7 @@ class _HomeState extends State<Home> {
             textAlign: TextAlign.center,
           ),
           Container(
+            height: 250,
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(
                 dragDevices: {
@@ -99,7 +109,7 @@ class _HomeState extends State<Home> {
                         return BookCard(
                           title: _books[index].title,
                           author: "Some author",
-                          rate: _books[index].rate,
+                          rate: _books[index].rate.toString(),
                           imageUrl: _books[index].photoURL,
                         );
                       },
@@ -141,7 +151,7 @@ class _HomeState extends State<Home> {
                       itemBuilder: (context, index) {
                         return BookCard(
                           title: _events[index].name,
-                          author: _events[index].eventDate.toString(),
+                          author: _events[index].eventDate.day.toString() + "-" + _events[index].eventDate.month.toString() + "-" + _events[index].eventDate.year.toString(),
                           rate: _events[index].usersList.length.toString(),
                           imageUrl: "",
                         );
@@ -183,7 +193,7 @@ class _HomeState extends State<Home> {
                       itemBuilder: (context, index) {
                         return BookCard(
                           title: _clubs[index].name,
-                          author: _clubs[index].category.toString(),
+                          author: getStringCategories(_clubs[index].category).toString(),
                           rate: _clubs[index].usersList.length.toString(),
                           imageUrl: "",
                         );

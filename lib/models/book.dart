@@ -24,6 +24,7 @@ class Book {
 
   factory Book.fromJson(dynamic json) {
     return Book(
+
       title: json['title'] as String,
       ISBN: json['ISBN'] as String,
       photoURL: json['photoURL'] as String,
@@ -37,6 +38,7 @@ class Book {
           : json['category'],
       writer: json['writer'] as String,
     );
+
   }
 
   static List<Book> booksFromSnapshot(List snapshot) {

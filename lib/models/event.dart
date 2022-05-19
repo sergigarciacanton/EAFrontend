@@ -37,7 +37,7 @@ class Event {
         chat: json['chat'].toString().contains('{')
             ? Chat.fromJson(json['chat'])
             : json['chat'],
-        eventDate: DateTime.parse(json['eventDate'] as String),
+        eventDate: DateTime.parse((json['eventDate'] as String).replaceAll("T", " ")),
         usersList: json['usersList'].toString().contains('{')
             ? User.usersFromSnapshot(json['usersList'])
             : json['usersList'],

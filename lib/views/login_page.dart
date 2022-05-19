@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/login.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
@@ -20,31 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   bool isLoading = false;
-
-  void checkToken() async {
-    var token = LocalStorage('BookHub').getItem('token');
-    if (token == null) {
-      return;
-    }
-    var response = await AuthService.verifyToken(token);
-    if (response == '200') {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const HomeScaffold()));
-    } else {
-      log(response.toString());
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    var storage = LocalStorage('BookHub');
-    storage.ready.then(((value) => checkToken()));
-
-    //AuthService.verifyToken(token);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   const SizedBox(height: 50),
-                  Image.asset("public/logo.png"),
+                  Image.asset("public/logowhite.png"),
                   Text(
                     getTranslated(context, 'signIn')!,
                     style: const TextStyle(

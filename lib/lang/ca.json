@@ -40,5 +40,8 @@
   "publishDate": "Data de publicació",
   "editorial": "Editorial",
   "categories": "Categories",
-  "comments": "Comentaris"
+  "comments": "Comentaris",
+  "followers": "Seguidors",
+  "unsubscribe": "CANCEL·LAR SUBSCRIPCIÓ",
+  "subscribe": "SUBSCRIU-TE"
 }
