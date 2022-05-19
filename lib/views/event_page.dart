@@ -1,49 +1,49 @@
 import 'dart:developer';
 
 import 'package:ea_frontend/localization/language_constants.dart';
-import 'package:ea_frontend/models/club.dart';
-import 'package:ea_frontend/routes/club_service.dart';
+import 'package:ea_frontend/models/event.dart';
+import 'package:ea_frontend/routes/event_service.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
-class ClubPage extends StatefulWidget {
+class EventPage extends StatefulWidget {
   final String? elementId;
 
-  const ClubPage({
+  const EventPage({
     Key? key,
     this.elementId,
   }) : super(key: key);
 
   @override
-  State<ClubPage> createState() => _ClubPageState();
+  State<EventPage> createState() => _EventPageState();
 }
 
-class _ClubPageState extends State<ClubPage> {
+class _EventPageState extends State<EventPage> {
   late String idUser;
   var storage;
   //GET ELEMENTID WITH widget.elementId;
-  Future<Club> fetchClub() async {
+  Future<Event> fetchEvent() async {
     storage = LocalStorage('BookHub');
     await storage.ready;
 
     idUser = LocalStorage('BookHub').getItem('userId');
-    return ClubService.getClub(widget.elementId!);
+    return EventService.getEvent(widget.elementId!);
   }
 
-  Future<bool> unsubscribe() async {
-    return ClubService.unsubscribeClub(widget.elementId!);
+  Future<bool> leaveEvent() async {
+    return EventService.leaveEvent(widget.elementId!);
   }
 
-  Future<bool> subscribe() async {
-    return ClubService.subscribeClub(widget.elementId!);
+  Future<bool> joinEvent() async {
+    return EventService.joinEvent(widget.elementId!);
   }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return FutureBuilder(
-        future: fetchClub(),
-        builder: (context, AsyncSnapshot<Club> snapshot) {
+        future: fetchEvent(),
+        builder: (context, AsyncSnapshot<Event> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
                 body: Stack(
@@ -65,7 +65,7 @@ class _ClubPageState extends State<ClubPage> {
                               ),
                               child: IntrinsicHeight(
                                   child: Container(
-                                      child: _club(
+                                      child: _Event(
                                           context, snapshot, screenSize))))),
                     )),
                   ],
@@ -83,7 +83,7 @@ class _ClubPageState extends State<ClubPage> {
         });
   }
 
-  Widget _buildAdmin(AsyncSnapshot<Club> snapshot) {
+  Widget _buildAdmin(AsyncSnapshot<Event> snapshot) {
     return Container(
         margin: EdgeInsets.all(5),
         padding: const EdgeInsets.all(5),
@@ -124,8 +124,8 @@ class _ClubPageState extends State<ClubPage> {
         ));
   }
 
-  Widget _club(
-      BuildContext context, AsyncSnapshot<Club> snapshot, Size screenSize) {
+  Widget _Event(
+      BuildContext context, AsyncSnapshot<Event> snapshot, Size screenSize) {
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -157,7 +157,7 @@ class _ClubPageState extends State<ClubPage> {
     );
   }
 
-  Widget _buildName(AsyncSnapshot<Club> snapshot) {
+  Widget _buildName(AsyncSnapshot<Event> snapshot) {
     return Text(snapshot.data!.name,
         style: const TextStyle(
           color: Colors.black,
@@ -166,7 +166,7 @@ class _ClubPageState extends State<ClubPage> {
         ));
   }
 
-  concatCategory(AsyncSnapshot<Club> snapshot) {
+  concatCategory(AsyncSnapshot<Event> snapshot) {
     List<Widget> lista = [];
     snapshot.data?.category.forEach((element) {
       lista.add(_buildCategory(context, element.name!));
@@ -192,7 +192,7 @@ class _ClubPageState extends State<ClubPage> {
     );
   }
 
-  userList(AsyncSnapshot<Club> snapshot) {
+  userList(AsyncSnapshot<Event> snapshot) {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
       lista.add(_buildUser(element.userName!, element.mail!));
@@ -250,7 +250,7 @@ class _ClubPageState extends State<ClubPage> {
     );
   }
 
-  Widget _buildStatContainer(AsyncSnapshot<Club> snapshot) {
+  Widget _buildStatContainer(AsyncSnapshot<Event> snapshot) {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
@@ -269,7 +269,8 @@ class _ClubPageState extends State<ClubPage> {
     );
   }
 
-  Widget _buildDescription(BuildContext context, AsyncSnapshot<Club> snapshot) {
+  Widget _buildDescription(
+      BuildContext context, AsyncSnapshot<Event> snapshot) {
     TextStyle bioTextStyle = const TextStyle(
       fontWeight: FontWeight.w500, //try changing weight to w500 if not thin
       fontStyle: FontStyle.italic,
@@ -297,7 +298,7 @@ class _ClubPageState extends State<ClubPage> {
     );
   }
 
-  Widget _buildButtons(AsyncSnapshot<Club> snapshot) {
+  Widget _buildButtons(AsyncSnapshot<Event> snapshot) {
     if (snapshot.data!.usersList
         .where((item) => item.id == idUser)
         .isNotEmpty) {
@@ -329,18 +330,18 @@ class _ClubPageState extends State<ClubPage> {
             const SizedBox(width: 10.0),
             Expanded(
               child: InkWell(
-                onTap: () => unsubscribe(),
+                onTap: () => leaveEvent(),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
                     border: Border.all(),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(10.0),
                       child: Text(
-                        getTranslated(context, 'unsubscribe')!,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        "leave",
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -357,18 +358,18 @@ class _ClubPageState extends State<ClubPage> {
           children: <Widget>[
             Expanded(
               child: InkWell(
-                onTap: () => subscribe(),
+                onTap: () => joinEvent(),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
                     border: Border.all(),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(10.0),
                       child: Text(
-                        getTranslated(context, 'subscribe')!,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        "Join",
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -384,7 +385,7 @@ class _ClubPageState extends State<ClubPage> {
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
-  AsyncSnapshot<Club> snapshot;
+  AsyncSnapshot<Event> snapshot;
 
   MySliverAppBar({required this.snapshot, required this.expandedHeight});
 

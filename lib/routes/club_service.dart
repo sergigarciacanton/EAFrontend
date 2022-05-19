@@ -20,7 +20,6 @@ class ClubService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    print(data);
     return Club.fromJson(data);
   }
 
