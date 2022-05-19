@@ -33,5 +33,8 @@
   "birthDate": "Birthday",
   "alreadyWithAccount": "Already with an account?",
   "termsAndConditions": "Accept terms and conditions",
-  "termsError": "Please, accept terms and conditions."
+  "termsError": "Please, accept terms and conditions.",
+  "followers": "Followers",
+  "unsubscribe": "UNSUBSCRIBE",
+  "subscribe": "SUBSCRIBE"
 }

@@ -1,10 +1,9 @@
 import 'dart:developer';
 
 import 'package:ea_frontend/localization/language_constants.dart';
-import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
-import 'package:ea_frontend/views/club_event_page.dart';
+import 'package:ea_frontend/views/event_page.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -69,7 +68,7 @@ class _EventListState extends State<EventList> {
                               child: ListTile(
                                 onTap: () {
                                   if (widget.setMainComponent != null) {
-                                    widget.setMainComponent!(ClubEventPage(
+                                    widget.setMainComponent!(EventPage(
                                         elementId:
                                             snapshot.data?.events[index].id));
                                   }
