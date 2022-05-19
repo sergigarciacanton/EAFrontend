@@ -45,59 +45,69 @@ class _ClubListState extends State<ClubList> {
         future: fetchUser(),
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
-            return Column(
-              children: [
-                Text(
-                  getTranslated(context, 'clubTitle')!,
-                  style: const TextStyle(
-                      color: Colors.orange,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    child: ListView.builder(
-                        padding: const EdgeInsets.all(8),
-                        itemCount: snapshot.data?.clubs.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                              child: ListTile(
-                                  onTap: () {
-                                    if (widget.setMainComponent != null) {
-                                      widget.setMainComponent!(ClubPage(
-                                          elementId:
-                                              snapshot.data?.clubs[index].id));
-                                    } else {
-                                      Route route = MaterialPageRoute(
-                                          builder: (context) => ClubPage(
-                                              elementId: snapshot
-                                                  .data?.clubs[index].id));
-                                      Navigator.of(context).push(route);
-
-                                      //DO SOMETHING TO CHANGE PAGE IN MOBILE FORM
-
-                                      // print(context);
-                                      // ((Scaffold.of(context) as ScaffoldState)
-                                      //         .widget
-                                      //         .body as PageView)
-                                      //     .controller
-                                      //     .animateToPage(3,
-                                      //         duration:
-                                      //             Duration(milliseconds: 500),
-                                      //         curve: Curves.bounceIn);
-                                    }
-                                  },
-                                  leading: const FlutterLogo(size: 56.0),
-                                  title: Text(snapshot.data?.clubs[index].name),
-                                  subtitle: concatCategory(
-                                      snapshot.data?.clubs[index].category)
-                                  //trailing: Icon(Icons.more_vert),
-
-                                  ));
-                        }),
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.orange,
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  log('createClub');
+                },
+              ),
+              body: Column(
+                children: [
+                  Text(
+                    getTranslated(context, 'clubTitle')!,
+                    style: const TextStyle(
+                        color: Colors.orange,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: SizedBox(
+                      child: ListView.builder(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: snapshot.data?.clubs.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                                child: ListTile(
+                                    onTap: () {
+                                      if (widget.setMainComponent != null) {
+                                        widget.setMainComponent!(ClubPage(
+                                            elementId: snapshot
+                                                .data?.clubs[index].id));
+                                      } else {
+                                        Route route = MaterialPageRoute(
+                                            builder: (context) => ClubPage(
+                                                elementId: snapshot
+                                                    .data?.clubs[index].id));
+                                        Navigator.of(context).push(route);
+
+                                        //DO SOMETHING TO CHANGE PAGE IN MOBILE FORM
+
+                                        // print(context);
+                                        // ((Scaffold.of(context) as ScaffoldState)
+                                        //         .widget
+                                        //         .body as PageView)
+                                        //     .controller
+                                        //     .animateToPage(3,
+                                        //         duration:
+                                        //             Duration(milliseconds: 500),
+                                        //         curve: Curves.bounceIn);
+                                      }
+                                    },
+                                    leading: const FlutterLogo(size: 56.0),
+                                    title:
+                                        Text(snapshot.data?.clubs[index].name),
+                                    subtitle: concatCategory(
+                                        snapshot.data?.clubs[index].category)
+                                    //trailing: Icon(Icons.more_vert),
+
+                                    ));
+                          }),
+                    ),
+                  ),
+                ],
+              ),
             );
           } else if (snapshot.hasError) {
             log(snapshot.error.toString());

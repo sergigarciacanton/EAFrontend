@@ -36,38 +36,47 @@ class _ChatListState extends State<ChatList> {
         future: fetchUser(),
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
-            return Column(
-              children: [
-                Text(
-                  getTranslated(context, 'chatTitle')!,
-                  style: const TextStyle(
-                      color: Colors.orange,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    child: ListView.builder(
-                        padding: const EdgeInsets.all(8),
-                        itemCount: snapshot.data?.chats.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            child: ListTile(
-                              onTap: () {
-                                if (widget.setMainComponent != null) {
-                                  widget.setMainComponent!(ChatPage());
-                                }
-                              },
-                              leading: FlutterLogo(size: 56.0),
-                              title: Text(snapshot.data?.chats[index].name),
-                              subtitle: Text('this will be the last message'),
-                              //trailing: Icon(Icons.more_vert),
-                            ),
-                          );
-                        }),
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.orange,
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  log('createChat');
+                },
+              ),
+              body: Column(
+                children: [
+                  Text(
+                    getTranslated(context, 'chatTitle')!,
+                    style: const TextStyle(
+                        color: Colors.orange,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: SizedBox(
+                      child: ListView.builder(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: snapshot.data?.chats.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              child: ListTile(
+                                onTap: () {
+                                  if (widget.setMainComponent != null) {
+                                    widget.setMainComponent!(ChatPage());
+                                  }
+                                },
+                                leading: FlutterLogo(size: 56.0),
+                                title: Text(snapshot.data?.chats[index].name),
+                                subtitle: Text('this will be the last message'),
+                                //trailing: Icon(Icons.more_vert),
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+                ],
+              ),
             );
           } else if (snapshot.hasError) {
             log(snapshot.error.toString());
