@@ -28,8 +28,9 @@ class _WebLayoutState extends State<WebLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Image.asset(
-            "public/logo.png",
+            "public/logowhite.png",
             fit: BoxFit.contain,
             height: 64,
           ),

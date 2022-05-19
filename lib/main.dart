@@ -78,7 +78,8 @@ class _MyAppState extends State<MyApp> {
         },
         home: AnimatedSplashScreen.withScreenFunction(
             duration: 3000,
-            splash: "public/logo.png",
+            splash: "public/logosplash.png",
+            splashIconSize: 500,
             screenFunction: () async {
               var storage = LocalStorage('BookHub');
               await storage.ready;
@@ -96,6 +97,6 @@ class _MyAppState extends State<MyApp> {
             },
             splashTransition: SplashTransition.fadeTransition,
             pageTransitionType: PageTransitionType.fade,
-            backgroundColor: Colors.black));
+            backgroundColor: Colors.blueGrey));
   }
 }

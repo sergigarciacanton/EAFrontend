@@ -71,6 +71,8 @@ flutter:
     - lib/lang/ca.json
     - lib/lang/es.json
     - public/logo.png
+    - public/logowhite.png
+    - public/logosplash.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

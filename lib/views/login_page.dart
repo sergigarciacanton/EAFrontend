@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   const SizedBox(height: 50),
-                  Image.asset("public/logo.png"),
+                  Image.asset("public/logowhite.png"),
                   Text(
                     getTranslated(context, 'signIn')!,
                     style: const TextStyle(
