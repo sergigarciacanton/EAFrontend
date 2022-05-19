@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'book_profile.dart';
 
 class BookCard extends StatelessWidget {
   final String title;
@@ -11,6 +12,7 @@ class BookCard extends StatelessWidget {
     required this.rate,
     required this.imageUrl,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -85,7 +87,7 @@ class BookCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Row(
-                    children: [
+                    children: <Widget>[
                       const Icon(
                         Icons.star,
                         color: Colors.orange,
@@ -103,7 +105,7 @@ class BookCard extends StatelessWidget {
                     color: Colors.black.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                )
+                ),
               ],
             ),
             alignment: Alignment.bottomLeft,
