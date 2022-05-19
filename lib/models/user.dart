@@ -37,7 +37,7 @@ class User {
   factory User.fromJson(dynamic json) {
     var name = json['name'] as String;
     var userName = json['userName'] as String;
-    var birthDate = DateTime.parse(json['birthDate']);
+    var birthDate = DateTime.parse((json['birthDate'] as String).replaceAll("T", " "));
     var mail = json['mail'] as String;
     var location =
         json['location'] == null ? null : Location.fromJson(json['location']);
