@@ -30,17 +30,22 @@ class _ClubPageState extends State<ClubPage> {
     return ClubService.getClub(widget.elementId!);
   }
 
-  Future<bool> unsubscribe() async {
-    return ClubService.unsubscribeClub(widget.elementId!);
+  Future<void> unsubscribe() async {
+    ClubService.unsubscribeClub(widget.elementId!);
+    setState(() {});
   }
 
-  Future<bool> subscribe() async {
-    return ClubService.subscribeClub(widget.elementId!);
+  Future<void> subscribe() async {
+    ClubService.subscribeClub(widget.elementId!);
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width < 11000) {
+      screenSize = screenSize / 5 * 4;
+    }
     return FutureBuilder(
         future: fetchClub(),
         builder: (context, AsyncSnapshot<Club> snapshot) {
@@ -132,7 +137,7 @@ class _ClubPageState extends State<ClubPage> {
         Container(
             padding: const EdgeInsets.all(10),
             child: Row(children: [
-              SizedBox(
+              Container(
                 width: screenSize.width / 1.5,
                 child: _buildName(snapshot),
               ),
@@ -391,6 +396,10 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width < 11000) {
+      screenSize = screenSize / 5 * 4;
+    }
     return Stack(
       fit: StackFit.expand,
       overflow: Overflow.visible,
@@ -419,7 +428,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
         ),
         Positioned(
           top: expandedHeight / 2 - shrinkOffset,
-          left: MediaQuery.of(context).size.width / 1.5,
+          left: screenSize.width / 1.5,
           child: Opacity(
             opacity: (1 - shrinkOffset / expandedHeight),
             child: Container(
@@ -435,7 +444,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
               ),
               child: SizedBox(
                 height: expandedHeight,
-                width: MediaQuery.of(context).size.width / 4,
+                width: screenSize.width / 4,
               ),
             ),
           ),
