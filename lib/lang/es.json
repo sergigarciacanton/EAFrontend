@@ -33,5 +33,9 @@
   "birthDate": "Fecha de nacimiento",
   "alreadyWithAccount": "¿Ya tienes una cuenta?",
   "termsAndConditions": "Aceptar términos y condiciones",
-  "termsError": "Por favor, acepta los términos y condiciones."
+  "termsError": "Por favor, acepta los términos y condiciones.",
+  "followers":"Seguidores",
+  "unsubscribe":"CANCELAR SUSCRIPCIÓN",
+  "subscribe": "SUSCRIBIR"
+
 }
