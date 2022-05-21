@@ -1,5 +1,5 @@
 import 'package:ea_frontend/models/book.dart';
-import 'package:ea_frontend/views/club_event_page.dart';
+import 'package:ea_frontend/views/club_page.dart';
 import 'package:ea_frontend/views/home.dart';
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';

@@ -40,5 +40,8 @@
   "publishDate": "Publish date",
   "editorial": "Editorial",
   "categories": "Categories",
-  "comments": "Comments"
+  "comments": "Comments",
+  "followers": "Followers",
+  "unsubscribe": "UNSUBSCRIBE",
+  "subscribe": "SUBSCRIBE"
 }
