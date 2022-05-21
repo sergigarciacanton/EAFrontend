@@ -16,7 +16,7 @@ class MyThemes {
     scaffoldBackgroundColor: Colors.grey.shade900,
     primaryColor: Colors.black,
     colorScheme: ColorScheme.dark(),
-    iconTheme: IconThemeData(color: Colors.orange.shade200, opacity: 0.8),
+    iconTheme: IconThemeData(color: Colors.purple.shade200, opacity: 0.8),
   );
 
   static final lightTheme = ThemeData(
