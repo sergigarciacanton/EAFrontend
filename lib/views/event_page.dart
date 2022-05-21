@@ -160,7 +160,6 @@ class _EventPageState extends State<EventPage> {
   Widget _buildName(AsyncSnapshot<Event> snapshot) {
     return Text(snapshot.data!.name,
         style: const TextStyle(
-          color: Colors.black,
           fontSize: 28.0,
           fontWeight: FontWeight.w700,
         ));

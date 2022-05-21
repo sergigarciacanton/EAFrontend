@@ -165,7 +165,6 @@ class _ClubPageState extends State<ClubPage> {
   Widget _buildName(AsyncSnapshot<Club> snapshot) {
     return Text(snapshot.data!.name,
         style: const TextStyle(
-          color: Colors.black,
           fontSize: 28.0,
           fontWeight: FontWeight.w700,
         ));

@@ -56,7 +56,7 @@ class _MobileLayoutState extends State<MobileLayout> {
             BottomNavigationBarItem(icon: Icon(Icons.face), label: 'Perfil')
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
+          selectedItemColor: Colors.grey,
           unselectedItemColor: Colors.grey,
           onTap: onTapped),
       body: PageView(controller: pageController, children: const [

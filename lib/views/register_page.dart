@@ -28,7 +28,6 @@ class _RegisterPageState extends State<RegisterPage> {
     AuthService authService = AuthService();
 
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Center(
         child: ListView(
           children: [
@@ -46,9 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     getTranslated(context, 'register')!,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 50, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
                   Container(

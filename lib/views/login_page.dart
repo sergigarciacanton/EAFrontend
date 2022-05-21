@@ -24,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
     AuthService authService = AuthService();
 
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Center(
         child: ListView(
           children: [
@@ -43,9 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     getTranslated(context, 'signIn')!,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 50, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
                   Container(
@@ -150,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const BookPage()));
+                                  builder: (context) => const RegisterPage()));
                         },
                       ),
                     ],
