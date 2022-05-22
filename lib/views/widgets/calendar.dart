@@ -1,5 +1,7 @@
 //https://www.youtube.com/watch?v=KvaKVud0Jx0
 
+import 'dart:async';
+
 import 'package:ea_frontend/routes/event_service.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -28,25 +30,29 @@ class _BuildCalendarState extends State<BuildCalendar> {
 
   Future<void> getEvents() async {
     _events = await EventService.getEvents();
+    int count = 0;
     _events.forEach((element) {
-      print("hello00000");
-      if (selectedEvents[element.eventDate] != null) {
-        selectedEvents[element.eventDate]!.add(element);
+      print(DateTime.parse(
+          element.eventDate.toString().split(" ")[0] + " 00:00:00.000Z"));
+      if (selectedEvents[DateTime.parse(
+              element.eventDate.toString().split(" ")[0] + " 00:00:00.000Z")] !=
+          null) {
+        selectedEvents[DateTime.parse(
+                element.eventDate.toString().split(" ")[0] + " 00:00:00.000Z")]
+            ?.add(element);
       } else {
-        selectedEvents[selectedDay] = [element];
+        selectedEvents[DateTime.parse(
+            element.eventDate.toString().split(" ")[0] + " 00:00:00.000Z")] = [
+          element
+        ];
       }
     });
     print(selectedEvents);
-    setState(() {});
   }
 
-/*
-  Event? _getEventsfromDay(DateTime date) {
-    return selectedEvents[date];
-  }
-*/
-//TODO passar events ordentas per data i canviar events a una llista
   List<Event> _getEventsfromDay(DateTime date) {
+    print(selectedEvents[date]);
+    print(date);
     return selectedEvents[date] ?? [];
   }
 
@@ -66,6 +72,7 @@ class _BuildCalendarState extends State<BuildCalendar> {
             calendarFormat: format,
             onFormatChanged: (CalendarFormat _format) {
               setState(() {
+                print("1");
                 format = _format;
               });
             },
@@ -74,13 +81,11 @@ class _BuildCalendarState extends State<BuildCalendar> {
 
             //Day Changed
             onDaySelected: (DateTime selectDay, DateTime focusDay) {
-              getEvents();
-              print("hello" + selectDay.toString());
-              getEvents();
               setState(() {
-                selectedDay = selectDay;
+                selectedDay = DateTime.parse(selectDay.toString());
                 focusedDay = focusDay;
               });
+              _getEventsfromDay(selectDay);
             },
             selectedDayPredicate: (DateTime date) {
               return isSameDay(selectedDay, date);
@@ -124,13 +129,6 @@ class _BuildCalendarState extends State<BuildCalendar> {
               ),
             ),
           ),
-          /*..._getEventsfromDay(selectedDay).map(
-            (Event event) => ListTile(
-              title: Text(
-                event.name,
-              ),
-            ),
-          ),*/
           ..._getEventsfromDay(selectedDay).map(
             (Event event) => ListTile(
               title: Text(
@@ -138,7 +136,7 @@ class _BuildCalendarState extends State<BuildCalendar> {
               ),
             ),
           ),
-          Text(selectedDay.toString())
+          Text(selectedDay.toString()),
         ],
       ),
     );

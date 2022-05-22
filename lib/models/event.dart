@@ -1,3 +1,5 @@
+import 'package:ea_frontend/models/userPopulate.dart';
+
 import 'location.dart';
 import 'user.dart';
 import 'category.dart';
@@ -32,14 +34,15 @@ class Event {
         description: json['description'] as String,
         location: Location.fromJson(json['location']),
         admin: json['admin'].toString().contains('{')
-            ? User.fromJson(json['admin'])
+            ? UserPopulate.fromJson(json['admin'])
             : json['admin'],
         chat: json['chat'].toString().contains('{')
             ? Chat.fromJson(json['chat'])
             : json['chat'],
-        eventDate: DateTime.parse((json['eventDate'] as String).replaceAll("T", " ")),
+        eventDate:
+            DateTime.parse((json['eventDate'] as String).replaceAll("T", " ")),
         usersList: json['usersList'].toString().contains('{')
-            ? User.usersFromSnapshot(json['usersList'])
+            ? UserPopulate.usersFromSnapshot(json['usersList'])
             : json['usersList'],
         category: json['category'].toString().contains('{')
             ? Category.categoriesFromSnapshot(json['category'])
