@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
           return supportedLocales.first;
         },
         home: AnimatedSplashScreen.withScreenFunction(
-            duration: 300,
+            duration: 3000,
             splash: "public/logosplash.png",
             splashIconSize: 500,
             screenFunction: () async {

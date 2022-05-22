@@ -5,6 +5,7 @@ import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/views/event_page.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
+import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -44,9 +45,28 @@ class _EventListState extends State<EventList> {
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-              floatingActionButton: Column(
+              floatingActionButton: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
+                    FloatingActionButton(
+                      onPressed: () {
+                        if (widget.setMainComponent != null) {
+                          widget.setMainComponent!(
+                              const BuildMap(modo: "AllEvents"));
+                        } else {
+                          Route route = MaterialPageRoute(
+                              builder: (context) =>
+                                  const BuildMap(modo: "AllEvents"));
+                          Navigator.of(context).push(route);
+                        }
+                      },
+                      tooltip: getTranslated(context, "goMap"),
+                      child: const Icon(Icons.map),
+                    ),
+                    const SizedBox(
+                      width:
+                          15.0, //Esto es solo para dar cierto margen entre los FAB
+                    ),
                     FloatingActionButton(
                       onPressed: () {
                         if (widget.setMainComponent != null) {
@@ -63,7 +83,7 @@ class _EventListState extends State<EventList> {
                       child: const Icon(Icons.calendar_today),
                     ),
                     const SizedBox(
-                      height:
+                      width:
                           15.0, //Esto es solo para dar cierto margen entre los FAB
                     ),
                     FloatingActionButton(
