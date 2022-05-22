@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../localization/language_constants.dart';
+
 class NewClub extends StatefulWidget {
   const NewClub({Key? key}) : super(key: key);
 
@@ -72,14 +74,14 @@ class InputName extends StatelessWidget {
           cursorColor: Colors.black,
           validator: (value) {
             if (value!.isEmpty) {
-              return "The name is required.";
+              return getTranslated(context, "fieldRequired");
             }
             return null;
           },
           style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: const InputDecoration(
-              labelText: "Name",
-              hintText: "Write the name of the club",
+          decoration: InputDecoration(
+              labelText: getTranslated(context, "name"),
+              hintText: getTranslated(context, "writeTheName"),
               border: OutlineInputBorder()),
         ));
   }
@@ -99,13 +101,13 @@ class InputCategory extends StatelessWidget {
           cursorColor: Colors.black,
           validator: (value) {
             if (value!.isEmpty) {
-              return "The category is required.";
+              return getTranslated(context, "fieldRequired");
             }
             return null;
           },
           style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: const InputDecoration(
-              labelText: "Category",
+          decoration: InputDecoration(
+              labelText: getTranslated(context, "category"),
               hintText: "Adventure, Fantasy, Romance, Contemponary",
               border: OutlineInputBorder()),
         ));
@@ -128,14 +130,14 @@ class InputDescription extends StatelessWidget {
           cursorColor: Colors.black,
           validator: (value) {
             if (value!.isEmpty) {
-              return "The description is required.";
+              return getTranslated(context, "fieldRequired");
             }
             return null;
           },
           style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: const InputDecoration(
-              labelText: "Description",
-              hintText: "Write the description of the club",
+          decoration: InputDecoration(
+              labelText: getTranslated(context, "description"),
+              hintText: getTranslated(context, "writeTheDescription"),
               border: OutlineInputBorder()),
         ));
   }

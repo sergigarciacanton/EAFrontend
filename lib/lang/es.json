@@ -43,5 +43,10 @@
   "birthDate": "Fecha de nacimiento",
   "alreadyWithAccount": "¿Ya tienes una cuenta?",
   "termsAndConditions": "Aceptar términos y condiciones",
+  "writeTheTitle": "Escriba el título del libro",
+  "writeTheISBN": "Escriba el ISBN del libro",
+  "writeTheDescription": "Escriba la descripción",
+  "writeTheName": "Escriba el nombre del club",
+  "fieldRequired": "Este campo es obligatorio",
   "termsError": "Por favor, acepta los términos y condiciones."
 }

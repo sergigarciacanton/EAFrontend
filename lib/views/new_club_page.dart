@@ -14,7 +14,7 @@ class NewClubPage extends StatelessWidget {
         home: Scaffold(
           backgroundColor: Color.fromARGB(124, 247, 202, 111),
           appBar: AppBar(
-            title: Text("N E W  C L U B"),
+            title: Text(getTranslated(context, "newClub")!),
             foregroundColor: Colors.black,
             centerTitle: true,
             backgroundColor: Colors.orange,

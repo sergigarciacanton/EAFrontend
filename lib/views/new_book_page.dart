@@ -1,6 +1,8 @@
 import 'package:ea_frontend/views/widgets/new_book.dart';
 import 'package:flutter/material.dart';
 
+import '../localization/language_constants.dart';
+
 class NewBookPage extends StatelessWidget {
   const NewBookPage({Key? key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class NewBookPage extends StatelessWidget {
         home: Scaffold(
           backgroundColor: Color.fromARGB(124, 247, 202, 111),
           appBar: AppBar(
-            title: Text('N E W   B O O K'),
+            title: Text(getTranslated(context, "newBook")!),
             foregroundColor: Colors.black,
             centerTitle: true,
             backgroundColor: Colors.orange,

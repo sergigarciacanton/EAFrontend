@@ -43,5 +43,10 @@
   "birthDate": "Data de naixement",
   "alreadyWithAccount": "Ja tens un compte?",
   "termsAndConditions": "Acceptar terminis i condicions",
+  "writeTheTitle": "Escriu el títol del llibre",
+  "writeTheISBN": "Escriu el ISBN del llibre",
+  "writeTheDescription": "Escriu la descripció",
+  "writeTheName": "Escriu el nom del club",
+  "fieldRequired": "Aquest camp és obligatori",
   "termsError": "Si us plau, accepta els terminis i condicions."
 }

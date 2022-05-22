@@ -10,7 +10,7 @@
   "register": "Register",
   "interest": "It may interest you",
   "newClub": "N O U  C L U B",
-  "name": "name",
+  "name": "Name",
   "description": "Description",
   "category": "Category",
   "addNewClub": "Add new club",
@@ -43,5 +43,10 @@
   "birthDate": "Birthday",
   "alreadyWithAccount": "Already with an account?",
   "termsAndConditions": "Accept terms and conditions",
+  "writeTheTitle": "Write the title of the book",
+  "writeTheISBN": "Write the ISBN of the book",
+  "writeTheDescription": "Write the description",
+  "writeTheName": "Write the name of the club",
+  "fieldRequired": "This field is required",
   "termsError": "Please, accept terms and conditions."
 }

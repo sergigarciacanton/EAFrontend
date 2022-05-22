@@ -1,3 +1,4 @@
+import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -36,8 +37,8 @@ class _NewBookState extends State<NewBook> {
             height: 10,
           ),
           ElevatedButton(
-            child: const Text(
-              'Add new book',
+            child: Text(
+              getTranslated(context, "addNewBook")!,
               textScaleFactor: 1,
             ),
             onPressed: () {
@@ -72,14 +73,14 @@ class InputTitle extends StatelessWidget {
           cursorColor: Colors.black,
           validator: (value) {
             if (value!.isEmpty) {
-              return "The title is required.";
+              return getTranslated(context, "fieldRequired");
             }
             return null;
           },
           style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: const InputDecoration(
-              labelText: "Title",
-              hintText: "Write the title of the book",
+          decoration: InputDecoration(
+              labelText: getTranslated(context, "title")!,
+              hintText: getTranslated(context, "writeTheTitle"),
               border: OutlineInputBorder()),
         ));
   }
@@ -99,14 +100,14 @@ class InputISBN extends StatelessWidget {
           cursorColor: Colors.black,
           validator: (value) {
             if (value!.isEmpty) {
-              return "The ISBN is required.";
+              return getTranslated(context, "fieldRequired");
             }
             return null;
           },
           style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: const InputDecoration(
-              labelText: "ISBN",
-              hintText: "Write the ISBN of the book",
+          decoration: InputDecoration(
+              labelText: getTranslated(context, "ISBN"),
+              hintText: getTranslated(context, "writeTheISBN"),
               border: OutlineInputBorder()),
         ));
   }
@@ -128,14 +129,14 @@ class InputDescription extends StatelessWidget {
           cursorColor: Colors.black,
           validator: (value) {
             if (value!.isEmpty) {
-              return "The description is required.";
+              return getTranslated(context, "fieldRequired");
             }
             return null;
           },
           style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: const InputDecoration(
-              labelText: "Description",
-              hintText: "Write the description of the book",
+          decoration: InputDecoration(
+              labelText: getTranslated(context, "description"),
+              hintText: getTranslated(context, "writeTheDescription"),
               border: OutlineInputBorder()),
         ));
   }
