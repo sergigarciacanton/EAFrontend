@@ -1,5 +1,6 @@
 import 'dart:html';
 
+import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
@@ -22,8 +23,9 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     reload() {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const AccountPage()));
+      Route route =
+          MaterialPageRoute(builder: (context) => const SettingPage());
+      Navigator.pop(context, route);
     }
 
     String lenguage = getTranslated(context, 'lenguageCode')!;
@@ -47,6 +49,9 @@ class _AccountPageState extends State<AccountPage> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          const SizedBox(
+            width: 20,
+          ),
           Text(getTranslated(context, 'language2')!),
           const Spacer(),
           DropdownButton(
@@ -73,7 +78,10 @@ class _AccountPageState extends State<AccountPage> {
                 Locale _locale = await setLocale(value!);
                 MyApp.setLocale(context, _locale);
                 reload();
-              })
+              }),
+          const SizedBox(
+            width: 20,
+          ),
         ],
       );
 

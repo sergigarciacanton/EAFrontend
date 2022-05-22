@@ -4,8 +4,10 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/views/event_page.dart';
+import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class EventList extends StatefulWidget {
   final Function? setMainComponent;
@@ -42,13 +44,36 @@ class _EventListState extends State<EventList> {
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.orange,
-                child: const Icon(Icons.add),
-                onPressed: () {
-                  log('createEvent');
-                },
-              ),
+              floatingActionButton: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    FloatingActionButton(
+                      onPressed: () {
+                        if (widget.setMainComponent != null) {
+                          widget.setMainComponent!(
+                              const BuildCalendar(modo: "AllEvents"));
+                        } else {
+                          Route route = MaterialPageRoute(
+                              builder: (context) =>
+                                  const BuildCalendar(modo: "AllEvents"));
+                          Navigator.of(context).push(route);
+                        }
+                      },
+                      tooltip: getTranslated(context, "goCalendar"),
+                      child: const Icon(Icons.calendar_today),
+                    ),
+                    const SizedBox(
+                      height:
+                          15.0, //Esto es solo para dar cierto margen entre los FAB
+                    ),
+                    FloatingActionButton(
+                      backgroundColor: Colors.orange,
+                      child: const Icon(Icons.add),
+                      onPressed: () {
+                        log('createEvent');
+                      },
+                    ),
+                  ]),
               body: Column(
                 children: [
                   Text(
@@ -71,6 +96,12 @@ class _EventListState extends State<EventList> {
                                     widget.setMainComponent!(EventPage(
                                         elementId:
                                             snapshot.data?.events[index].id));
+                                  } else {
+                                    Route route = MaterialPageRoute(
+                                        builder: (context) => EventPage(
+                                            elementId: snapshot
+                                                .data?.events[index].id));
+                                    Navigator.of(context).push(route);
                                   }
                                 },
                                 leading: const FlutterLogo(size: 56.0),
