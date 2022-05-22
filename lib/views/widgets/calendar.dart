@@ -72,7 +72,7 @@ class _BuildCalendarState extends State<BuildCalendar> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Calendar"),
+          title: Text(getTranslated(context, "calendar")!),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
