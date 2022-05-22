@@ -1,5 +1,3 @@
-//https://www.youtube.com/watch?v=KvaKVud0Jx0
-
 import 'dart:async';
 
 import 'package:ea_frontend/localization/language_constants.dart';
