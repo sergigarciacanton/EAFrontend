@@ -2,21 +2,27 @@
 
 import 'dart:async';
 
+import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/routes/event_service.dart';
+import 'package:ea_frontend/routes/user_service.dart';
+import 'package:ea_frontend/views/event_page.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../models/event.dart';
 
 class BuildCalendar extends StatefulWidget {
-  const BuildCalendar({Key? key}) : super(key: key);
+  final String? modo;
+  const BuildCalendar({Key? key, this.modo}) : super(key: key);
 
   @override
   State<BuildCalendar> createState() => _BuildCalendarState();
 }
 
 class _BuildCalendarState extends State<BuildCalendar> {
-  List<Event> _events = [];
+  List<dynamic> _events = [];
   Map<DateTime, List<Event>> selectedEvents = {};
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
@@ -29,11 +35,20 @@ class _BuildCalendarState extends State<BuildCalendar> {
   }
 
   Future<void> getEvents() async {
-    _events = await EventService.getEvents();
-    int count = 0;
+    if (widget.modo == "UserEvent") {
+      //Get events user
+      String id = LocalStorage('BookHub').getItem('userId');
+      _events = (await UserService.getUser(id)).events;
+    } else {
+      //Get all events
+      _events = await EventService.getEvents();
+      if (widget.modo != "AllEvents") {
+        focusedDay =
+            DateTime.parse(widget.modo!.split(' ')[0] + " 00:00:00.000Z");
+        selectedDay = focusedDay;
+      }
+    }
     _events.forEach((element) {
-      print(DateTime.parse(
-          element.eventDate.toString().split(" ")[0] + " 00:00:00.000Z"));
       if (selectedEvents[DateTime.parse(
               element.eventDate.toString().split(" ")[0] + " 00:00:00.000Z")] !=
           null) {
@@ -47,24 +62,23 @@ class _BuildCalendarState extends State<BuildCalendar> {
         ];
       }
     });
-    print(selectedEvents);
+    setState(() {});
+    _getEventsfromDay(selectedDay);
   }
 
   List<Event> _getEventsfromDay(DateTime date) {
-    print(selectedEvents[date]);
-    print(date);
     return selectedEvents[date] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Calendar"),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
+        appBar: AppBar(
+          title: Text("Calendar"),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+            child: Column(children: [
           TableCalendar(
             focusedDay: selectedDay,
             firstDay: DateTime(1990),
@@ -96,6 +110,9 @@ class _BuildCalendarState extends State<BuildCalendar> {
             //To style the Calendar
             calendarStyle: CalendarStyle(
               isTodayHighlighted: true,
+              markerDecoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 235, 237, 238),
+                  shape: BoxShape.circle),
               selectedDecoration: BoxDecoration(
                 color: Colors.blue,
                 shape: BoxShape.rectangle,
@@ -129,16 +146,29 @@ class _BuildCalendarState extends State<BuildCalendar> {
               ),
             ),
           ),
-          ..._getEventsfromDay(selectedDay).map(
-            (Event event) => ListTile(
-              title: Text(
-                event.name,
-              ),
-            ),
-          ),
-          Text(selectedDay.toString()),
-        ],
-      ),
-    );
+          ..._getEventsfromDay(selectedDay)
+              .map(
+                (Event event) => Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 4.0),
+                  child: ListTile(
+                    title: Text(event.name),
+                    subtitle: Text(getTranslated(context, "description")! +
+                        ": " +
+                        event.description),
+                    onTap: () {
+                      Route route = MaterialPageRoute(
+                          builder: (context) => EventPage(elementId: event.id));
+                      Navigator.of(context).push(route);
+                    },
+                  ),
+                ),
+              )
+              .toList()
+        ])));
   }
 }

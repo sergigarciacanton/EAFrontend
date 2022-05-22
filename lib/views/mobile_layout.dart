@@ -3,7 +3,6 @@ import 'package:ea_frontend/views/club_page.dart';
 import 'package:ea_frontend/views/home.dart';
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
-import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
@@ -61,7 +60,7 @@ class _MobileLayoutState extends State<MobileLayout> {
           unselectedItemColor: Colors.grey,
           onTap: onTapped),
       body: PageView(controller: pageController, children: const [
-        BuildCalendar(),
+        Home(),
         ClubList(),
         EventList(),
         ChatList(),
