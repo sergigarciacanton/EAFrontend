@@ -6,6 +6,10 @@
   "username": "Username",
   "password": "Password",
   "submit": "Submit",
+  "goCalendar": "View calendar",
+  "calendar": "Events calendar",
+  "goMap": "View map",
+  "map": "Find your events",
   "stillWithoutAccount": "Still without account?",
   "register": "Register",
   "interest": "It may interest you",
@@ -48,5 +52,15 @@
   "writeTheDescription": "Write the description",
   "writeTheName": "Write the name of the club",
   "fieldRequired": "This field is required",
-  "termsError": "Please, accept terms and conditions."
+  "termsError": "Please, accept terms and conditions.",
+  "returnToHome": "Return",
+  "specs":"Specs",
+  "publishDate": "Publish date",
+  "editorial": "Editorial",
+  "categories": "Categories",
+  "comments": "Comments",
+  "followers": "Followers",
+  "unsubscribe": "UNSUBSCRIBE",
+  "subscribe": "SUBSCRIBE",
+  "writeID":"Write the ID of the admin"
 }

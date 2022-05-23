@@ -6,6 +6,10 @@
   "username": "Nom usuari",
   "password": "Contrasenya",
   "submit": "Entra",
+  "goCalendar": "Veure calendari",
+  "calendar": "Calendari d'Events",
+  "goMap": "Veure mapa",
+  "map": "Troba els teus events",
   "stillWithoutAccount": "Encara sense compte?",
   "register": "Registrar-se",
   "interest": "Et pot interessar",
@@ -48,5 +52,15 @@
   "writeTheDescription": "Escriu la descripció",
   "writeTheName": "Escriu el nom del club",
   "fieldRequired": "Aquest camp és obligatori",
-  "termsError": "Si us plau, accepta els terminis i condicions."
+  "termsError": "Si us plau, accepta els terminis i condicions.",
+  "returnToHome": "Tornar",
+  "specs":"Especificacions",
+  "publishDate": "Data de publicació",
+  "editorial": "Editorial",
+  "categories": "Categories",
+  "comments": "Comentaris",
+  "followers": "Seguidors",
+  "unsubscribe": "CANCEL·LAR SUBSCRIPCIÓ",
+  "subscribe": "SUBSCRIU-TE",
+  "writeID":"Escriu el ID del admin"
 }

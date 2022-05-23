@@ -1,8 +1,15 @@
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localization/demo_localization.dart';
 import 'localization/language_constants.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:ea_frontend/routes/auth_service.dart';
+import 'package:localstorage/localstorage.dart';
+import 'dart:developer';
 
 void main() => runApp(MyApp());
 
@@ -69,6 +76,27 @@ class _MyAppState extends State<MyApp> {
           }
           return supportedLocales.first;
         },
-        home: const LoginPage());
+        home: AnimatedSplashScreen.withScreenFunction(
+            duration: 3000,
+            splash: "public/logosplash.png",
+            splashIconSize: 500,
+            screenFunction: () async {
+              var storage = LocalStorage('BookHub');
+              await storage.ready;
+
+              var token = LocalStorage('BookHub').getItem('token');
+              if (token == null) {
+                return const LoginPage();
+              }
+              var response = await AuthService.verifyToken(token);
+              if (response == '200') {
+                log('Load home scaffold');
+                return const HomeScaffold();
+              }
+              return const LoginPage();
+            },
+            splashTransition: SplashTransition.fadeTransition,
+            pageTransitionType: PageTransitionType.fade,
+            backgroundColor: Colors.blueGrey));
   }
 }

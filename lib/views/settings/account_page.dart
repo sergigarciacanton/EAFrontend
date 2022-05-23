@@ -1,5 +1,6 @@
 import 'dart:html';
 
+import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
@@ -15,27 +16,46 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   @override
-  Widget build(BuildContext context) => SimpleSettingsTile(
-      title: getTranslated(context, 'accountSettings')!,
-      subtitle: getTranslated(context, 'accountSettingsSub')!,
-      leading: const IconWidget(icon: Icons.person, color: Colors.green),
-      child: SettingsScreen(
-        title: getTranslated(context, 'accountSettings')!,
-        children: <Widget>[
-          buildLanguage(context),
-          buildPrivacy(context),
-          buildSecurity(context),
-          buildAccountInfo(context),
-        ],
-      ));
+  void initState() {
+    super.initState();
+  }
 
-  Widget buildLanguage(BuildContext context) => Row(
+  @override
+  Widget build(BuildContext context) {
+    reload() {
+      Route route =
+          MaterialPageRoute(builder: (context) => const SettingPage());
+      Navigator.pop(context, route);
+    }
+
+    String lenguage = getTranslated(context, 'lenguageCode')!;
+    return SimpleSettingsTile(
+        title: getTranslated(context, 'accountSettings')!,
+        subtitle: getTranslated(context, 'accountSettingsSub')!,
+        leading: const IconWidget(icon: Icons.person, color: Colors.green),
+        child: SettingsScreen(
+          title: getTranslated(context, 'accountSettings')!,
+          children: <Widget>[
+            buildLanguage(context, lenguage, reload),
+            buildPrivacy(context),
+            buildSecurity(context),
+            buildAccountInfo(context),
+          ],
+        ));
+  }
+
+  Widget buildLanguage(
+          BuildContext context, String lenguage, Function reload) =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          const SizedBox(
+            width: 20,
+          ),
           Text(getTranslated(context, 'language2')!),
           const Spacer(),
           DropdownButton(
-              value: getTranslated(context, 'lenguageCode')!,
+              value: lenguage,
               items: const [
                 DropdownMenuItem<String>(
                     value: 'es',
@@ -57,7 +77,11 @@ class _AccountPageState extends State<AccountPage> {
               onChanged: (String? value) async {
                 Locale _locale = await setLocale(value!);
                 MyApp.setLocale(context, _locale);
-              })
+                reload();
+              }),
+          const SizedBox(
+            width: 20,
+          ),
         ],
       );
 

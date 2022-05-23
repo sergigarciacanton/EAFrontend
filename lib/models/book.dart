@@ -9,6 +9,7 @@ class Book {
   String editorial;
   dynamic rate;
   List<dynamic> category;
+  String writer;
 
   Book(
       {required this.title,
@@ -18,27 +19,36 @@ class Book {
       required this.publishedDate,
       required this.editorial,
       required this.rate,
-      required this.category});
+      required this.category,
+      required this.writer});
 
   factory Book.fromJson(dynamic json) {
     return Book(
-        title: json['title'] as String,
-        ISBN: json['ISBN'] as String,
-        photoURL: json['photoURL'] as String,
-        description: json['description'] as String,
-        publishedDate:
-            DateTime.parse((['publishedDate'] as String).replaceAll("T", " ")),
-        editorial: json['editorial'] as String,
-        rate: json['rate'],
-        category: json['category'].toString().contains('{')
-            ? Category.categoriesFromSnapshot(json['category'])
-            : json['category']);
+
+      title: json['title'] as String,
+      ISBN: json['ISBN'] as String,
+      photoURL: json['photoURL'] as String,
+      description: json['description'] as String,
+      publishedDate: DateTime.parse(
+          (json['publishedDate'] as String).replaceAll("T", " ")),
+      editorial: json['editorial'] as String,
+      rate: json['rate'],
+      category: json['category'].toString().contains('{')
+          ? Category.categoriesFromSnapshot(json['category'])
+          : json['category'],
+      writer: json['writer'] as String,
+    );
+
   }
 
   static List<Book> booksFromSnapshot(List snapshot) {
     return snapshot.map((data) {
       return Book.fromJson(data);
     }).toList();
+  }
+
+  static Book booksFromJson(data) {
+    return Book.fromJson(data);
   }
 
   // @override
