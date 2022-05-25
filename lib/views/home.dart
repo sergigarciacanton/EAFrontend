@@ -2,6 +2,8 @@ import 'package:ea_frontend/models/book.dart';
 import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/models/event.dart';
 import 'package:ea_frontend/routes/event_service.dart';
+import 'package:ea_frontend/views/club_page.dart';
+import 'package:ea_frontend/views/event_page.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +110,7 @@ class _HomeState extends State<Home> {
                       itemBuilder: (context, index) {
                         return BookCard(
                           title: _books[index].title,
-                          author: "Some author",
+                          author: _books[index].writer,
                           rate: _books[index].rate.toString(),
                           imageUrl: _books[index].photoURL,
                         );
@@ -149,11 +151,19 @@ class _HomeState extends State<Home> {
                       scrollDirection: Axis.horizontal,
                       itemCount: _events.length,
                       itemBuilder: (context, index) {
-                        return BookCard(
-                          title: _events[index].name,
-                          author: _events[index].eventDate.day.toString() + "-" + _events[index].eventDate.month.toString() + "-" + _events[index].eventDate.year.toString(),
-                          rate: _events[index].usersList.length.toString(),
-                          imageUrl: "",
+                        return GestureDetector(
+                          child: BookCard(
+                            title: _events[index].name,
+                            author: _events[index].eventDate.day.toString() + "-" + _events[index].eventDate.month.toString() + "-" + _events[index].eventDate.year.toString(),
+                            rate: _events[index].usersList.length.toString(),
+                            imageUrl: "",
+                          ),
+                          onTap: () {
+                            Route route = MaterialPageRoute(
+                                builder: (context) => EventPage(
+                                    elementId: _events[index].id));
+                            Navigator.of(context).push(route);
+                          },
                         );
                       },
                     ),
@@ -191,11 +201,19 @@ class _HomeState extends State<Home> {
                       scrollDirection: Axis.horizontal,
                       itemCount: _clubs.length,
                       itemBuilder: (context, index) {
-                        return BookCard(
-                          title: _clubs[index].name,
-                          author: getStringCategories(_clubs[index].category).toString(),
-                          rate: _clubs[index].usersList.length.toString(),
-                          imageUrl: "",
+                        return GestureDetector(
+                          child: BookCard(
+                            title: _clubs[index].name,
+                            author: getStringCategories(_clubs[index].category).toString(),
+                            rate: _clubs[index].usersList.length.toString(),
+                            imageUrl: "",
+                          ),
+                          onTap: () {
+                            Route route = MaterialPageRoute(
+                                builder: (context) => ClubPage(
+                                    elementId: _clubs[index].id));
+                            Navigator.of(context).push(route);
+                          },
                         );
                       },
                     ),
