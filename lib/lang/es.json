@@ -62,5 +62,12 @@
   "followers":"Seguidores",
   "unsubscribe":"CANCELAR SUSCRIPCIÓN",
   "subscribe": "SUSCRIBIR",
-  "writeID":"Escrba el ID del admin"
+  "writeID": "Escriba el ID del admin",
+  "writer": "Escritor",
+  "writeTheWriter": "Escriba el nombre del escritor",
+  "photoURL": "photoURL",
+  "writeThePhotoURL": "Escriba la URL de la foto",
+  "writeTheEditorial": "Escriba la editorial",
+  "rate": "Ratio",
+  "writeTheRate": "Determine el ratio"
 }

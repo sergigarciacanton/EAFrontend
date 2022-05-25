@@ -97,7 +97,7 @@ class ClubService {
 
     var response = await http.post(url,
         headers: {
-          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Authorization": LocalStorage('BookHub').getItem('token'),
           "Content-Type": "application/json"
         },
         body: json.encode(NewClubModel.toJson(credentials)));
@@ -105,16 +105,6 @@ class ClubService {
       return "200";
     } else {
       return Message.fromJson(await jsonDecode(response.body)).message;
-    }
-  }
-
-  static String checkPlatform() {
-    if (kIsWeb) {
-      return const String.fromEnvironment('API_URL',
-              defaultValue: 'http://localhost:3000') +
-          '/auth/';
-    } else {
-      return 'http://10.0.2.2:3000/auth/';
     }
   }
 }

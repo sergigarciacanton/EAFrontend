@@ -62,5 +62,12 @@
   "followers": "Followers",
   "unsubscribe": "UNSUBSCRIBE",
   "subscribe": "SUBSCRIBE",
-  "writeID":"Write the ID of the admin"
+  "writeID":"Write the ID of the admin",
+  "writer": "Writer",
+  "writeTheWriter": "Write the name of the writer",
+  "photoURL": "photoURL",
+  "writeThePhotoURL": "Write the URL of the photo",
+  "writeTheEditorial": "Write the editorial",
+  "rate": "Rate",
+  "writeTheRate": "Determine the rate"
 }

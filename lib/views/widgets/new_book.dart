@@ -1,7 +1,10 @@
-import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:ea_frontend/routes/book_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../localization/language_constants.dart';
+import '../../models/book.dart';
 import 'event_list.dart';
 
 class NewBook extends StatefulWidget {
@@ -12,8 +15,23 @@ class NewBook extends StatefulWidget {
 }
 
 class _NewBookState extends State<NewBook> {
+  final titleController = TextEditingController();
+  final ISBNController = TextEditingController();
+  final photoURLController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final editorialController = TextEditingController();
+  final writerController = TextEditingController();
+  String categoryController = "";
+  //Category categoryController2 = "MYSTERY" as Category;
+  List<dynamic> categories = [];
+  String publishedDateController = "";
+  dynamic rateController = "";
+
   @override
   Widget build(BuildContext context) {
+    BookService bookService = BookService();
+    String category = "MYSTERY";
+
     return Scaffold(
         appBar: AppBar(
           title: Text(getTranslated(context, "newBook")!,
@@ -34,26 +52,260 @@ class _NewBookState extends State<NewBook> {
               const SizedBox(
                 height: 20,
               ),
-              const InputTitle(),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller: titleController,
+                    cursorColor: Colors.black,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return getTranslated(context, "fieldRequired");
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    decoration: InputDecoration(
+                        labelText: getTranslated(context, "title")!,
+                        hintText: getTranslated(context, "writeTheTitle"),
+                        border: OutlineInputBorder()),
+                  )),
               const SizedBox(
                 height: 10,
               ),
-              InputISBN(),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller: ISBNController,
+                    cursorColor: Colors.black,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return getTranslated(context, "fieldRequired");
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    decoration: InputDecoration(
+                        labelText: getTranslated(context, "ISBN"),
+                        hintText: getTranslated(context, "writeTheISBN"),
+                        border: OutlineInputBorder()),
+                  )),
               const SizedBox(
                 height: 10,
               ),
-              const InputDescription(),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller: writerController,
+                    cursorColor: Colors.black,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return getTranslated(context, "fieldRequired");
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    decoration: InputDecoration(
+                        labelText: getTranslated(context, "writer"),
+                        hintText: getTranslated(context, "writeTheWriter"),
+                        border: OutlineInputBorder()),
+                  )),
               const SizedBox(
                 height: 10,
+              ),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller: photoURLController,
+                    cursorColor: Colors.black,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return getTranslated(context, "fieldRequired");
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    decoration: InputDecoration(
+                        labelText: getTranslated(context, "photoURL"),
+                        hintText: getTranslated(context, "writeThePhotoURL"),
+                        border: OutlineInputBorder()),
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller: descriptionController,
+                    maxLines: 8,
+                    maxLength: 500,
+                    cursorColor: Colors.black,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return getTranslated(context, "fieldRequired");
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    decoration: InputDecoration(
+                        labelText: getTranslated(context, "description"),
+                        hintText: getTranslated(context, "writeTheDescription"),
+                        border: OutlineInputBorder()),
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                constraints: const BoxConstraints(maxWidth: 200),
+                child: DateTimePicker(
+                  type: DateTimePickerType.date,
+                  dateMask: 'dd/MM/yyyy',
+                  initialValue: DateTime.now().toString(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                  icon: const Icon(Icons.event),
+                  dateLabelText: getTranslated(context, "publishDate")!,
+                  onSaved: (val) => publishedDateController = val!,
+                  onChanged: (val) => publishedDateController = val,
+                  onFieldSubmitted: (val) => publishedDateController = val,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller: editorialController,
+                    cursorColor: Colors.black,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return getTranslated(context, "fieldRequired");
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    decoration: InputDecoration(
+                        labelText: getTranslated(context, "editorial"),
+                        hintText: getTranslated(context, "writeTheEditorial"),
+                        border: OutlineInputBorder()),
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    //controller: rateController,
+                    cursorColor: Colors.black,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return getTranslated(context, "fieldRequired");
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    decoration: InputDecoration(
+                        labelText: getTranslated(context, "rate"),
+                        hintText: getTranslated(context, "writeTheRate"),
+                        border: OutlineInputBorder()),
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  DropdownButton(
+                    value: category,
+                    items: const [
+                      DropdownMenuItem<String>(
+                          value: 'SCI-FI',
+                          child: Text(
+                            'SCI-FI',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                      DropdownMenuItem<String>(
+                          value: 'MYSTERY',
+                          child: Text('MYSTERY',
+                              style: TextStyle(color: Colors.white))),
+                      DropdownMenuItem<String>(
+                          value: 'THRILLER',
+                          child: Text('THRILLER',
+                              style: TextStyle(color: Colors.white))),
+                      DropdownMenuItem<String>(
+                          value: 'ROMANCE',
+                          child: Text('ROMANCE',
+                              style: TextStyle(color: Colors.white))),
+                      DropdownMenuItem<String>(
+                          value: 'WESTERN',
+                          child: Text('WESTERN',
+                              style: TextStyle(color: Colors.white))),
+                      DropdownMenuItem<String>(
+                          value: 'DYSTOPIAN',
+                          child: Text('DYSTOPIAN',
+                              style: TextStyle(color: Colors.white))),
+                      DropdownMenuItem<String>(
+                          value: 'CONTEMPORANY',
+                          child: Text('CONTEMPORANY',
+                              style: TextStyle(color: Colors.white))),
+                      DropdownMenuItem<String>(
+                          value: 'FANTASY',
+                          child: Text(
+                            'FANTASY',
+                            style: TextStyle(color: Colors.white),
+                          ))
+                    ],
+                    onChanged: (category) =>
+                        categoryController = categoryController,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                ],
+              )),
+              const SizedBox(
+                height: 20,
               ),
               ElevatedButton(
                 child: Text(
                   getTranslated(context, "addNewBook")!,
                   textScaleFactor: 1,
                 ),
-                onPressed: () {
-                  if (kDebugMode) {
-                    print("Add new book");
+                onPressed: () async {
+                  print("Add new book");
+                  var response = await BookService.newBook(Book(
+                      title: titleController.text,
+                      ISBN: ISBNController.text,
+                      photoURL: photoURLController.text,
+                      description: descriptionController.text,
+                      editorial: editorialController.text,
+                      writer: writerController.text,
+                      category: categories,
+                      publishedDate: DateTime.parse(publishedDateController),
+                      rate: rateController));
+                  if (response == "200") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EventList()));
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Text(response.toString()),
+                        );
+                      },
+                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -103,89 +355,6 @@ class _NewBookState extends State<NewBook> {
                   ]),
             ],
           ),
-        ));
-  }
-}
-
-class InputTitle extends StatelessWidget {
-  const InputTitle({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        child: TextFormField(
-          cursorColor: Colors.black,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return getTranslated(context, "fieldRequired");
-            }
-            return null;
-          },
-          style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: InputDecoration(
-              labelText: getTranslated(context, "title")!,
-              hintText: getTranslated(context, "writeTheTitle"),
-              border: OutlineInputBorder()),
-        ));
-  }
-}
-
-class InputISBN extends StatelessWidget {
-  const InputISBN({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        child: TextFormField(
-          cursorColor: Colors.black,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return getTranslated(context, "fieldRequired");
-            }
-            return null;
-          },
-          style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: InputDecoration(
-              labelText: getTranslated(context, "ISBN"),
-              hintText: getTranslated(context, "writeTheISBN"),
-              border: OutlineInputBorder()),
-        ));
-  }
-}
-
-class InputDescription extends StatelessWidget {
-  const InputDescription({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        child: TextFormField(
-          maxLines: 8,
-          maxLength: 500,
-          cursorColor: Colors.black,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return getTranslated(context, "fieldRequired");
-            }
-            return null;
-          },
-          style: const TextStyle(fontSize: 20, color: Colors.black),
-          decoration: InputDecoration(
-              labelText: getTranslated(context, "description"),
-              hintText: getTranslated(context, "writeTheDescription"),
-              border: OutlineInputBorder()),
         ));
   }
 }

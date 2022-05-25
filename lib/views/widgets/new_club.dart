@@ -175,11 +175,11 @@ class _NewClubState extends State<NewClub> {
             onPressed: () async {
               print("Add new club");
               var response = await ClubService.newClub(NewClubModel(
-                  clubname: nameController.text,
+                  clubName: nameController.text,
                   description: descriptionController.text,
                   idAdmin: idController.text,
                   category: categoryController));
-              if (response == "201") {
+              if (response == "200") {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const ClubList()));
               } else {
