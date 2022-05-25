@@ -45,19 +45,32 @@ class _MobileLayoutState extends State<MobileLayout> {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
+        iconTheme: Theme.of(context).iconTheme,
+        backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
       ),
-      backgroundColor: Colors.black,
       bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Grup'),
-            BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Event'),
-            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-            BottomNavigationBarItem(icon: Icon(Icons.face), label: 'Perfil')
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.home),
+                label: getTranslated(context, 'home')!),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.group),
+                label: getTranslated(context, 'clubTitle')!),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.event),
+                label: getTranslated(context, 'eventTitle')!),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.chat),
+                label: getTranslated(context, 'chatTitle')!),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.face),
+                label: getTranslated(context, 'profile')!)
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.grey,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Theme.of(context).backgroundColor,
+          unselectedItemColor: Theme.of(context).primaryColor,
+          selectedIconTheme: Theme.of(context).iconTheme,
+          unselectedIconTheme: Theme.of(context).iconTheme,
           onTap: onTapped),
       body: PageView(controller: pageController, children: const [
         Home(),

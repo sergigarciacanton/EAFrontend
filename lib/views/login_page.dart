@@ -50,14 +50,14 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       controller: usernameController,
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 2.0),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1),
-                              width: 2.0),
+                              color: Theme.of(context).backgroundColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).backgroundColor,
+                              width: 3.0),
                         ),
                         hintText: getTranslated(context, 'username')!,
                       ),
@@ -70,14 +70,14 @@ class _LoginPageState extends State<LoginPage> {
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 2.0),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1),
-                              width: 2.0),
+                              color: Theme.of(context).backgroundColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).backgroundColor,
+                              width: 3.0),
                         ),
                         hintText: getTranslated(context, 'password')!,
                       ),
@@ -88,6 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: ElevatedButton(
                       style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).backgroundColor),
                         minimumSize: MaterialStateProperty.all(
                             Size(MediaQuery.of(context).size.width, 60)),
                       ),
@@ -138,9 +140,9 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         child: Text(
                           getTranslated(context, 'register')!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
-                            color: Colors.orange,
+                            color: Theme.of(context).backgroundColor,
                           ),
                         ),
                         onPressed: () async {

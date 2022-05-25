@@ -13,16 +13,26 @@ class ThemeProvider extends ChangeNotifier {
 
 class MyThemes {
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey.shade900,
-    primaryColor: Colors.black,
-    colorScheme: ColorScheme.dark(),
-    iconTheme: IconThemeData(color: Colors.purple.shade200, opacity: 0.8),
-  );
+      scaffoldBackgroundColor: Colors.grey.shade900,
+      primaryColor: Colors.black,
+      colorScheme: const ColorScheme.dark(),
+      iconTheme: IconThemeData(color: Colors.orange.shade500),
+      backgroundColor: Colors.orange.shade500,
+      navigationBarTheme:
+          const NavigationBarThemeData(backgroundColor: Colors.black),
+      bottomNavigationBarTheme:
+          BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800));
 
   static final lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: Colors.red.shade50,
     primaryColor: Colors.white,
-    colorScheme: ColorScheme.light(),
-    iconTheme: IconThemeData(color: Colors.red, opacity: 0.8),
+    colorScheme: const ColorScheme.light(),
+    iconTheme: const IconThemeData(color: Colors.red),
+    backgroundColor: Colors.red,
+    navigationBarTheme:
+        const NavigationBarThemeData(backgroundColor: Colors.red),
+    bottomNavigationBarTheme:
+        BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
+    splashColor: Colors.red,
   );
 }

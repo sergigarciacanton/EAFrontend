@@ -42,7 +42,6 @@ class _BookPageState extends State<BookPage> {
         builder: (context, AsyncSnapshot<Book> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-              backgroundColor: Colors.black,
               appBar: AppBar(
                 title: Text(getTranslated(context, 'returnToHome')!),
               ),
@@ -56,7 +55,6 @@ class _BookPageState extends State<BookPage> {
                         snapshot.data!.title,
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          color: Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),
@@ -102,9 +100,7 @@ class _BookPageState extends State<BookPage> {
                           snapshot.data!.writer,
                           textAlign: TextAlign.left,
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 30, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -119,7 +115,6 @@ class _BookPageState extends State<BookPage> {
                             snapshot.data!.description,
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -134,7 +129,6 @@ class _BookPageState extends State<BookPage> {
                         getTranslated(context, 'specs')!,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            color: Colors.white,
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline),
@@ -155,7 +149,6 @@ class _BookPageState extends State<BookPage> {
                             snapshot.data!.publishedDate.year.toString(),
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -172,7 +165,6 @@ class _BookPageState extends State<BookPage> {
                             snapshot.data!.editorial,
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -189,7 +181,6 @@ class _BookPageState extends State<BookPage> {
                             getTranslated(context, 'categories')! + ': ',
                             textAlign: TextAlign.left,
                             style: const TextStyle(
-                              color: Colors.white,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
@@ -201,7 +192,6 @@ class _BookPageState extends State<BookPage> {
                         (Text(
                           snapshot.data?.category[i].name + "  ",
                           style: const TextStyle(
-                            color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
@@ -216,7 +206,6 @@ class _BookPageState extends State<BookPage> {
                         getTranslated(context, 'comments')! + ': PROXIMAMENTE',
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -236,28 +225,5 @@ class _BookPageState extends State<BookPage> {
             child: CircularProgressIndicator(),
           );
         });
-  }
-
-  Widget buildRowAutor() {
-    return Row(
-      children: const <Widget>[
-        SizedBox(
-          height: 80,
-          width: 80,
-          child: FittedBox(
-            fit: BoxFit.fill, // otherwise the logo will be tiny
-            child: FlutterLogo(),
-          ),
-        ),
-        Expanded(
-          child: Text(
-            'Nombre Autor va aqui',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ],
-    );
   }
 }

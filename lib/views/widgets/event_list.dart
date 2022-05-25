@@ -43,7 +43,7 @@ class _EventListState extends State<EventList> {
           if (snapshot.hasData) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.orange,
+                backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {
                   log('createEvent');
@@ -53,8 +53,8 @@ class _EventListState extends State<EventList> {
                 children: [
                   Text(
                     getTranslated(context, 'eventTitle')!,
-                    style: const TextStyle(
-                        color: Colors.orange,
+                    style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
