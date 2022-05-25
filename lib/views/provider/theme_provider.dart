@@ -33,6 +33,5 @@ class MyThemes {
         const NavigationBarThemeData(backgroundColor: Colors.red),
     bottomNavigationBarTheme:
         BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
-    splashColor: Colors.red,
   );
 }

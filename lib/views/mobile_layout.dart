@@ -45,7 +45,6 @@ class _MobileLayoutState extends State<MobileLayout> {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
-        iconTheme: Theme.of(context).iconTheme,
         backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
       ),
       bottomNavigationBar: BottomNavigationBar(
