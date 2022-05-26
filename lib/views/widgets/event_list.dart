@@ -9,6 +9,9 @@ import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
+import '../new_book_page.dart';
+import 'new_book.dart';
+
 class EventList extends StatefulWidget {
   final Function? setMainComponent;
   const EventList({
@@ -90,6 +93,10 @@ class _EventListState extends State<EventList> {
                       backgroundColor: Colors.orange,
                       child: const Icon(Icons.add),
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NewBook()),
+                        );
                         log('createEvent');
                       },
                     ),

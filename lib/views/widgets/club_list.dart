@@ -5,6 +5,7 @@ import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/views/club_page.dart';
+import 'package:ea_frontend/views/widgets/new_club.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -50,6 +51,10 @@ class _ClubListState extends State<ClubList> {
                 backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewClub()),
+                  );
                   log('createClub');
                 },
               ),

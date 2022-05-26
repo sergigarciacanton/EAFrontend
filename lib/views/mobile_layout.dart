@@ -1,4 +1,6 @@
 import 'package:ea_frontend/views/home.dart';
+import 'package:ea_frontend/views/new_book_page.dart';
+import 'package:ea_frontend/views/new_club_page.dart';
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
@@ -19,7 +21,7 @@ class _MobileLayoutState extends State<MobileLayout> {
   int _selectedIndex = 0;
   PageController pageController = PageController();
   String appBarTitle = 'Home';
-  var views = ["Home", "Club", "Event", "Chat", "User"];
+  var views = ["Home", "Club", "Event", "Chat", "Perfil"];
 
   void onTapped(int index) {
     setState(() {
