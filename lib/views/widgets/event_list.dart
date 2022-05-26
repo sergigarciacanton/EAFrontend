@@ -8,7 +8,6 @@ import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class EventList extends StatefulWidget {
   final Function? setMainComponent;
@@ -49,6 +48,7 @@ class _EventListState extends State<EventList> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     FloatingActionButton(
+                      backgroundColor: Theme.of(context).backgroundColor,
                       onPressed: () {
                         if (widget.setMainComponent != null) {
                           widget.setMainComponent!(
@@ -98,8 +98,8 @@ class _EventListState extends State<EventList> {
                 children: [
                   Text(
                     getTranslated(context, 'eventTitle')!,
-                    style: const TextStyle(
-                        color: Colors.orange,
+                    style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),

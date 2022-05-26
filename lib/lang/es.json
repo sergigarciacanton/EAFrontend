@@ -47,5 +47,7 @@
   "comments": "Comentarios",
   "followers":"Seguidores",
   "unsubscribe":"CANCELAR SUSCRIPCIÓN",
-  "subscribe": "SUSCRIBIR"
+  "subscribe": "SUSCRIBIR",
+  "home": "Inicio",
+  "profile": "Perfil"
 }
