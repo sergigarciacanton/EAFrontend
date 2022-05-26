@@ -10,11 +10,13 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
 
+import '../../models/location.dart';
 import '../event_page.dart';
 
 class BuildMap extends StatefulWidget {
   final String? modo;
-  const BuildMap({Key? key, this.modo}) : super(key: key);
+  final Location? center;
+  const BuildMap({Key? key, this.modo, this.center}) : super(key: key);
 
   @override
   State<BuildMap> createState() => _BuildMapState();
@@ -22,10 +24,10 @@ class BuildMap extends StatefulWidget {
 
 class _BuildMapState extends State<BuildMap> {
   final PopupController _popupController = PopupController();
-
   List<Marker> markers = [];
   List<dynamic> _events = [];
   int pointIndex = 0;
+  LatLng centerPoint = LatLng(0.0, 0.0);
   List points = [];
   Future<bool> getEvents() async {
     if (widget.modo == "UserEvent") {
@@ -50,6 +52,11 @@ class _BuildMapState extends State<BuildMap> {
         ),
       ));
     });
+    if (widget.center == null) {
+      centerPoint = points[0];
+    } else {
+      centerPoint = LatLng(widget.center!.latitude, widget.center!.longitude);
+    }
     if (_events != null) {
       return true;
     }
@@ -73,7 +80,7 @@ class _BuildMapState extends State<BuildMap> {
               ),
               body: FlutterMap(
                 options: MapOptions(
-                  center: points[0],
+                  center: centerPoint,
                   zoom: 5,
                   maxZoom: 15,
                   plugins: [

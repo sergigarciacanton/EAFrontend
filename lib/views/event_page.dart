@@ -165,16 +165,12 @@ class _EventPageState extends State<EventPage> {
         _buildSeparator(screenSize),
         _buildDescription(context, snapshot),
         _buildSeparator(screenSize),
-        InkWell(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              height: screenSize.height / 2,
-              width: screenSize.width / 1.5,
-              child: _buildMap(context, snapshot),
-            ),
-            onTap: () {
-              print("tap");
-            }),
+        Container(
+          padding: const EdgeInsets.all(10),
+          height: screenSize.height / 2,
+          width: screenSize.width / 1.5,
+          child: _buildMap(context, snapshot),
+        ),
         _buildButtons(snapshot),
         Container(
             width: 300,
@@ -458,6 +454,14 @@ class _EventPageState extends State<EventPage> {
         center: LatLng(snapshot.data!.location.latitude,
             snapshot.data!.location.longitude),
         zoom: 13.0,
+        onTap: (TapPosition, LatLng) {
+          Route route = MaterialPageRoute(
+              builder: (context) => BuildMap(
+                    modo: "AllEvents",
+                    center: snapshot.data!.location,
+                  ));
+          Navigator.of(context).push(route);
+        },
       ),
       layers: [
         TileLayerOptions(
