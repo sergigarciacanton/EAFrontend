@@ -40,12 +40,13 @@
   "termsError": "Si us plau, accepta els terminis i condicions.",
   "returnToHome": "Tornar",
   "description": "Descripció",
-  "specs":"Especificacions",
+  "specs": "Especificacions",
   "publishDate": "Data de publicació",
   "editorial": "Editorial",
   "categories": "Categories",
   "comments": "Comentaris",
   "followers": "Seguidors",
   "unsubscribe": "CANCEL·LAR SUBSCRIPCIÓ",
-  "subscribe": "SUBSCRIU-TE"
+  "subscribe": "SUBSCRIU-TE",
+  "find": "Cercar..."
 }

@@ -46,6 +46,7 @@ dependencies:
   table_calendar: ^3.0.5
   flutter_map: ^0.14.0
   flutter_map_marker_cluster: ^0.4.4
+  textfield_search: ^0.10.0
 
 dev_dependencies:
   flutter_test:

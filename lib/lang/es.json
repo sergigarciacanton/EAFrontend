@@ -40,12 +40,13 @@
   "termsError": "Por favor, acepta los términos y condiciones.",
   "returnToHome": "Volver",
   "description": "Descripción",
-  "specs":"Especificaciones",
+  "specs": "Especificaciones",
   "publishDate": "Fecha de publicación",
   "editorial": "Editorial",
   "categories": "Categorias",
   "comments": "Comentarios",
-  "followers":"Seguidores",
-  "unsubscribe":"CANCELAR SUSCRIPCIÓN",
-  "subscribe": "SUSCRIBIR"
+  "followers": "Seguidores",
+  "unsubscribe": "CANCELAR SUSCRIPCIÓN",
+  "subscribe": "SUSCRIBIR",
+  "find": "Buscar..."
 }

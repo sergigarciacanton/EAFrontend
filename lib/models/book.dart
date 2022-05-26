@@ -1,6 +1,7 @@
 import 'package:ea_frontend/models/category.dart';
 
 class Book {
+  String id;
   String title;
   String ISBN;
   String photoURL;
@@ -11,20 +12,22 @@ class Book {
   List<dynamic> category;
   String writer;
 
-  Book(
-      {required this.title,
-      required this.ISBN,
-      required this.photoURL,
-      required this.description,
-      required this.publishedDate,
-      required this.editorial,
-      required this.rate,
-      required this.category,
-      required this.writer});
+  Book({
+    required this.id,
+    required this.title,
+    required this.ISBN,
+    required this.photoURL,
+    required this.description,
+    required this.publishedDate,
+    required this.editorial,
+    required this.rate,
+    required this.category,
+    required this.writer
+  });
 
   factory Book.fromJson(dynamic json) {
     return Book(
-
+      id: json['_id'] as String,
       title: json['title'] as String,
       ISBN: json['ISBN'] as String,
       photoURL: json['photoURL'] as String,
