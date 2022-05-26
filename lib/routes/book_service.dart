@@ -29,14 +29,51 @@ class BookService {
     if (!kIsWeb) {
       url = Uri.parse('http://10.0.2.2:3000/book/$id');
     }
-    print(url);
 
     final response = await http.get(
       url,
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    print(data);
     return Book.fromJson(data);
+  }
+
+  static Future<String> newBook(Book values) async {
+    Uri url = Uri.parse('http://localhost:3000/book/');
+
+    if (!kIsWeb) {
+      url = Uri.parse('http://10.0.2.2:3000/book/');
+    }
+
+    var response = await http.post(url,
+        headers: {
+          "Authorization": LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode(Book.toJson(values)));
+    if (response.statusCode == 200) {
+      return "200";
+    } else {
+      return Message.fromJson(await jsonDecode(response.body)).message;
+    }
+  }
+}
+
+class Message {
+  final String message;
+
+  const Message({
+    required this.message,
+  });
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      message: json['message'] as String,
+    );
+  }
+
+  @override
+  String toString() {
+    return message;
   }
 }

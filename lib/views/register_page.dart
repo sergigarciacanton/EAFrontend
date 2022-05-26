@@ -28,7 +28,6 @@ class _RegisterPageState extends State<RegisterPage> {
     AuthService authService = AuthService();
 
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Center(
         child: ListView(
           children: [
@@ -46,9 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     getTranslated(context, 'register')!,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 50, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
                   Container(
@@ -56,13 +53,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: nameController,
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 2.0),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1),
+                              color: Theme.of(context).backgroundColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).backgroundColor,
                               width: 2.0),
                         ),
                         hintText: getTranslated(context, 'name')!,
@@ -75,13 +72,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: usernameController,
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 2.0),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1),
+                              color: Theme.of(context).backgroundColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).backgroundColor,
                               width: 2.0),
                         ),
                         hintText: getTranslated(context, 'username')!,
@@ -110,14 +107,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: mailController,
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 2.0),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1),
-                              width: 2.0),
+                              color: Theme.of(context).backgroundColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).backgroundColor,
+                              width: 3.0),
                         ),
                         hintText: getTranslated(context, 'mail')!,
                       ),
@@ -130,14 +127,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 2.0),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1),
-                              width: 2.0),
+                              color: Theme.of(context).backgroundColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).backgroundColor,
+                              width: 3.0),
                         ),
                         hintText: getTranslated(context, 'password')!,
                       ),
@@ -150,14 +147,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: repeatPasswordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.white, width: 2.0),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(247, 151, 28, 1),
-                              width: 2.0),
+                              color: Theme.of(context).backgroundColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).backgroundColor,
+                              width: 3.0),
                         ),
                         hintText: getTranslated(context, 'repeatPassword')!,
                       ),
@@ -168,8 +165,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Checkbox(
-                        checkColor: Colors.black,
-                        activeColor: Colors.orange,
+                        checkColor: Theme.of(context).primaryColor,
+                        activeColor: Theme.of(context).backgroundColor,
                         value: isChecked,
                         onChanged: (bool? value) {
                           setState(() {
@@ -190,6 +187,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: ElevatedButton(
                       style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).backgroundColor),
                         minimumSize: MaterialStateProperty.all(
                             Size(MediaQuery.of(context).size.width, 60)),
                       ),
@@ -268,9 +267,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       TextButton(
                           child: Text(
                             getTranslated(context, 'signIn')!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 20,
-                              color: Colors.orange,
+                              color: Theme.of(context).backgroundColor,
                             ),
                           ),
                           onPressed: () async {

@@ -1,10 +1,13 @@
 import 'package:ea_frontend/views/home.dart';
+import 'package:ea_frontend/views/new_book_page.dart';
+import 'package:ea_frontend/views/new_club_page.dart';
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:ea_frontend/localization/language_constants.dart';
 
 class MobileLayout extends StatefulWidget {
   const MobileLayout({Key? key}) : super(key: key);
@@ -18,7 +21,7 @@ class _MobileLayoutState extends State<MobileLayout> {
   int _selectedIndex = 0;
   PageController pageController = PageController();
   String appBarTitle = 'Home';
-  var views = ["Home", "Club", "Event", "Chat", "User"];
+  var views = ["Home", "Club", "Event", "Chat", "Perfil"];
 
   void onTapped(int index) {
     setState(() {
@@ -38,19 +41,31 @@ class _MobileLayoutState extends State<MobileLayout> {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
+        backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
       ),
-      backgroundColor: Colors.black,
       bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Grup'),
-            BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Event'),
-            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-            BottomNavigationBarItem(icon: Icon(Icons.face), label: 'Perfil')
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.home),
+                label: getTranslated(context, 'home')!),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.group),
+                label: getTranslated(context, 'clubTitle')!),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.event),
+                label: getTranslated(context, 'eventTitle')!),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.chat),
+                label: getTranslated(context, 'chatTitle')!),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.face),
+                label: getTranslated(context, 'profile')!)
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Theme.of(context).backgroundColor,
+          unselectedItemColor: Theme.of(context).primaryColor,
+          selectedIconTheme: Theme.of(context).iconTheme,
+          unselectedIconTheme: Theme.of(context).iconTheme,
           onTap: onTapped),
       body: PageView(controller: pageController, children: const [
         Home(),
