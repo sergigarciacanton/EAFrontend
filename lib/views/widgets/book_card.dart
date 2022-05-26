@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'book_profile.dart';
 
 class BookCard extends StatelessWidget {
   final String title;
@@ -39,7 +38,7 @@ class BookCard extends StatelessWidget {
             Colors.white.withOpacity(0.35),
             BlendMode.multiply,
           ),
-          image: const AssetImage("public/logo.png"),
+          image: NetworkImage(imageUrl),
           fit: BoxFit.fitWidth,
         ),
       ),
@@ -48,14 +47,21 @@ class BookCard extends StatelessWidget {
           Align(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 19,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(4.0),
                 ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                textAlign: TextAlign.center,
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             alignment: Alignment.topCenter,
@@ -63,14 +69,21 @@ class BookCard extends StatelessWidget {
           Align(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 0.0),
-              child: Text(
-                author,
-                style: const TextStyle(
-                  fontSize: 19,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(4.0),
                 ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                textAlign: TextAlign.center,
+                child: Text(
+                  author,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             alignment: Alignment.bottomCenter,

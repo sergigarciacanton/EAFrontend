@@ -1,17 +1,11 @@
-import 'package:ea_frontend/models/book.dart';
-import 'package:ea_frontend/views/club_page.dart';
 import 'package:ea_frontend/views/home.dart';
 import 'package:ea_frontend/views/settings_page.dart';
-import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
-import 'package:ea_frontend/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MobileLayout extends StatefulWidget {
   const MobileLayout({Key? key}) : super(key: key);
