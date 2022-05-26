@@ -1,5 +1,6 @@
 import 'package:ea_frontend/views/settings/account_page.dart';
 import 'package:ea_frontend/views/widgets/icon_widget.dart';
+import 'package:ea_frontend/views/widgets/change_theme_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
@@ -26,6 +27,7 @@ class _SettingPageState extends State<SettingPage> {
         SettingsGroup(
           title: getTranslated(context, 'general')!,
           children: <Widget>[
+            buildAccountTheme(context),
             AccountPage(),
             buildLogout(),
             buildDeleteAccount(),
@@ -41,7 +43,7 @@ class _SettingPageState extends State<SettingPage> {
                 height: 8,
               ),
               buildReportBug(context),
-              buildSendFeedback(context)
+              buildSendFeedback(context),
             ])
       ])));
 
@@ -68,4 +70,9 @@ class _SettingPageState extends State<SettingPage> {
       subtitle: '',
       leading: const IconWidget(icon: Icons.thumb_up, color: Colors.purple),
       onTap: () => {});
+
+  Widget buildAccountTheme(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [Text("Tema: "), const Spacer(), ChangeThemeButtonWidget()],
+      );
 }

@@ -13,6 +13,8 @@ import 'dart:developer';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ea_frontend/views/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -50,61 +52,62 @@ class _MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (this._locale == null) {
-      setLocale(Locale('es'));
-    }
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "BookHub",
-        theme: ThemeData(
-          primarySwatch: Colors.orange,
-          brightness: Brightness.dark,
-          primaryColor: const Color.fromRGBO(247, 151, 28, 1),
-        ),
-        locale: _locale,
-        supportedLocales: const [
-          Locale("en", ""),
-          Locale("es", ""),
-          Locale("ca", ""),
-        ],
-        localizationsDelegates: const [
-          DemoLocalization.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        localeResolutionCallback: (locale, supportedLocales) {
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale!.languageCode &&
-                supportedLocale.countryCode == locale.countryCode) {
-              return supportedLocale;
-            }
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (context) => ThemeProvider(),
+        builder: (context, _) {
+          final themeProvider = Provider.of<ThemeProvider>(context);
+          if (this._locale == null) {
+            setLocale(Locale('es'));
           }
-          return supportedLocales.first;
-        },
-        home: AnimatedSplashScreen.withScreenFunction(
-            duration: 500,
-            splash: "public/logosplash.png",
-            splashIconSize: 500,
-            screenFunction: () async {
-              var storage = LocalStorage('BookHub');
-              await storage.ready;
+          return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: "BookHub",
+              themeMode: themeProvider.themeMode,
+              theme: MyThemes.lightTheme,
+              darkTheme: MyThemes.darkTheme,
+              locale: _locale,
+              supportedLocales: const [
+                Locale("en", ""),
+                Locale("es", ""),
+                Locale("ca", ""),
+              ],
+              localizationsDelegates: const [
+                DemoLocalization.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              localeResolutionCallback: (locale, supportedLocales) {
+                for (var supportedLocale in supportedLocales) {
+                  if (supportedLocale.languageCode == locale!.languageCode &&
+                      supportedLocale.countryCode == locale.countryCode) {
+                    return supportedLocale;
+                  }
+                }
+                return supportedLocales.first;
+              },
+              home: AnimatedSplashScreen.withScreenFunction(
+                  duration: 3000,
+                  splash: "public/logosplash.png",
+                  splashIconSize: 500,
+                  screenFunction: () async {
+                    var storage = LocalStorage('BookHub');
+                    await storage.ready;
 
-              var token = LocalStorage('BookHub').getItem('token');
-              if (token == null) {
-                return const LoginPage();
-              }
-              var response = await AuthService.verifyToken(token);
-              if (response == '200') {
-                log('Load home scaffold');
-                return const HomeScaffold();
-              }
-              return const LoginPage();
-            },
-            splashTransition: SplashTransition.fadeTransition,
-            pageTransitionType: PageTransitionType.fade,
-            backgroundColor: Colors.blueGrey));
-  }
+                    var token = LocalStorage('BookHub').getItem('token');
+                    if (token == null) {
+                      return const LoginPage();
+                    }
+                    var response = await AuthService.verifyToken(token);
+                    if (response == '200') {
+                      log('Load home scaffold');
+                      return const HomeScaffold();
+                    }
+                    return const LoginPage();
+                  },
+                  splashTransition: SplashTransition.fadeTransition,
+                  pageTransitionType: PageTransitionType.fade,
+                  backgroundColor: Colors.blueGrey));
+        },
+      );
 }

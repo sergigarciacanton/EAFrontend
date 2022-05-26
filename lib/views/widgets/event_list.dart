@@ -4,8 +4,13 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/views/event_page.dart';
+import 'package:ea_frontend/views/widgets/calendar.dart';
+import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+
+import '../new_book_page.dart';
+import 'new_book.dart';
 
 class EventList extends StatefulWidget {
   final Function? setMainComponent;
@@ -42,19 +47,66 @@ class _EventListState extends State<EventList> {
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.orange,
-                child: const Icon(Icons.add),
-                onPressed: () {
-                  log('createEvent');
-                },
-              ),
+              floatingActionButton: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    FloatingActionButton(
+                      backgroundColor: Theme.of(context).backgroundColor,
+                      onPressed: () {
+                        if (widget.setMainComponent != null) {
+                          widget.setMainComponent!(
+                              const BuildMap(modo: "AllEvents"));
+                        } else {
+                          Route route = MaterialPageRoute(
+                              builder: (context) =>
+                                  const BuildMap(modo: "AllEvents"));
+                          Navigator.of(context).push(route);
+                        }
+                      },
+                      tooltip: getTranslated(context, "goMap"),
+                      child: const Icon(Icons.map),
+                    ),
+                    const SizedBox(
+                      width:
+                          15.0, //Esto es solo para dar cierto margen entre los FAB
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {
+                        if (widget.setMainComponent != null) {
+                          widget.setMainComponent!(
+                              const BuildCalendar(modo: "AllEvents"));
+                        } else {
+                          Route route = MaterialPageRoute(
+                              builder: (context) =>
+                                  const BuildCalendar(modo: "AllEvents"));
+                          Navigator.of(context).push(route);
+                        }
+                      },
+                      tooltip: getTranslated(context, "goCalendar"),
+                      child: const Icon(Icons.calendar_today),
+                    ),
+                    const SizedBox(
+                      width:
+                          15.0, //Esto es solo para dar cierto margen entre los FAB
+                    ),
+                    FloatingActionButton(
+                      backgroundColor: Colors.orange,
+                      child: const Icon(Icons.add),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NewBook()),
+                        );
+                        log('createEvent');
+                      },
+                    ),
+                  ]),
               body: Column(
                 children: [
                   Text(
                     getTranslated(context, 'eventTitle')!,
-                    style: const TextStyle(
-                        color: Colors.orange,
+                    style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
@@ -71,6 +123,12 @@ class _EventListState extends State<EventList> {
                                     widget.setMainComponent!(EventPage(
                                         elementId:
                                             snapshot.data?.events[index].id));
+                                  } else {
+                                    Route route = MaterialPageRoute(
+                                        builder: (context) => EventPage(
+                                            elementId: snapshot
+                                                .data?.events[index].id));
+                                    Navigator.of(context).push(route);
                                   }
                                 },
                                 leading: const FlutterLogo(size: 56.0),

@@ -5,6 +5,7 @@ import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/views/club_page.dart';
+import 'package:ea_frontend/views/widgets/new_club.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -47,9 +48,13 @@ class _ClubListState extends State<ClubList> {
           if (snapshot.hasData) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.orange,
+                backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewClub()),
+                  );
                   log('createClub');
                 },
               ),
@@ -57,8 +62,8 @@ class _ClubListState extends State<ClubList> {
                 children: [
                   Text(
                     getTranslated(context, 'clubTitle')!,
-                    style: const TextStyle(
-                        color: Colors.orange,
+                    style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),

@@ -38,7 +38,7 @@ class _ChatListState extends State<ChatList> {
           if (snapshot.hasData) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.orange,
+                backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {
                   log('createChat');
@@ -48,8 +48,8 @@ class _ChatListState extends State<ChatList> {
                 children: [
                   Text(
                     getTranslated(context, 'chatTitle')!,
-                    style: const TextStyle(
-                        color: Colors.orange,
+                    style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),

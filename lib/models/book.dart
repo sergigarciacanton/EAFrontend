@@ -24,7 +24,6 @@ class Book {
 
   factory Book.fromJson(dynamic json) {
     return Book(
-
       title: json['title'] as String,
       ISBN: json['ISBN'] as String,
       photoURL: json['photoURL'] as String,
@@ -38,7 +37,6 @@ class Book {
           : json['category'],
       writer: json['writer'] as String,
     );
-
   }
 
   static List<Book> booksFromSnapshot(List snapshot) {
@@ -51,8 +49,17 @@ class Book {
     return Book.fromJson(data);
   }
 
-  // @override
-  // String toString() {
-  //   return 'Book {title: $title, imageURL: $photoURL, rate: $rate}';
-  // }
+  static Map<String, dynamic> toJson(Book values) {
+    return {
+      'title': values.title,
+      'ISBN': values.ISBN,
+      'photoURL': values.photoURL,
+      'description': values.description,
+      'publishedDate': values.publishedDate.toString(),
+      'editorial': values.editorial,
+      'rate': values.rate.toString(),
+      'category': values.category.toString(),
+      'writer': values.writer
+    };
+  }
 }
