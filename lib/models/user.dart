@@ -7,6 +7,7 @@ import 'event.dart';
 import 'dart:developer';
 
 class User {
+  String id;
   String name;
   String userName;
   DateTime birthDate;
@@ -21,7 +22,8 @@ class User {
   List<String> roles;
 
   User(
-      {required this.name,
+      {required this.id,
+      required this.name,
       required this.userName,
       required this.birthDate,
       required this.mail,
@@ -35,6 +37,7 @@ class User {
       required this.roles});
 
   factory User.fromJson(dynamic json) {
+    var id = json['_id'] as String;
     var name = json['name'] as String;
     var userName = json['userName'] as String;
     var birthDate =
@@ -61,6 +64,7 @@ class User {
     var roles = json['role'].cast<String>() as List<String>;
 
     var u = User(
+        id: id,
         name: name,
         userName: userName,
         birthDate: birthDate,
