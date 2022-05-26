@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/event.dart';
 import 'package:ea_frontend/routes/event_service.dart';
@@ -386,6 +387,8 @@ class _EventPageState extends State<EventPage> {
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   AsyncSnapshot<Event> snapshot;
+  var image = CloudinaryImage(
+      'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
 
   MySliverAppBar({required this.snapshot, required this.expandedHeight});
 
@@ -394,13 +397,13 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
       fit: StackFit.expand,
-      overflow: Overflow.visible,
+      clipBehavior: Clip.none,
       children: [
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(
-                  'https://media.istockphoto.com/photos/old-hardcover-books-flying-on-white-background-picture-id1334803015?k=20&m=1334803015&s=612x612&w=0&h=PITeysTcf9pqDB9QBPJvo6y6GyUTa2IaM4vGxTfsNTQ='),
+              image:
+                  Image.network(image.transform().generate()!) as ImageProvider,
               fit: BoxFit.cover,
             ),
           ),

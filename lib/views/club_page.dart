@@ -402,7 +402,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
     }
     return Stack(
       fit: StackFit.expand,
-      overflow: Overflow.visible,
+      clipBehavior: Clip.none,
       children: [
         Container(
           decoration: const BoxDecoration(
