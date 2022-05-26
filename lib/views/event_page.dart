@@ -3,7 +3,11 @@ import 'dart:developer';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/event.dart';
 import 'package:ea_frontend/routes/event_service.dart';
+import 'package:ea_frontend/views/widgets/calendar.dart';
+import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
 
 class EventPage extends StatefulWidget {
@@ -30,12 +34,14 @@ class _EventPageState extends State<EventPage> {
     return EventService.getEvent(widget.elementId!);
   }
 
-  Future<bool> leaveEvent() async {
-    return EventService.leaveEvent(widget.elementId!);
+  Future<void> leaveEvent() async {
+    await EventService.leaveEvent(widget.elementId!);
+    setState(() {});
   }
 
-  Future<bool> joinEvent() async {
-    return EventService.joinEvent(widget.elementId!);
+  Future<void> joinEvent() async {
+    await EventService.joinEvent(widget.elementId!);
+    setState(() {});
   }
 
   @override
@@ -46,32 +52,41 @@ class _EventPageState extends State<EventPage> {
         builder: (context, AsyncSnapshot<Event> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
+                floatingActionButton: (snapshot.data!.admin.id == idUser)
+                    ? FloatingActionButton(
+                        backgroundColor: Colors.orange,
+                        child: const Icon(Icons.edit),
+                        onPressed: () {
+                          log('editEvent');
+                        },
+                      )
+                    : null,
                 body: Stack(
-              children: <Widget>[
-                SafeArea(
-                    child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverPersistentHeader(
-                      delegate: MySliverAppBar(
-                          snapshot: snapshot, expandedHeight: 150),
-                      pinned: true,
-                    ),
-                    SliverToBoxAdapter(
-                        child: SafeArea(
-                      child: SingleChildScrollView(
-                          child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                minHeight: 30,
-                              ),
-                              child: IntrinsicHeight(
-                                  child: Container(
-                                      child: _Event(
-                                          context, snapshot, screenSize))))),
-                    )),
+                  children: <Widget>[
+                    SafeArea(
+                        child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverPersistentHeader(
+                          delegate: MySliverAppBar(
+                              snapshot: snapshot, expandedHeight: 150),
+                          pinned: true,
+                        ),
+                        SliverToBoxAdapter(
+                            child: SafeArea(
+                          child: SingleChildScrollView(
+                              child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    minHeight: 30,
+                                  ),
+                                  child: IntrinsicHeight(
+                                      child: Container(
+                                          child: _Event(context, snapshot,
+                                              screenSize))))),
+                        )),
+                      ],
+                    ))
                   ],
-                ))
-              ],
-            ));
+                ));
           } else if (snapshot.hasError) {
             log(snapshot.error.toString());
             print(snapshot.error);
@@ -141,6 +156,7 @@ class _EventPageState extends State<EventPage> {
               )
             ])),
         const SizedBox(height: 30),
+        _buildDate(snapshot),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: concatCategory(snapshot),
@@ -149,10 +165,27 @@ class _EventPageState extends State<EventPage> {
         _buildSeparator(screenSize),
         _buildDescription(context, snapshot),
         _buildSeparator(screenSize),
-        Column(
-          children: userList(snapshot),
-        ),
-        _buildButtons(snapshot)
+        InkWell(
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              height: screenSize.height / 2,
+              width: screenSize.width / 1.5,
+              child: _buildMap(context, snapshot),
+            ),
+            onTap: () {
+              print("tap");
+            }),
+        _buildButtons(snapshot),
+        Container(
+            width: 300,
+            constraints: const BoxConstraints(maxHeight: 200),
+            decoration:
+                BoxDecoration(border: Border.all(width: 1), color: Colors.grey),
+            child: SingleChildScrollView(
+              child: Column(
+                children: userList(snapshot),
+              ),
+            ))
       ],
     );
   }
@@ -160,10 +193,36 @@ class _EventPageState extends State<EventPage> {
   Widget _buildName(AsyncSnapshot<Event> snapshot) {
     return Text(snapshot.data!.name,
         style: const TextStyle(
-          color: Colors.black,
           fontSize: 28.0,
           fontWeight: FontWeight.w700,
         ));
+  }
+
+  Widget _buildDate(AsyncSnapshot<Event> snapshot) {
+    return Row(children: [
+      IconButton(
+        icon: const Icon(Icons.calendar_today),
+        iconSize: 50,
+        tooltip: getTranslated(context, "goCalendar"),
+        onPressed: () {
+          Route route = MaterialPageRoute(
+              builder: (context) =>
+                  BuildCalendar(modo: snapshot.data!.eventDate.toString()));
+          Navigator.of(context).push(route);
+        },
+      ),
+      Text(
+          snapshot.data!.eventDate.day.toString() +
+              "-" +
+              snapshot.data!.eventDate.month.toString() +
+              "-" +
+              snapshot.data!.eventDate.year.toString(),
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 28.0,
+            fontWeight: FontWeight.w700,
+          ))
+    ]);
   }
 
   concatCategory(AsyncSnapshot<Event> snapshot) {
@@ -202,24 +261,35 @@ class _EventPageState extends State<EventPage> {
 
   Widget _buildUser(String userName, String mail) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            height: 40,
-            width: 40,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Image.network(
-                'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
-                fit: BoxFit.contain,
-              ),
-            ),
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: 1),
+            borderRadius: BorderRadius.circular(12.0),
           ),
-          Text('    ' + userName + '  (' + mail + ')'),
-        ],
-      ),
-    );
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                height: 40,
+                width: 40,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.network(
+                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Text('    ' + userName),
+                  Text('    (' + mail + ')'),
+                ],
+              )
+            ],
+          ),
+        ));
   }
 
   Widget _buildStatItem(String label, String count) {
@@ -381,6 +451,37 @@ class _EventPageState extends State<EventPage> {
       );
     }
   }
+
+  Widget _buildMap(BuildContext context, AsyncSnapshot<Event> snapshot) {
+    return FlutterMap(
+      options: MapOptions(
+        center: LatLng(snapshot.data!.location.latitude,
+            snapshot.data!.location.longitude),
+        zoom: 13.0,
+      ),
+      layers: [
+        TileLayerOptions(
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: ['a', 'b', 'c'],
+        ),
+        MarkerLayerOptions(
+          markers: [
+            Marker(
+              anchorPos: AnchorPos.align(AnchorAlign.center),
+              width: 30.0,
+              height: 30.0,
+              point: LatLng(snapshot.data!.location.latitude,
+                  snapshot.data!.location.longitude),
+              builder: (ctx) => const Icon(
+                Icons.location_on,
+                color: Colors.red,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
@@ -400,7 +501,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                  'https://media.istockphoto.com/photos/old-hardcover-books-flying-on-white-background-picture-id1334803015?k=20&m=1334803015&s=612x612&w=0&h=PITeysTcf9pqDB9QBPJvo6y6GyUTa2IaM4vGxTfsNTQ='),
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYdJFymvjmjacbKVMvsqzjEanEAKlEBjQkOFvJ11KtCAiXR4BnUqT4Zj7wx6fquYoLgA8&usqp=CAU'),
               fit: BoxFit.cover,
             ),
           ),
@@ -428,7 +529,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 image: const DecorationImage(
                   //TODO Change to club image
                   image: NetworkImage(
-                      'https://media.istockphoto.com/photos/group-of-friends-taking-part-in-book-club-at-home-picture-id499373254?k=20&m=499373254&s=612x612&w=0&h=Vd4LsLqIJqG6wtVVyy2590-lndlHh4j3tHn7pj4hq90='),
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYdJFymvjmjacbKVMvsqzjEanEAKlEBjQkOFvJ11KtCAiXR4BnUqT4Zj7wx6fquYoLgA8&usqp=CAU'),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,

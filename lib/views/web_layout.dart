@@ -27,6 +27,7 @@ class _WebLayoutState extends State<WebLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
           automaticallyImplyLeading: false,
           title: Image.asset(
             "public/logowhite.png",

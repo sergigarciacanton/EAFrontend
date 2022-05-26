@@ -61,17 +61,16 @@ class _AccountPageState extends State<AccountPage> {
                     value: 'es',
                     child: Text(
                       'Español',
-                      style: TextStyle(color: Colors.white),
                     )),
                 DropdownMenuItem<String>(
                     value: 'en',
-                    child:
-                        Text('English', style: TextStyle(color: Colors.white))),
+                    child: Text(
+                      'English',
+                    )),
                 DropdownMenuItem<String>(
                     value: 'ca',
                     child: Text(
                       'Català',
-                      style: TextStyle(color: Colors.white),
                     ))
               ],
               onChanged: (String? value) async {

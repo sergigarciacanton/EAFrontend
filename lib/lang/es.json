@@ -69,5 +69,7 @@
   "writeThePhotoURL": "Escriba la URL de la foto",
   "writeTheEditorial": "Escriba la editorial",
   "rate": "Ratio",
-  "writeTheRate": "Determine el ratio"
+  "writeTheRate": "Determine el ratio",
+  "home": "Inicio",
+  "profile": "Perfil"
 }

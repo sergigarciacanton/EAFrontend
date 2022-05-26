@@ -48,7 +48,7 @@ class _ClubListState extends State<ClubList> {
           if (snapshot.hasData) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.orange,
+                backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {
                   Navigator.push(
@@ -62,8 +62,8 @@ class _ClubListState extends State<ClubList> {
                 children: [
                   Text(
                     getTranslated(context, 'clubTitle')!,
-                    style: const TextStyle(
-                        color: Colors.orange,
+                    style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),

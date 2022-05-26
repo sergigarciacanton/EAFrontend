@@ -69,5 +69,7 @@
   "writeThePhotoURL": "Write the URL of the photo",
   "writeTheEditorial": "Write the editorial",
   "rate": "Rate",
-  "writeTheRate": "Determine the rate"
+  "writeTheRate": "Determine the rate",
+  "home": "Home",
+  "profile": "Profile"
 }

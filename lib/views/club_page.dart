@@ -31,12 +31,12 @@ class _ClubPageState extends State<ClubPage> {
   }
 
   Future<void> unsubscribe() async {
-    ClubService.unsubscribeClub(widget.elementId!);
+    await ClubService.unsubscribeClub(widget.elementId!);
     setState(() {});
   }
 
   Future<void> subscribe() async {
-    ClubService.subscribeClub(widget.elementId!);
+    await ClubService.subscribeClub(widget.elementId!);
     setState(() {});
   }
 
@@ -51,32 +51,41 @@ class _ClubPageState extends State<ClubPage> {
         builder: (context, AsyncSnapshot<Club> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
+                floatingActionButton: (snapshot.data!.admin.id == idUser)
+                    ? FloatingActionButton(
+                        backgroundColor: Colors.orange,
+                        child: const Icon(Icons.edit),
+                        onPressed: () {
+                          log('editClub');
+                        },
+                      )
+                    : null,
                 body: Stack(
-              children: <Widget>[
-                SafeArea(
-                    child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverPersistentHeader(
-                      delegate: MySliverAppBar(
-                          snapshot: snapshot, expandedHeight: 150),
-                      pinned: true,
-                    ),
-                    SliverToBoxAdapter(
-                        child: SafeArea(
-                      child: SingleChildScrollView(
-                          child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                minHeight: 30,
-                              ),
-                              child: IntrinsicHeight(
-                                  child: Container(
-                                      child: _club(
-                                          context, snapshot, screenSize))))),
-                    )),
+                  children: <Widget>[
+                    SafeArea(
+                        child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverPersistentHeader(
+                          delegate: MySliverAppBar(
+                              snapshot: snapshot, expandedHeight: 150),
+                          pinned: true,
+                        ),
+                        SliverToBoxAdapter(
+                            child: SafeArea(
+                          child: SingleChildScrollView(
+                              child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    minHeight: 30,
+                                  ),
+                                  child: IntrinsicHeight(
+                                      child: Container(
+                                          child: _club(context, snapshot,
+                                              screenSize))))),
+                        )),
+                      ],
+                    ))
                   ],
-                ))
-              ],
-            ));
+                ));
           } else if (snapshot.hasError) {
             log(snapshot.error.toString());
             print(snapshot.error);
@@ -154,10 +163,17 @@ class _ClubPageState extends State<ClubPage> {
         _buildSeparator(screenSize),
         _buildDescription(context, snapshot),
         _buildSeparator(screenSize),
-        Column(
-          children: userList(snapshot),
-        ),
-        _buildButtons(snapshot)
+        _buildButtons(snapshot),
+        Container(
+            width: 300,
+            decoration:
+                BoxDecoration(border: Border.all(width: 1), color: Colors.grey),
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: SingleChildScrollView(
+              child: Column(
+                children: userList(snapshot),
+              ),
+            ))
       ],
     );
   }
@@ -165,7 +181,6 @@ class _ClubPageState extends State<ClubPage> {
   Widget _buildName(AsyncSnapshot<Club> snapshot) {
     return Text(snapshot.data!.name,
         style: const TextStyle(
-          color: Colors.black,
           fontSize: 28.0,
           fontWeight: FontWeight.w700,
         ));
@@ -207,24 +222,35 @@ class _ClubPageState extends State<ClubPage> {
 
   Widget _buildUser(String userName, String mail) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            height: 40,
-            width: 40,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Image.network(
-                'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
-                fit: BoxFit.contain,
-              ),
-            ),
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: 1),
+            borderRadius: BorderRadius.circular(12.0),
           ),
-          Text('    ' + userName + '  (' + mail + ')'),
-        ],
-      ),
-    );
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                height: 40,
+                width: 40,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.network(
+                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Text('    ' + userName),
+                  Text('    (' + mail + ')'),
+                ],
+              )
+            ],
+          ),
+        ));
   }
 
   Widget _buildStatItem(String label, String count) {
