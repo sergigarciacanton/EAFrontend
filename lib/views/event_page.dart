@@ -261,6 +261,8 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _buildUser(String userName, String mail) {
+    var image = CloudinaryImage(
+        'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
@@ -277,7 +279,7 @@ class _EventPageState extends State<EventPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
                   child: Image.network(
-                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
+                    image.transform().generate()!,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -490,7 +492,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   AsyncSnapshot<Event> snapshot;
   var image = CloudinaryImage(
       'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
-
   MySliverAppBar({required this.snapshot, required this.expandedHeight});
 
   @override
@@ -504,7 +505,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                  'https://media.istockphoto.com/photos/spanish-cities-the-sacred-barcelona-family-picture-id1301579230?b=1&k=20&m=1301579230&s=170667a&w=0&h=lx_qYx9mHAP2emRwBLX6JY7Q9wJEik7HjAfnQnzKsjE='),
+                  image.transform().width(500).height(100).generate()!),
               fit: BoxFit.cover,
             ),
           ),
