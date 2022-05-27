@@ -1,10 +1,13 @@
 import 'package:ea_frontend/models/newchat.dart';
+import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import '../../localization/language_constants.dart';
 import '../../models/chat.dart';
+import '../../routes/user_service.dart';
 import 'event_list.dart';
 
 class NewChat extends StatefulWidget {
@@ -15,16 +18,31 @@ class NewChat extends StatefulWidget {
 }
 
 class _NewChatState extends State<NewChat> {
+  List<User> _response = List.empty(growable: true);
+  bool _isLoading = true;
+
   final nameController = TextEditingController();
   List<String> usersController = List.empty(growable: true);
-
-  List<UserList> userList = [
-    UserList("6282807fe7cb332941b325fc", "Roberto", false),
-    UserList("62836f79b688c998845cfc07", "alguien", false),
-    UserList("62695e77c0d07f7296b9c37e", "Pepa", false),
-  ];
-
   List<UserList> selectedUsers = List.empty(growable: true);
+
+  List<UserList> userList = [];
+
+  void initState() {
+    super.initState();
+    getUsers();
+  }
+
+  Future<void> getUsers() async {
+    _response = await UserService.getUsers();
+    setState(() {
+      for (int i = 0; i < _response.length; i++) {
+        UserList user1 = new UserList(_response[i].id.toString(),
+            _response[i].userName.toString(), false);
+        userList.add(user1);
+      }
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,20 +93,31 @@ class _NewChatState extends State<NewChat> {
               children: <Widget>[
                 Expanded(
                   child: SizedBox(
-                    height: 200.0,
-                    child: ListView.builder(
-                        itemCount: userList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return UserItem(
-                            userList[index].id,
-                            userList[index].userName,
-                            userList[index].isSlected,
-                            index,
-                          );
-                        }),
+                    height: 300.0,
+                    child: _isLoading
+                        ? Column(
+                            children: const [
+                              SizedBox(height: 10),
+                              LinearProgressIndicator(),
+                              SizedBox(height: 200),
+                            ],
+                          )
+                        : ListView.builder(
+                            itemCount: userList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return UserItem(
+                                userList[index].id,
+                                userList[index].userName,
+                                userList[index].isSlected,
+                                index,
+                              );
+                            }),
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 20,
             ),
             ElevatedButton(
               child: Text(
