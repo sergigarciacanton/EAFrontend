@@ -14,9 +14,13 @@ import '../../models/location.dart';
 import '../event_page.dart';
 
 class BuildMap extends StatefulWidget {
+  final Function? setMainComponent;
+  final String? eventId;
   final String? modo;
   final Location? center;
-  const BuildMap({Key? key, this.modo, this.center}) : super(key: key);
+  const BuildMap(
+      {Key? key, this.modo, this.center, this.setMainComponent, this.eventId})
+      : super(key: key);
 
   @override
   State<BuildMap> createState() => _BuildMapState();
@@ -70,19 +74,20 @@ class _BuildMapState extends State<BuildMap> {
         builder: (context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data == true) {
             return Scaffold(
-              appBar: (widget.center != null)
-                  ? AppBar(
-                      title: Text(getTranslated(context, 'BuildMap')!),
-                      backgroundColor:
-                          Theme.of(context).navigationBarTheme.backgroundColor,
-                      centerTitle: true,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.startTop,
+              floatingActionButton: (widget.center != null)
+                  ? FloatingActionButton(
+                      backgroundColor: const Color.fromARGB(202, 255, 255, 255),
+                      onPressed: () {
+                        widget.setMainComponent!(EventPage(
+                          setMainComponent: widget.setMainComponent,
+                          elementId: widget.eventId,
+                        ));
+                      },
+                      child: const Icon(Icons.arrow_back),
                     )
                   : null,
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: Theme.of(context).iconTheme.color,
-                onPressed: () {},
-                child: const Icon(Icons.gps_fixed),
-              ),
               body: FlutterMap(
                 options: MapOptions(
                   center: centerPoint,
@@ -159,12 +164,12 @@ class _BuildMapState extends State<BuildMap> {
                                           style:
                                               TextStyle(color: Colors.black)),
                                       onTap: () {
-                                        Route route = MaterialPageRoute(
-                                            builder: (context) => EventPage(
-                                                elementId: _events[
-                                                        markers.indexOf(marker)]
+                                        widget.setMainComponent!(EventPage(
+                                            setMainComponent:
+                                                widget.setMainComponent,
+                                            elementId:
+                                                _events[markers.indexOf(marker)]
                                                     .id));
-                                        Navigator.of(context).push(route);
                                       },
                                     ),
                                   ),

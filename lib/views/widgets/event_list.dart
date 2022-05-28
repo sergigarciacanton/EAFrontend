@@ -53,8 +53,10 @@ class _EventListState extends State<EventList> {
                     FloatingActionButton(
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
-                        widget.setMainComponent!(
-                            const BuildMap(modo: "AllEvents"));
+                        widget.setMainComponent!(BuildMap(
+                          modo: "AllEvents",
+                          setMainComponent: widget.setMainComponent,
+                        ));
                       },
                       tooltip: getTranslated(context, "goMap"),
                       child: const Icon(Icons.map),
@@ -66,8 +68,10 @@ class _EventListState extends State<EventList> {
                     FloatingActionButton(
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
-                        widget.setMainComponent!(
-                            const BuildCalendar(modo: "AllEvents"));
+                        widget.setMainComponent!(BuildCalendar(
+                          modo: "AllEvents",
+                          setMainComponent: widget.setMainComponent,
+                        ));
                       },
                       tooltip: getTranslated(context, "goCalendar"),
                       child: const Icon(Icons.calendar_today),
@@ -100,8 +104,9 @@ class _EventListState extends State<EventList> {
                               child: ListTile(
                                 onTap: () {
                                   widget.setMainComponent!(EventPage(
-                                      elementId:
-                                          snapshot.data?.events[index].id));
+                                    elementId: snapshot.data?.events[index].id,
+                                    setMainComponent: widget.setMainComponent,
+                                  ));
                                 },
                                 leading: const FlutterLogo(size: 56.0),
                                 title: Text(snapshot.data?.events[index].name),
