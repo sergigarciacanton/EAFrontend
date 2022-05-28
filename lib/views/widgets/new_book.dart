@@ -1,4 +1,5 @@
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:ea_frontend/models/newbook.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -282,7 +283,7 @@ class _NewBookState extends State<NewBook> {
                 ),
                 onPressed: () async {
                   print("Add new book");
-                  var response = await BookService.newBook(Book(
+                  var response = await BookService.newBook(NewBookModel(
                       title: titleController.text,
                       ISBN: ISBNController.text,
                       photoURL: photoURLController.text,

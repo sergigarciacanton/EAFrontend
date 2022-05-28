@@ -39,8 +39,8 @@
   "privacy": "Privadesa",
   "security": "Seguretat",
   "accountInfo": "Informació del compte",
-  "clubTitle": "Club",
-  "eventTitle": "Event",
+  "clubTitle": "Els meus clubs",
+  "eventTitle": "Els meus events",
   "mail": "Correu electònic",
   "repeatPassword": "Repeteix contrasenya",
   "passwordError": "Error. Les contrasenyes introduides no coincideixen.",
@@ -71,5 +71,8 @@
   "rate": "Ràtio",
   "writeTheRate": "Determineu la ràtio",
   "home": "Inici",
-  "profile": "Perfil"
+  "profile": "Perfil",
+  "EventPage": "Event",
+  "ClubPage": "Club",
+  "BookPage": "Llibre"
 }

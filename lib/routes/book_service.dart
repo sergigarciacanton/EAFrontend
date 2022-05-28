@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:ea_frontend/models/book.dart';
+import 'package:ea_frontend/models/newbook.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
@@ -40,7 +41,7 @@ class BookService {
     return Book.fromJson(data);
   }
 
-  static Future<String> newBook(Book values) async {
+  static Future<String> newBook(NewBookModel values) async {
     Uri url = Uri.parse('http://localhost:3000/book/');
 
     if (!kIsWeb) {
@@ -52,7 +53,7 @@ class BookService {
           "Authorization": LocalStorage('BookHub').getItem('token'),
           "Content-Type": "application/json"
         },
-        body: json.encode(Book.toJson(values)));
+        body: json.encode(NewBookModel.toJson(values)));
     if (response.statusCode == 200) {
       return "200";
     } else {

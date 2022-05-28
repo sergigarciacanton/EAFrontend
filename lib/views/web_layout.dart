@@ -1,3 +1,4 @@
+import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/help.dart';
 import 'package:ea_frontend/views/home.dart';
@@ -16,6 +17,11 @@ class WebLayout extends StatefulWidget {
 
 class _WebLayoutState extends State<WebLayout> {
   Widget mainComponent = Home();
+  @override
+  void initState() {
+    super.initState();
+    mainComponent = Home(setMainComponent: setMainComponent);
+  }
 
   setMainComponent(Widget component) {
     setState(() {
@@ -40,7 +46,7 @@ class _WebLayoutState extends State<WebLayout> {
               tooltip: 'Home',
               onPressed: () {
                 setState(() {
-                  mainComponent = Home();
+                  mainComponent = Home(setMainComponent: setMainComponent);
                 });
               },
             ),
@@ -75,25 +81,46 @@ class _WebLayoutState extends State<WebLayout> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      Text(
+                        getTranslated(context, 'chatTitle')!,
+                        style: TextStyle(
+                            color: Theme.of(context).backgroundColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
                       Container(
                           padding: const EdgeInsets.all(10.0),
                           //   color: Colors.red,
-                          height: constraints.maxHeight / 3,
+                          height: constraints.maxHeight / 3.5,
                           width: constraints.maxWidth / 5,
                           child: ChatList(
                             setMainComponent: setMainComponent,
                           )),
+                      Text(
+                        getTranslated(context, 'eventTitle')!,
+                        style: TextStyle(
+                            color: Theme.of(context).backgroundColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
                       Container(
                           padding: const EdgeInsets.all(10.0),
-                          height: constraints.maxHeight / 3,
+                          height: constraints.maxHeight / 3.5,
                           width: constraints.maxWidth / 5,
                           //    color: Colors.blue,
                           child: EventList(
                             setMainComponent: setMainComponent,
                           )),
+                      Text(
+                        getTranslated(context, 'clubTitle')!,
+                        style: TextStyle(
+                            color: Theme.of(context).backgroundColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
                       Container(
                           padding: const EdgeInsets.all(10.0),
-                          height: constraints.maxHeight / 3,
+                          height: constraints.maxHeight / 3.5,
                           width: constraints.maxWidth / 5,
                           //   color: Colors.green,
                           child: ClubList(

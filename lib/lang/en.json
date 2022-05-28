@@ -39,8 +39,8 @@
   "privacy": "Privacy",
   "security": "Security",
   "accountInfo": "Account Info",
-  "clubTitle": "Club",
-  "eventTitle": "Event",
+  "clubTitle": "My clubs",
+  "eventTitle": "My events",
   "mail": "Mail address",
   "repeatPassword": "Repeat password",
   "passwordError": "Error. Introduced passwords don't match.",
@@ -71,5 +71,8 @@
   "rate": "Rate",
   "writeTheRate": "Determine the rate",
   "home": "Home",
-  "profile": "Profile"
+  "profile": "Profile",
+  "EventPage": "Event",
+  "ClubPage": "Club",
+  "BookPage": "Book"
 }

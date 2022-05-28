@@ -5,6 +5,7 @@ import 'package:ea_frontend/routes/event_service.dart';
 import 'package:ea_frontend/views/club_page.dart';
 import 'package:ea_frontend/views/event_page.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
+import 'package:ea_frontend/views/widgets/book_profile.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -15,7 +16,11 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import '../routes/club_service.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final Function? setMainComponent;
+  const Home({
+    Key? key,
+    this.setMainComponent,
+  }) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -106,11 +111,17 @@ class _HomeState extends State<Home> {
                       scrollDirection: Axis.horizontal,
                       itemCount: _books.length,
                       itemBuilder: (context, index) {
-                        return BookCard(
-                          title: _books[index].title,
-                          author: _books[index].writer,
-                          rate: _books[index].rate.toString(),
-                          imageUrl: _books[index].photoURL,
+                        return GestureDetector(
+                          child: BookCard(
+                            title: _books[index].title,
+                            author: _books[index].writer,
+                            rate: _books[index].rate.toString(),
+                            imageUrl: _books[index].photoURL,
+                          ),
+                          onTap: () {
+                            widget.setMainComponent!(
+                                BookPage(elementId: _books[index].id));
+                          },
                         );
                       },
                     ),
@@ -160,10 +171,8 @@ class _HomeState extends State<Home> {
                             imageUrl: "",
                           ),
                           onTap: () {
-                            Route route = MaterialPageRoute(
-                                builder: (context) =>
-                                    EventPage(elementId: _events[index].id));
-                            Navigator.of(context).push(route);
+                            widget.setMainComponent!(
+                                EventPage(elementId: _events[index].id));
                           },
                         );
                       },
@@ -208,10 +217,8 @@ class _HomeState extends State<Home> {
                             imageUrl: "",
                           ),
                           onTap: () {
-                            Route route = MaterialPageRoute(
-                                builder: (context) =>
-                                    ClubPage(elementId: _clubs[index].id));
-                            Navigator.of(context).push(route);
+                            widget.setMainComponent!(
+                                ClubPage(elementId: _clubs[index].id));
                           },
                         );
                       },
