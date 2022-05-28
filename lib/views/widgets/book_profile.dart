@@ -1,27 +1,17 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
-import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
-import 'package:ea_frontend/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ea_frontend/models/book.dart';
-
-@override
-Widget build(BuildContext context) {
-  // TODO: implement build
-  throw UnimplementedError();
-}
 
 class BookPage extends StatefulWidget {
   final String? elementId;
+
   const BookPage({
     Key? key,
     this.elementId,
-  }) : super(key: key);
+  });
 
   @override
   State<BookPage> createState() => _BookPageState();

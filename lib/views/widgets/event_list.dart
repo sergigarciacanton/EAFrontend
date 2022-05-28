@@ -99,17 +99,9 @@ class _EventListState extends State<EventList> {
                             return Card(
                               child: ListTile(
                                 onTap: () {
-                                  if (widget.setMainComponent != null) {
-                                    widget.setMainComponent!(EventPage(
-                                        elementId:
-                                            snapshot.data?.events[index].id));
-                                  } else {
-                                    Route route = MaterialPageRoute(
-                                        builder: (context) => EventPage(
-                                            elementId: snapshot
-                                                .data?.events[index].id));
-                                    Navigator.of(context).push(route);
-                                  }
+                                  widget.setMainComponent!(EventPage(
+                                      elementId:
+                                          snapshot.data?.events[index].id));
                                 },
                                 leading: const FlutterLogo(size: 56.0),
                                 title: Text(snapshot.data?.events[index].name),

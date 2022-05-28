@@ -1,5 +1,4 @@
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:ea_frontend/models/newbook.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,6 @@ class _NewBookState extends State<NewBook> {
   final editorialController = TextEditingController();
   final writerController = TextEditingController();
   String categoryController = "";
-  //Category categoryController2 = "MYSTERY" as Category;
   List<dynamic> categories = [];
   String publishedDateController = "";
   dynamic rateController = "";
@@ -283,7 +281,9 @@ class _NewBookState extends State<NewBook> {
                 ),
                 onPressed: () async {
                   print("Add new book");
-                  var response = await BookService.newBook(NewBookModel(
+
+                  var response = await BookService.newBook(Book(
+                      id: "",
                       title: titleController.text,
                       ISBN: ISBNController.text,
                       photoURL: photoURLController.text,
