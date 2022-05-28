@@ -7,9 +7,9 @@
   "password": "Contraseña",
   "submit": "Entrar",
   "goCalendar": "Ver calendario",
-  "calendar": "Calendario de Eventos",
+  "BuildCalendar": "Calendario de Eventos",
   "goMap": "Ver mapa",
-  "map": "Encuentra tus eventos",
+  "BuildMap": "Encuentra tus eventos",
   "stillWithoutAccount": "¿Todavía sin cuenta?",
   "register": "Registrarse",
   "interest": "Te puede interesar",
@@ -39,8 +39,8 @@
   "privacy": "Privacidad",
   "security": "Seguridad",
   "accountInfo": "Información de la cuenta",
-  "clubTitle": "Club",
-  "eventTitle": "Evento",
+  "clubTitle": "Mis clubs",
+  "eventTitle": "Mis eventos",
   "mail": "Correo electrónico",
   "repeatPassword": "Repetir contraseña",
   "passwordError": "Error. Las contraseñas introducidas no coinciden.",
@@ -72,5 +72,8 @@
   "rate": "Ratio",
   "writeTheRate": "Determine el ratio",
   "home": "Inicio",
-  "profile": "Perfil"
+  "profile": "Perfil",
+  "EventPage": "Evento",
+  "ClubPage": "Club",
+  "BookPage": "Libro"
 }

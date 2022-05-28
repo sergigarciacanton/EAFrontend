@@ -12,18 +12,17 @@ class Book {
   List<dynamic> category;
   String writer;
 
-  Book({
-    required this.id,
-    required this.title,
-    required this.ISBN,
-    required this.photoURL,
-    required this.description,
-    required this.publishedDate,
-    required this.editorial,
-    required this.rate,
-    required this.category,
-    required this.writer
-  });
+  Book(
+      {required this.id,
+      required this.title,
+      required this.ISBN,
+      required this.photoURL,
+      required this.description,
+      required this.publishedDate,
+      required this.editorial,
+      required this.rate,
+      required this.category,
+      required this.writer});
 
   factory Book.fromJson(dynamic json) {
     return Book(

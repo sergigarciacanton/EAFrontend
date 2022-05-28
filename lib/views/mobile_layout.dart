@@ -17,6 +17,15 @@ class MobileLayout extends StatefulWidget {
 }
 
 class _MobileLayoutState extends State<MobileLayout> {
+  Widget mainComponent = Home();
+  setMainComponent(Widget component) {
+    setState(() {
+      mainComponent = component;
+      pageController.jumpToPage(5);
+      appBarTitle = getTranslated(context, component.toString())!;
+    });
+  }
+
   final LocalStorage storage = LocalStorage('BookHub');
   int _selectedIndex = 0;
   PageController pageController = PageController();
@@ -37,12 +46,25 @@ class _MobileLayoutState extends State<MobileLayout> {
   }
 
   @override
+  void didChangeDependencies() {
+    appBarTitle = getTranslated(context, "home")!;
+    views = [
+      getTranslated(context, "home")!,
+      getTranslated(context, "clubTitle")!,
+      getTranslated(context, "eventTitle")!,
+      getTranslated(context, "chatTitle")!,
+      getTranslated(context, "profile")!
+    ];
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarTitle),
-        backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
-      ),
+          title: Text(appBarTitle),
+          backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
+          automaticallyImplyLeading: false),
       bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -67,12 +89,13 @@ class _MobileLayoutState extends State<MobileLayout> {
           selectedIconTheme: Theme.of(context).iconTheme,
           unselectedIconTheme: Theme.of(context).iconTheme,
           onTap: onTapped),
-      body: PageView(controller: pageController, children: const [
-        Home(),
-        ClubList(),
-        EventList(),
-        ChatList(),
+      body: PageView(controller: pageController, children: [
+        Home(setMainComponent: setMainComponent),
+        ClubList(setMainComponent: setMainComponent),
+        EventList(setMainComponent: setMainComponent),
+        ChatList(setMainComponent: setMainComponent),
         SettingPage(),
+        mainComponent,
       ]),
     );
   }

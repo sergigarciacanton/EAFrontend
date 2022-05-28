@@ -71,10 +71,14 @@ class _BuildCalendarState extends State<BuildCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(getTranslated(context, "calendar")!),
-          centerTitle: true,
-        ),
+        appBar: (widget.modo != "AllEvents" && widget.modo != "UserEvents")
+            ? AppBar(
+                title: Text(getTranslated(context, "BuildCalendar")!),
+                backgroundColor:
+                    Theme.of(context).navigationBarTheme.backgroundColor,
+                centerTitle: true,
+              )
+            : null,
         body: SingleChildScrollView(
             child: Column(children: [
           TableCalendar(
@@ -108,8 +112,8 @@ class _BuildCalendarState extends State<BuildCalendar> {
             //To style the Calendar
             calendarStyle: CalendarStyle(
               isTodayHighlighted: true,
-              markerDecoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 235, 237, 238),
+              markerDecoration: BoxDecoration(
+                  color: Theme.of(context).backgroundColor,
                   shape: BoxShape.circle),
               selectedDecoration: BoxDecoration(
                 color: Colors.blue,

@@ -46,13 +46,6 @@ class _ChatListState extends State<ChatList> {
               ),
               body: Column(
                 children: [
-                  Text(
-                    getTranslated(context, 'chatTitle')!,
-                    style: TextStyle(
-                        color: Theme.of(context).backgroundColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(

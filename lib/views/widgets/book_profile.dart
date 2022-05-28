@@ -6,24 +6,20 @@ import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 
 class BookPage extends StatefulWidget {
-  final String id;
-  
+  final String? elementId;
+
   const BookPage({
-    Key? key, 
-    required this.id,
-  }) : super(key: key);
+    Key? key,
+    this.elementId,
+  });
 
   @override
   State<BookPage> createState() => _BookPageState();
 }
 
 class _BookPageState extends State<BookPage> {
-
-  var bookStorage;
   Future<Book> fetchBook() async {
-    bookStorage = LocalStorage('BookHub');
-    await bookStorage.ready;
-    return BookService.getBook(widget.id);
+    return BookService.getBook(widget.elementId!);
   }
 
   @override
@@ -33,10 +29,10 @@ class _BookPageState extends State<BookPage> {
         builder: (context, AsyncSnapshot<Book> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-              appBar: AppBar(
-                title: Text(getTranslated(context, 'returnToHome')!),
-              ),
-              body: Column(
+                body: SingleChildScrollView(
+                    child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
                 children: [
                   const SizedBox(height: 20),
                   Container(
@@ -205,9 +201,8 @@ class _BookPageState extends State<BookPage> {
                   ),
                 ],
               ),
-            );
+            )));
           } else if (snapshot.hasError) {
-            print("holaMAL");
             print(snapshot);
             log(snapshot.error.toString());
             print(snapshot.error);
