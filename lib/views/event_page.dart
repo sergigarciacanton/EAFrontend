@@ -4,6 +4,7 @@ import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/event.dart';
 import 'package:ea_frontend/routes/event_service.dart';
+import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
@@ -160,11 +161,14 @@ class _EventPageState extends State<EventPage> {
               )
             ])),
         const SizedBox(height: 30),
-
-        ///WHAT
         Row(children: [
-          Row(children: concatCategory(snapshot)),
           _buildDate(snapshot),
+          const SizedBox(
+            width: 20,
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: concatCategory(snapshot)),
         ]),
         _buildStatContainer(snapshot),
         _buildSeparator(screenSize),
@@ -255,15 +259,16 @@ class _EventPageState extends State<EventPage> {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
       if (element.id != snapshot.data!.admin.id) {
-        lista.add(_buildUser(element.userName!, element.mail!));
+        lista.add(
+            _buildUser(element.userName!, element.mail!, element.photoURL!));
       }
     });
     return lista;
   }
 
-  Widget _buildUser(String userName, String mail) {
-    var image = CloudinaryImage(
-        'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
+  Widget _buildUser(String userName, String mail, String imageURL) {
+    var image =
+        CloudinaryImage('https://res.cloudinary.com/demo/image/upload/w_100,');
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
@@ -281,7 +286,8 @@ class _EventPageState extends State<EventPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
                   child: Image.network(
-                    image.transform().generate()!,
+                    imageURL,
+                    //image.transform().generate()!,
                     fit: BoxFit.contain,
                   ),
                 ),

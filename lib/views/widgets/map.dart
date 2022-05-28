@@ -70,13 +70,18 @@ class _BuildMapState extends State<BuildMap> {
         builder: (context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data == true) {
             return Scaffold(
-              appBar: AppBar(
-                title: Text(getTranslated(context, 'map')!),
-                centerTitle: true,
-              ),
+              appBar: (widget.center != null)
+                  ? AppBar(
+                      title: Text(getTranslated(context, 'BuildMap')!),
+                      backgroundColor:
+                          Theme.of(context).navigationBarTheme.backgroundColor,
+                      centerTitle: true,
+                    )
+                  : null,
               floatingActionButton: FloatingActionButton(
+                backgroundColor: Theme.of(context).iconTheme.color,
                 onPressed: () {},
-                child: Icon(Icons.refresh),
+                child: const Icon(Icons.gps_fixed),
               ),
               body: FlutterMap(
                 options: MapOptions(
