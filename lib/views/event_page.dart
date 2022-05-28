@@ -13,11 +13,13 @@ import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
 
 class EventPage extends StatefulWidget {
+  final Function? setMainComponent;
   final String? elementId;
 
   const EventPage({
     Key? key,
     this.elementId,
+    this.setMainComponent,
   }) : super(key: key);
 
   @override
@@ -209,10 +211,11 @@ class _EventPageState extends State<EventPage> {
         iconSize: 50,
         tooltip: getTranslated(context, "goCalendar"),
         onPressed: () {
-          Route route = MaterialPageRoute(
-              builder: (context) =>
-                  BuildCalendar(modo: snapshot.data!.eventDate.toString()));
-          Navigator.of(context).push(route);
+          widget.setMainComponent!(BuildCalendar(
+            modo: snapshot.data!.eventDate.toString(),
+            setMainComponent: widget.setMainComponent,
+            eventId: widget.elementId,
+          ));
         },
       ),
       Text(
@@ -473,12 +476,12 @@ class _EventPageState extends State<EventPage> {
             snapshot.data!.location.longitude),
         zoom: 13.0,
         onTap: (TapPosition, LatLng) {
-          Route route = MaterialPageRoute(
-              builder: (context) => BuildMap(
-                    modo: "AllEvents",
-                    center: snapshot.data!.location,
-                  ));
-          Navigator.of(context).push(route);
+          widget.setMainComponent!((BuildMap(
+            modo: "AllEvents",
+            center: snapshot.data!.location,
+            setMainComponent: widget.setMainComponent,
+            eventId: widget.elementId,
+          )));
         },
       ),
       layers: [

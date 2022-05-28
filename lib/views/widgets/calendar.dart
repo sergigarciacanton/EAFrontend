@@ -12,8 +12,12 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../models/event.dart';
 
 class BuildCalendar extends StatefulWidget {
+  final Function? setMainComponent;
+  final String? eventId;
   final String? modo;
-  const BuildCalendar({Key? key, this.modo}) : super(key: key);
+  const BuildCalendar(
+      {Key? key, this.modo, this.setMainComponent, this.eventId})
+      : super(key: key);
 
   @override
   State<BuildCalendar> createState() => _BuildCalendarState();
@@ -71,16 +75,25 @@ class _BuildCalendarState extends State<BuildCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: (widget.modo != "AllEvents" && widget.modo != "UserEvents")
-            ? AppBar(
-                title: Text(getTranslated(context, "BuildCalendar")!),
-                backgroundColor:
-                    Theme.of(context).navigationBarTheme.backgroundColor,
-                centerTitle: true,
-              )
-            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+        floatingActionButton:
+            (widget.modo != "AllEvents" && widget.modo != "UserEvents")
+                ? FloatingActionButton(
+                    backgroundColor: const Color.fromARGB(202, 255, 255, 255),
+                    onPressed: () {
+                      widget.setMainComponent!(EventPage(
+                        setMainComponent: widget.setMainComponent,
+                        elementId: widget.eventId,
+                      ));
+                    },
+                    child: const Icon(Icons.arrow_back),
+                  )
+                : null,
         body: SingleChildScrollView(
             child: Column(children: [
+          (widget.modo != "AllEvents" && widget.modo != "UserEvents")
+              ? const Padding(padding: EdgeInsets.only(top: 40))
+              : const Padding(padding: EdgeInsets.zero),
           TableCalendar(
             focusedDay: selectedDay,
             firstDay: DateTime(1990),
@@ -163,9 +176,9 @@ class _BuildCalendarState extends State<BuildCalendar> {
                         ": " +
                         event.description),
                     onTap: () {
-                      Route route = MaterialPageRoute(
-                          builder: (context) => EventPage(elementId: event.id));
-                      Navigator.of(context).push(route);
+                      widget.setMainComponent!(EventPage(
+                          setMainComponent: widget.setMainComponent,
+                          elementId: event.id));
                     },
                   ),
                 ),

@@ -21,6 +21,7 @@ class MyThemes {
       indicatorColor: Colors.teal,
       backgroundColor: Colors.orange.shade500,
       shadowColor: Color.fromARGB(143, 255, 153, 0),
+      appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade800),
       navigationBarTheme:
           NavigationBarThemeData(backgroundColor: Colors.grey.shade800),
       bottomNavigationBarTheme:
@@ -35,6 +36,7 @@ class MyThemes {
     indicatorColor: Colors.pinkAccent,
     backgroundColor: Colors.red,
     shadowColor: Color.fromARGB(153, 251, 202, 42),
+    appBarTheme: AppBarTheme(backgroundColor: Colors.red),
     navigationBarTheme:
         const NavigationBarThemeData(backgroundColor: Colors.red),
     bottomNavigationBarTheme:

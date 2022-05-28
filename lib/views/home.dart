@@ -117,7 +117,9 @@ class _HomeState extends State<Home> {
   void findEvents(String name) {
     for (int i = 0; i < _events.length; i++) {
       if (_events[i].name == name) {
-        widget.setMainComponent!(EventPage(elementId: _events[i].id));
+        widget.setMainComponent!(EventPage(
+            setMainComponent: widget.setMainComponent,
+            elementId: _events[i].id));
         findEventsController.text = "";
       }
     }
@@ -310,8 +312,9 @@ class _HomeState extends State<Home> {
                                     "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
                               ),
                               onTap: () {
-                                widget.setMainComponent!(
-                                    EventPage(elementId: _events[index].id));
+                                widget.setMainComponent!(EventPage(
+                                    setMainComponent: widget.setMainComponent,
+                                    elementId: _events[index].id));
                               },
                             );
                           },
