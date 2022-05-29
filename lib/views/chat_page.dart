@@ -38,8 +38,10 @@ class ChatPage extends StatelessWidget {
               //   child: CircularProgressIndicator(),
               // );
             }
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).backgroundColor,
+              ),
             );
           },
         ));

@@ -129,13 +129,13 @@ class _BuildCalendarState extends State<BuildCalendar> {
                   color: Theme.of(context).backgroundColor,
                   shape: BoxShape.circle),
               selectedDecoration: BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).indicatorColor,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(5.0),
               ),
               selectedTextStyle: TextStyle(color: Colors.white),
               todayDecoration: BoxDecoration(
-                color: Colors.purpleAccent,
+                color: Theme.of(context).backgroundColor,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(5.0),
               ),
@@ -153,7 +153,7 @@ class _BuildCalendarState extends State<BuildCalendar> {
               titleCentered: true,
               formatButtonShowsNext: false,
               formatButtonDecoration: BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).backgroundColor,
                 borderRadius: BorderRadius.circular(5.0),
               ),
               formatButtonTextStyle: const TextStyle(

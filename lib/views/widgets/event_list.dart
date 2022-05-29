@@ -126,8 +126,10 @@ class _EventListState extends State<EventList> {
             print(snapshot.error);
             //   throw snapshot.error.hashCode;
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ),
           );
         });
   }

@@ -5,6 +5,10 @@ import 'package:ea_frontend/views/club_page.dart';
 import 'package:ea_frontend/views/event_page.dart';
 import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:ea_frontend/views/widgets/book_profile.dart';
+import 'package:ea_frontend/views/widgets/calendar.dart';
+import 'package:ea_frontend/views/widgets/club_card.dart';
+import 'package:ea_frontend/views/widgets/event_card.dart';
+import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -137,7 +141,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
@@ -153,8 +156,8 @@ class _HomeState extends State<Home> {
                       Text(
                         getTranslated(context, 'interestBook')!,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.orange,
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -199,10 +202,12 @@ class _HomeState extends State<Home> {
                   ),
                   child: _isLoadingBook
                       ? Column(
-                          children: const [
-                            SizedBox(height: 10),
-                            LinearProgressIndicator(),
-                            SizedBox(height: 200),
+                          children: [
+                            const SizedBox(height: 10),
+                            LinearProgressIndicator(
+                              color: Theme.of(context).backgroundColor,
+                            ),
+                            const SizedBox(height: 200),
                           ],
                         )
                       : ListView.builder(
@@ -237,8 +242,8 @@ class _HomeState extends State<Home> {
                       Text(
                         getTranslated(context, 'interestEvent')!,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.orange,
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -282,23 +287,27 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   child: _isLoadingEvent
-                      ? Column(
-                          children: const [
-                            SizedBox(height: 10),
-                            LinearProgressIndicator(),
-                            SizedBox(height: 200),
-                          ],
-                        )
-                      : ListView.builder(
+                  ? Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        LinearProgressIndicator(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                        const SizedBox(height: 200),
+                      ],
+                    )
+                  : Stack(
+                      children: [
+                        ListView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
                           controller: _controller,
                           scrollDirection: Axis.horizontal,
                           itemCount: _events.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              child: BookCard(
+                              child: EventCard(
                                 title: _events[index].name,
-                                author: _events[index]
+                                date: _events[index]
                                         .eventDate
                                         .day
                                         .toString() +
@@ -306,7 +315,7 @@ class _HomeState extends State<Home> {
                                     _events[index].eventDate.month.toString() +
                                     "-" +
                                     _events[index].eventDate.year.toString(),
-                                rate:
+                                numberUsers:
                                     _events[index].usersList.length.toString(),
                                 imageUrl:
                                     "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
@@ -319,6 +328,39 @@ class _HomeState extends State<Home> {
                             );
                           },
                         ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.15, vertical: 15.15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              FloatingActionButton(
+                                backgroundColor: Theme.of(context).indicatorColor,
+                                onPressed: () {
+                                  widget.setMainComponent!(BuildCalendar(
+                                    modo: "AllEvents",
+                                    setMainComponent: widget.setMainComponent,
+                                  ));
+                                },
+                                tooltip: getTranslated(context, "goCalendar"),
+                                child: const Icon(Icons.calendar_today),
+                              ),
+                              const SizedBox(width: 5),
+                              FloatingActionButton(
+                                backgroundColor: Theme.of(context).indicatorColor,
+                                onPressed: () {
+                                  widget.setMainComponent!(BuildMap(
+                                    modo: "AllEvents",
+                                    setMainComponent: widget.setMainComponent,
+                                  ));
+                                },
+                                tooltip: getTranslated(context, "goMap"),
+                                child: const Icon(Icons.map),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -331,8 +373,8 @@ class _HomeState extends State<Home> {
                       Text(
                         getTranslated(context, 'interestClub')!,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.orange,
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -377,10 +419,12 @@ class _HomeState extends State<Home> {
                   ),
                   child: _isLoadingClub
                       ? Column(
-                          children: const [
-                            SizedBox(height: 10),
-                            LinearProgressIndicator(),
-                            SizedBox(height: 200),
+                          children: [
+                            const SizedBox(height: 10),
+                            LinearProgressIndicator(
+                              color: Theme.of(context).backgroundColor,
+                            ),
+                            const SizedBox(height: 200),
                           ],
                         )
                       : ListView.builder(
@@ -390,12 +434,12 @@ class _HomeState extends State<Home> {
                           itemCount: _clubs.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              child: BookCard(
+                              child: ClubCard(
                                 title: _clubs[index].name,
-                                author:
+                                categories:
                                     getStringCategories(_clubs[index].category)
                                         .toString(),
-                                rate: _clubs[index].usersList.length.toString(),
+                                numberUsers: _clubs[index].usersList.length.toString(),
                                 imageUrl:
                                     "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
                               ),

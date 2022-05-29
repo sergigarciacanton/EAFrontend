@@ -19,7 +19,9 @@ class _SettingPageState extends State<SettingPage> {
               child: ListView(padding: EdgeInsets.all(24), children: [
         Text(
           getTranslated(context, 'settings')!,
-          style: const TextStyle(fontSize: 40),
+          style: const TextStyle(
+            fontSize: 40,
+          ),
         ),
         const SizedBox(
           height: 32,

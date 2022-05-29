@@ -34,7 +34,9 @@ class _RegisterPageState extends State<RegisterPage> {
         child: ListView(
           children: [
             isLoading
-                ? const LinearProgressIndicator()
+                ? LinearProgressIndicator(
+                    color: Theme.of(context).backgroundColor,
+                  )
                 : const SizedBox(height: 0),
             Padding(
               padding:

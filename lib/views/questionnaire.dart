@@ -62,7 +62,11 @@ class _HomeState extends State<Questionnaire> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: _isLoading 
-        ? const Center(child: CircularProgressIndicator())
+        ? Center(child: 
+            CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            )
+          )
         : Container(
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
@@ -82,8 +86,8 @@ class _HomeState extends State<Questionnaire> {
                     Text(
                       getTranslated(context, 'questionnaireText')!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.orange,
+                      style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),

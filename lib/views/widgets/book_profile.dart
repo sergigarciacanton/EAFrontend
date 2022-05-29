@@ -207,8 +207,10 @@ class _BookPageState extends State<BookPage> {
             log(snapshot.error.toString());
             print(snapshot.error);
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ),
           );
         });
   }
