@@ -87,7 +87,7 @@ class _NewChatState extends State<NewChat> {
                       border: OutlineInputBorder()),
                 )),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Row(
               children: <Widget>[
