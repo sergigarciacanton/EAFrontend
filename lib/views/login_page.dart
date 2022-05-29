@@ -5,6 +5,7 @@ import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/views/widgets/book_profile.dart';
+import 'package:localstorage/localstorage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
+    final LocalStorage storage = LocalStorage('BookHub');
 
     return Scaffold(
       body: Center(
@@ -109,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                           isLoading = false;
                         });
                         if (response == "200") {
+                            storage.setItem('userName', usernameController.text.toString());
                           Navigator.push(
                               context,
                               MaterialPageRoute(

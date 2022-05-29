@@ -51,17 +51,12 @@ class _EventListState extends State<EventList> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     FloatingActionButton(
-                      backgroundColor: Theme.of(context).backgroundColor,
+                      backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
-                        if (widget.setMainComponent != null) {
-                          widget.setMainComponent!(
-                              const BuildMap(modo: "AllEvents"));
-                        } else {
-                          Route route = MaterialPageRoute(
-                              builder: (context) =>
-                                  const BuildMap(modo: "AllEvents"));
-                          Navigator.of(context).push(route);
-                        }
+                        widget.setMainComponent!(BuildMap(
+                          modo: "AllEvents",
+                          setMainComponent: widget.setMainComponent,
+                        ));
                       },
                       tooltip: getTranslated(context, "goMap"),
                       child: const Icon(Icons.map),
@@ -71,16 +66,12 @@ class _EventListState extends State<EventList> {
                           15.0, //Esto es solo para dar cierto margen entre los FAB
                     ),
                     FloatingActionButton(
+                      backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
-                        if (widget.setMainComponent != null) {
-                          widget.setMainComponent!(
-                              const BuildCalendar(modo: "AllEvents"));
-                        } else {
-                          Route route = MaterialPageRoute(
-                              builder: (context) =>
-                                  const BuildCalendar(modo: "AllEvents"));
-                          Navigator.of(context).push(route);
-                        }
+                        widget.setMainComponent!(BuildCalendar(
+                          modo: "AllEvents",
+                          setMainComponent: widget.setMainComponent,
+                        ));
                       },
                       tooltip: getTranslated(context, "goCalendar"),
                       child: const Icon(Icons.calendar_today),
@@ -90,7 +81,7 @@ class _EventListState extends State<EventList> {
                           15.0, //Esto es solo para dar cierto margen entre los FAB
                     ),
                     FloatingActionButton(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: Theme.of(context).iconTheme.color,
                       child: const Icon(Icons.add),
                       onPressed: () {
                         Navigator.push(
@@ -103,13 +94,6 @@ class _EventListState extends State<EventList> {
                   ]),
               body: Column(
                 children: [
-                  Text(
-                    getTranslated(context, 'eventTitle')!,
-                    style: TextStyle(
-                        color: Theme.of(context).backgroundColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(
@@ -119,17 +103,10 @@ class _EventListState extends State<EventList> {
                             return Card(
                               child: ListTile(
                                 onTap: () {
-                                  if (widget.setMainComponent != null) {
-                                    widget.setMainComponent!(EventPage(
-                                        elementId:
-                                            snapshot.data?.events[index].id));
-                                  } else {
-                                    Route route = MaterialPageRoute(
-                                        builder: (context) => EventPage(
-                                            elementId: snapshot
-                                                .data?.events[index].id));
-                                    Navigator.of(context).push(route);
-                                  }
+                                  widget.setMainComponent!(EventPage(
+                                    elementId: snapshot.data?.events[index].id,
+                                    setMainComponent: widget.setMainComponent,
+                                  ));
                                 },
                                 leading: const FlutterLogo(size: 56.0),
                                 title: Text(snapshot.data?.events[index].name),

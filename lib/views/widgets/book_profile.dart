@@ -1,38 +1,25 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
-import 'package:ea_frontend/views/widgets/book_card.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
-import 'package:ea_frontend/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ea_frontend/models/book.dart';
-
-@override
-Widget build(BuildContext context) {
-  // TODO: implement build
-  throw UnimplementedError();
-}
 
 class BookPage extends StatefulWidget {
-  final Function? setMainComponent;
-  const BookPage({Key? key, this.setMainComponent}) : super(key: key);
+  final String? elementId;
+
+  const BookPage({
+    Key? key,
+    this.elementId,
+  });
 
   @override
   State<BookPage> createState() => _BookPageState();
 }
 
 class _BookPageState extends State<BookPage> {
-  final String id = "6284b7ef2fa88c877a78dcd2";
-
-  var bookStorage;
   Future<Book> fetchBook() async {
-    bookStorage = LocalStorage('BookHub');
-    await bookStorage.ready;
-    print("check");
-    return BookService.getBook(id);
+    return BookService.getBook(widget.elementId!);
   }
 
   @override
@@ -42,10 +29,10 @@ class _BookPageState extends State<BookPage> {
         builder: (context, AsyncSnapshot<Book> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-              appBar: AppBar(
-                title: Text(getTranslated(context, 'returnToHome')!),
-              ),
-              body: Column(
+                body: SingleChildScrollView(
+                    child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
                 children: [
                   const SizedBox(height: 20),
                   Container(
@@ -214,9 +201,8 @@ class _BookPageState extends State<BookPage> {
                   ),
                 ],
               ),
-            );
+            )));
           } else if (snapshot.hasError) {
-            print("holaMAL");
             print(snapshot);
             log(snapshot.error.toString());
             print(snapshot.error);

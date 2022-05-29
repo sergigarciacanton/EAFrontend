@@ -10,11 +10,17 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
 
+import '../../models/location.dart';
 import '../event_page.dart';
 
 class BuildMap extends StatefulWidget {
+  final Function? setMainComponent;
+  final String? eventId;
   final String? modo;
-  const BuildMap({Key? key, this.modo}) : super(key: key);
+  final Location? center;
+  const BuildMap(
+      {Key? key, this.modo, this.center, this.setMainComponent, this.eventId})
+      : super(key: key);
 
   @override
   State<BuildMap> createState() => _BuildMapState();
@@ -22,10 +28,10 @@ class BuildMap extends StatefulWidget {
 
 class _BuildMapState extends State<BuildMap> {
   final PopupController _popupController = PopupController();
-
   List<Marker> markers = [];
   List<dynamic> _events = [];
   int pointIndex = 0;
+  LatLng centerPoint = LatLng(0.0, 0.0);
   List points = [];
   Future<bool> getEvents() async {
     if (widget.modo == "UserEvent") {
@@ -50,6 +56,11 @@ class _BuildMapState extends State<BuildMap> {
         ),
       ));
     });
+    if (widget.center == null) {
+      centerPoint = points[0];
+    } else {
+      centerPoint = LatLng(widget.center!.latitude, widget.center!.longitude);
+    }
     if (_events != null) {
       return true;
     }
@@ -63,17 +74,23 @@ class _BuildMapState extends State<BuildMap> {
         builder: (context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data == true) {
             return Scaffold(
-              appBar: AppBar(
-                title: Text(getTranslated(context, 'map')!),
-                centerTitle: true,
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {},
-                child: Icon(Icons.refresh),
-              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.startTop,
+              floatingActionButton: (widget.center != null)
+                  ? FloatingActionButton(
+                      backgroundColor: const Color.fromARGB(202, 255, 255, 255),
+                      onPressed: () {
+                        widget.setMainComponent!(EventPage(
+                          setMainComponent: widget.setMainComponent,
+                          elementId: widget.eventId,
+                        ));
+                      },
+                      child: const Icon(Icons.arrow_back),
+                    )
+                  : null,
               body: FlutterMap(
                 options: MapOptions(
-                  center: points[0],
+                  center: centerPoint,
                   zoom: 5,
                   maxZoom: 15,
                   plugins: [
@@ -147,12 +164,12 @@ class _BuildMapState extends State<BuildMap> {
                                           style:
                                               TextStyle(color: Colors.black)),
                                       onTap: () {
-                                        Route route = MaterialPageRoute(
-                                            builder: (context) => EventPage(
-                                                elementId: _events[
-                                                        markers.indexOf(marker)]
+                                        widget.setMainComponent!(EventPage(
+                                            setMainComponent:
+                                                widget.setMainComponent,
+                                            elementId:
+                                                _events[markers.indexOf(marker)]
                                                     .id));
-                                        Navigator.of(context).push(route);
                                       },
                                     ),
                                   ),

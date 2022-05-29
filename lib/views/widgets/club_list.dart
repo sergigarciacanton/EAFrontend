@@ -60,13 +60,6 @@ class _ClubListState extends State<ClubList> {
               ),
               body: Column(
                 children: [
-                  Text(
-                    getTranslated(context, 'clubTitle')!,
-                    style: TextStyle(
-                        color: Theme.of(context).backgroundColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(
@@ -76,29 +69,9 @@ class _ClubListState extends State<ClubList> {
                             return Card(
                                 child: ListTile(
                                     onTap: () {
-                                      if (widget.setMainComponent != null) {
-                                        widget.setMainComponent!(ClubPage(
-                                            elementId: snapshot
-                                                .data?.clubs[index].id));
-                                      } else {
-                                        Route route = MaterialPageRoute(
-                                            builder: (context) => ClubPage(
-                                                elementId: snapshot
-                                                    .data?.clubs[index].id));
-                                        Navigator.of(context).push(route);
-
-                                        //DO SOMETHING TO CHANGE PAGE IN MOBILE FORM
-
-                                        // print(context);
-                                        // ((Scaffold.of(context) as ScaffoldState)
-                                        //         .widget
-                                        //         .body as PageView)
-                                        //     .controller
-                                        //     .animateToPage(3,
-                                        //         duration:
-                                        //             Duration(milliseconds: 500),
-                                        //         curve: Curves.bounceIn);
-                                      }
+                                      widget.setMainComponent!(ClubPage(
+                                          elementId:
+                                              snapshot.data?.clubs[index].id));
                                     },
                                     leading: const FlutterLogo(size: 56.0),
                                     title:

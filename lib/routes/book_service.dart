@@ -29,14 +29,12 @@ class BookService {
     if (!kIsWeb) {
       url = Uri.parse('http://10.0.2.2:3000/book/$id');
     }
-    print(url);
 
     final response = await http.get(
       url,
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    print(data);
     return Book.fromJson(data);
   }
 

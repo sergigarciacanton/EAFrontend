@@ -22,7 +22,6 @@ class _NewBookState extends State<NewBook> {
   final editorialController = TextEditingController();
   final writerController = TextEditingController();
   String categoryController = "";
-  //Category categoryController2 = "MYSTERY" as Category;
   List<dynamic> categories = [];
   String publishedDateController = "";
   dynamic rateController = "";
@@ -282,7 +281,9 @@ class _NewBookState extends State<NewBook> {
                 ),
                 onPressed: () async {
                   print("Add new book");
+
                   var response = await BookService.newBook(Book(
+                      id: "",
                       title: titleController.text,
                       ISBN: ISBNController.text,
                       photoURL: photoURLController.text,

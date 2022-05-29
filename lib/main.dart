@@ -10,6 +10,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:localstorage/localstorage.dart';
 import 'dart:developer';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ea_frontend/views/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +20,14 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   const MyApp() : super();
-  static void setLocale(BuildContext context, Locale newLocale) {
+  static void setLocale(BuildContext context, Locale newLocale) async {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(newLocale);
+    await dotenv.load(fileName: ".env");
+    final cloudinary = Cloudinary.full(
+        apiKey: dotenv.env['CLOUDINARY_API_KEY']!,
+        apiSecret: dotenv.env['CLOUDINARY_API_SECRET']!,
+        cloudName: dotenv.env['CLOUDINARY_CLOUD_NAME']!);
   }
 
   @override
@@ -79,7 +87,7 @@ class _MyAppState extends State<MyApp> {
                 return supportedLocales.first;
               },
               home: AnimatedSplashScreen.withScreenFunction(
-                  duration: 3000,
+                  duration: 30,
                   splash: "public/logosplash.png",
                   splashIconSize: 500,
                   screenFunction: () async {

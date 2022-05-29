@@ -1,8 +1,9 @@
 import 'package:ea_frontend/models/register.dart';
-import 'package:ea_frontend/views/home_scaffold.dart';
+import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:localstorage/localstorage.dart';
 import '../localization/language_constants.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -26,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
+    final LocalStorage storage = LocalStorage('BookHub');
 
     return Scaffold(
       body: Center(
@@ -234,11 +236,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             isLoading = false;
                           });
                           if (response == "201") {
+                            storage.setItem('userName', usernameController.text.toString());
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const HomeScaffold()));
+                                        const Questionnaire()));
                           } else {
                             showDialog(
                               context: context,

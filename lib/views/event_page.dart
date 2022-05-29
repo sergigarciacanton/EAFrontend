@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/event.dart';
 import 'package:ea_frontend/routes/event_service.dart';
+import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +13,13 @@ import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
 
 class EventPage extends StatefulWidget {
+  final Function? setMainComponent;
   final String? elementId;
 
   const EventPage({
     Key? key,
     this.elementId,
+    this.setMainComponent,
   }) : super(key: key);
 
   @override
@@ -47,6 +51,9 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width < 11000) {
+      screenSize = screenSize / 5 * 4;
+    }
     return FutureBuilder(
         future: fetchEvent(),
         builder: (context, AsyncSnapshot<Event> snapshot) {
@@ -54,7 +61,7 @@ class _EventPageState extends State<EventPage> {
             return Scaffold(
                 floatingActionButton: (snapshot.data!.admin.id == idUser)
                     ? FloatingActionButton(
-                        backgroundColor: Colors.orange,
+                        backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {
                           log('editEvent');
@@ -104,7 +111,8 @@ class _EventPageState extends State<EventPage> {
         padding: const EdgeInsets.all(5),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
-            color: Colors.blueGrey, borderRadius: BorderRadius.circular(4.0)),
+            color: Theme.of(context).shadowColor,
+            borderRadius: BorderRadius.circular(4.0)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -113,14 +121,12 @@ class _EventPageState extends State<EventPage> {
                 const Text("Admin: ",
                     textAlign: TextAlign.right,
                     style: TextStyle(
-                      color: Colors.black,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w700,
                     )),
                 Text(snapshot.data?.admin.userName,
                     textAlign: TextAlign.right,
                     style: const TextStyle(
-                      color: Colors.black,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w700,
                     )),
@@ -143,6 +149,7 @@ class _EventPageState extends State<EventPage> {
       BuildContext context, AsyncSnapshot<Event> snapshot, Size screenSize) {
     return Column(
       children: [
+        Container(height: 3, color: Theme.of(context).backgroundColor),
         const SizedBox(height: 10),
         Container(
             padding: const EdgeInsets.all(10),
@@ -156,31 +163,30 @@ class _EventPageState extends State<EventPage> {
               )
             ])),
         const SizedBox(height: 30),
-        _buildDate(snapshot),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: concatCategory(snapshot),
-        ),
+        Row(children: [
+          _buildDate(snapshot),
+          const SizedBox(
+            width: 20,
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: concatCategory(snapshot)),
+        ]),
         _buildStatContainer(snapshot),
         _buildSeparator(screenSize),
         _buildDescription(context, snapshot),
         _buildSeparator(screenSize),
-        InkWell(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              height: screenSize.height / 2,
-              width: screenSize.width / 1.5,
-              child: _buildMap(context, snapshot),
-            ),
-            onTap: () {
-              print("tap");
-            }),
-        _buildButtons(snapshot),
         Container(
-            width: 300,
-            constraints: const BoxConstraints(maxHeight: 200),
-            decoration:
-                BoxDecoration(border: Border.all(width: 1), color: Colors.grey),
+          padding: const EdgeInsets.all(10),
+          height: screenSize.height / 2,
+          width: screenSize.width / 1.5,
+          child: _buildMap(context, snapshot),
+        ),
+        _buildButtons(snapshot),
+        _buildSeparator(screenSize),
+        Container(
+            width: screenSize.width / 1.5,
+            constraints: BoxConstraints(maxHeight: screenSize.height / 3),
             child: SingleChildScrollView(
               child: Column(
                 children: userList(snapshot),
@@ -205,10 +211,11 @@ class _EventPageState extends State<EventPage> {
         iconSize: 50,
         tooltip: getTranslated(context, "goCalendar"),
         onPressed: () {
-          Route route = MaterialPageRoute(
-              builder: (context) =>
-                  BuildCalendar(modo: snapshot.data!.eventDate.toString()));
-          Navigator.of(context).push(route);
+          widget.setMainComponent!(BuildCalendar(
+            modo: snapshot.data!.eventDate.toString(),
+            setMainComponent: widget.setMainComponent,
+            eventId: widget.elementId,
+          ));
         },
       ),
       Text(
@@ -218,7 +225,6 @@ class _EventPageState extends State<EventPage> {
               "-" +
               snapshot.data!.eventDate.year.toString(),
           style: const TextStyle(
-            color: Colors.black,
             fontSize: 28.0,
             fontWeight: FontWeight.w700,
           ))
@@ -228,6 +234,7 @@ class _EventPageState extends State<EventPage> {
   concatCategory(AsyncSnapshot<Event> snapshot) {
     List<Widget> lista = [];
     snapshot.data?.category.forEach((element) {
+      print(element.name!);
       lista.add(_buildCategory(context, element.name!));
     });
     return lista;
@@ -237,7 +244,7 @@ class _EventPageState extends State<EventPage> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
-        color: Colors.blueGrey,
+        color: Theme.of(context).shadowColor,
         borderRadius: BorderRadius.circular(4.0),
       ),
       child: Text(
@@ -254,16 +261,22 @@ class _EventPageState extends State<EventPage> {
   userList(AsyncSnapshot<Event> snapshot) {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
-      lista.add(_buildUser(element.userName!, element.mail!));
+      if (element.id != snapshot.data!.admin.id) {
+        lista.add(
+            _buildUser(element.userName!, element.mail!, element.photoURL!));
+      }
     });
     return lista;
   }
 
-  Widget _buildUser(String userName, String mail) {
+  Widget _buildUser(String userName, String mail, String imageURL) {
+    var image =
+        CloudinaryImage('https://res.cloudinary.com/demo/image/upload/w_100,');
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
           decoration: BoxDecoration(
+            color: Theme.of(context).primaryColorLight,
             border: Border.all(width: 1),
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -276,7 +289,8 @@ class _EventPageState extends State<EventPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
                   child: Image.network(
-                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
+                    imageURL,
+                    //image.transform().generate()!,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -294,13 +308,12 @@ class _EventPageState extends State<EventPage> {
 
   Widget _buildStatItem(String label, String count) {
     TextStyle _statLabelTextStyle = const TextStyle(
-      color: Colors.black,
       fontSize: 16.0,
       fontWeight: FontWeight.w200,
     );
 
-    TextStyle _statCountTextStyle = const TextStyle(
-      color: Colors.black54,
+    TextStyle _statCountTextStyle = TextStyle(
+      color: Theme.of(context).primaryColor,
       fontSize: 24.0,
       fontWeight: FontWeight.bold,
     );
@@ -324,8 +337,8 @@ class _EventPageState extends State<EventPage> {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
-      decoration: const BoxDecoration(
-        color: Color(0xFFEFF4F7),
+      decoration: BoxDecoration(
+        color: Theme.of(context).navigationBarTheme.backgroundColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -342,9 +355,8 @@ class _EventPageState extends State<EventPage> {
   Widget _buildDescription(
       BuildContext context, AsyncSnapshot<Event> snapshot) {
     TextStyle bioTextStyle = const TextStyle(
-      fontWeight: FontWeight.w500, //try changing weight to w500 if not thin
+      fontWeight: FontWeight.w500,
       fontStyle: FontStyle.italic,
-      color: Color(0xFF799497),
       fontSize: 16.0,
     );
 
@@ -364,7 +376,7 @@ class _EventPageState extends State<EventPage> {
       width: screenSize.width / 1.6,
       height: 2.0,
       color: Colors.black54,
-      margin: const EdgeInsets.only(top: 4.0),
+      margin: const EdgeInsets.only(top: 6, bottom: 6),
     );
   }
 
@@ -373,7 +385,7 @@ class _EventPageState extends State<EventPage> {
         .where((item) => item.id == idUser)
         .isNotEmpty) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30.0),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -383,7 +395,7 @@ class _EventPageState extends State<EventPage> {
                   height: 40.0,
                   decoration: BoxDecoration(
                     border: Border.all(),
-                    color: const Color(0xFF404A5C),
+                    color: Theme.of(context).indicatorColor,
                   ),
                   child: const Center(
                     child: Text(
@@ -397,27 +409,32 @@ class _EventPageState extends State<EventPage> {
                 ),
               ),
             ),
-            const SizedBox(width: 10.0),
-            Expanded(
-              child: InkWell(
-                onTap: () => leaveEvent(),
-                child: Container(
-                  height: 40.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                  ),
-                  child: const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "leave",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+            (snapshot.data!.admin.id != idUser)
+                ? const SizedBox(width: 60.0)
+                : Container(),
+            (snapshot.data!.admin.id != idUser)
+                ? Expanded(
+                    child: InkWell(
+                      onTap: () => leaveEvent(),
+                      child: Container(
+                        height: 40.0,
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          color: Colors.redAccent,
+                        ),
+                        child: const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              "leave",
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-            ),
+                  )
+                : Container(),
           ],
         ),
       );
@@ -432,14 +449,14 @@ class _EventPageState extends State<EventPage> {
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
-                    border: Border.all(),
-                  ),
+                      border: Border.all(), color: Colors.greenAccent),
                   child: const Center(
                     child: Padding(
                       padding: EdgeInsets.all(10.0),
                       child: Text(
                         "Join",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, color: Colors.black),
                       ),
                     ),
                   ),
@@ -458,6 +475,14 @@ class _EventPageState extends State<EventPage> {
         center: LatLng(snapshot.data!.location.latitude,
             snapshot.data!.location.longitude),
         zoom: 13.0,
+        onTap: (TapPosition, LatLng) {
+          widget.setMainComponent!((BuildMap(
+            modo: "AllEvents",
+            center: snapshot.data!.location,
+            setMainComponent: widget.setMainComponent,
+            eventId: widget.elementId,
+          )));
+        },
       ),
       layers: [
         TileLayerOptions(
@@ -487,26 +512,32 @@ class _EventPageState extends State<EventPage> {
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   AsyncSnapshot<Event> snapshot;
-
+  var image = CloudinaryImage(
+      'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
   MySliverAppBar({required this.snapshot, required this.expandedHeight});
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width < 11000) {
+      screenSize = screenSize / 5 * 4;
+    }
     return Stack(
       fit: StackFit.expand,
-      overflow: Overflow.visible,
+      clipBehavior: Clip.none,
       children: [
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYdJFymvjmjacbKVMvsqzjEanEAKlEBjQkOFvJ11KtCAiXR4BnUqT4Zj7wx6fquYoLgA8&usqp=CAU'),
+                  image.transform().width(500).height(100).generate()!),
               fit: BoxFit.cover,
             ),
           ),
         ),
-        Center(
+        Container(
+          padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
           child: Opacity(
             opacity: shrinkOffset / expandedHeight,
             child: Text(
@@ -521,7 +552,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
         ),
         Positioned(
           top: expandedHeight / 2 - shrinkOffset,
-          left: MediaQuery.of(context).size.width / 1.5,
+          left: screenSize.width / 1.5,
           child: Opacity(
             opacity: (1 - shrinkOffset / expandedHeight),
             child: Container(
@@ -533,11 +564,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.yellow, width: 3),
+                border: Border.all(
+                    color: Theme.of(context).backgroundColor, width: 3),
               ),
               child: SizedBox(
                 height: expandedHeight,
-                width: MediaQuery.of(context).size.width / 4,
+                width: screenSize.width / 4,
               ),
             ),
           ),

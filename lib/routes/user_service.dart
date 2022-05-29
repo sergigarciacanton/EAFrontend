@@ -13,14 +13,31 @@ class UserService {
     if (!kIsWeb) {
       url = Uri.parse('http://10.0.2.2:3000/user/$id');
     }
-    print(url);
 
     final response = await http.get(
       url,
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    print(data);
+
+    return User.fromJson(data);
+  }
+
+  static Future<User> getUserByUserName(String userName) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/user/getbyusername/$userName';
+    Uri url = Uri.parse(baseUrl);
+    if (!kIsWeb) {
+      url = Uri.parse('http://10.0.2.2:3000/user/getbyusername/$userName');
+    }
+
+    final response = await http.get(
+      url,
+      headers: {'authorization': LocalStorage('BookHub').getItem('token')},
+    );
+    Object data = jsonDecode(response.body);
+
     return User.fromJson(data);
   }
 
