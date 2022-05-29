@@ -44,7 +44,7 @@ class UserService {
   static Future<List<User>> getUsers() async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/chat/';
+        '/user/';
     Uri url = Uri.parse(baseUrl);
 
     if (!kIsWeb) {

@@ -1,0 +1,25 @@
+import 'package:ea_frontend/views/widgets/new_chat.dart';
+import 'package:flutter/material.dart';
+
+import '../localization/language_constants.dart';
+
+class NewBookPage extends StatelessWidget {
+  const NewBookPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'NewChatPage',
+        home: Scaffold(
+          backgroundColor: Color.fromARGB(124, 247, 202, 111),
+          appBar: AppBar(
+            title: Text(getTranslated(context, "newChat")!),
+            foregroundColor: Colors.black,
+            centerTitle: true,
+            backgroundColor: Colors.orange,
+          ),
+          body: const NewChat(),
+        ));
+  }
+}

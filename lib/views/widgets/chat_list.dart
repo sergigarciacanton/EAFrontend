@@ -7,6 +7,8 @@ import 'package:ea_frontend/views/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
+import 'new_chat.dart';
+
 class ChatList extends StatefulWidget {
   final Function? setMainComponent;
   const ChatList({
@@ -41,6 +43,10 @@ class _ChatListState extends State<ChatList> {
                 backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewChat()),
+                  );
                   log('createChat');
                 },
               ),
