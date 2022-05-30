@@ -3,6 +3,7 @@ import 'package:ea_frontend/models/book.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
+import 'dart:io' show Platform;
 
 class BookService {
   static Future<List<Book>> getBooks() async {
@@ -11,7 +12,7 @@ class BookService {
         '/book/';
     Uri url = Uri.parse(baseUrl);
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/book/');
     }
 
@@ -26,7 +27,7 @@ class BookService {
   static Future<Book> getBook(String id) async {
     Uri url = Uri.parse('http://localhost:3000/book/$id');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/book/$id');
     }
 
@@ -41,7 +42,7 @@ class BookService {
   static Future<String> newBook(Book values) async {
     Uri url = Uri.parse('http://localhost:3000/book/');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/book/');
     }
 

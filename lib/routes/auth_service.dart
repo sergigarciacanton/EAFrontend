@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:jwt_decode/jwt_decode.dart';
+import 'dart:io' show Platform;
 
 class AuthService {
   final LocalStorage storage = LocalStorage('BookHub');
@@ -60,7 +61,7 @@ class AuthService {
   }
 
   static String checkPlatform() {
-    if (kIsWeb) {
+    if (kIsWeb || Platform.isWindows) {
       return const String.fromEnvironment('API_URL',
               defaultValue: 'http://localhost:3000') +
           '/auth/';

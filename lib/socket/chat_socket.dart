@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatSocket {
@@ -15,19 +16,25 @@ class ChatSocket {
   // ChatSocket streamSocket = ChatSocket();
 
 //STEP2: Add this function in main function in main.dart file and add incoming data to the stream
-  void connectAndListen() {
-    print("socket connect and listen");
+  IO.Socket connectAndListen(String chatId) {
+    print('Executed connectAnd Listen');
     IO.Socket socket = IO.io('http://localhost:3000',
         IO.OptionBuilder().setTransports(['websocket']).build());
 
-    print("2");
     socket.onConnect((_) {
-      print('connect');
-      socket.emit('msg', 'test');
+      print('connected websocket');
     });
 
+    socket.emit('new-chat', chatId);
     //When an event recieved from server, data is added to the stream
-    socket.on('event', (data) => this.addResponse);
+    socket.on('textMessage', (data) {
+      print(data + ' received');
+      addResponse(data);
+    });
     socket.onDisconnect((_) => print('disconnect'));
+
+    return socket;
   }
+
+  void sentMessage() {}
 }

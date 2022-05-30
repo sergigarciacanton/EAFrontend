@@ -63,6 +63,7 @@ class _ClubListState extends State<ClubList> {
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(
+                          controller: ScrollController(),
                           padding: const EdgeInsets.all(8),
                           itemCount: snapshot.data?.clubs.length,
                           itemBuilder: (BuildContext context, int index) {

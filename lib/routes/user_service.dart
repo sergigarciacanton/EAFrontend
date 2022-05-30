@@ -3,6 +3,7 @@ import 'package:ea_frontend/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
+import 'dart:io' show Platform;
 
 class UserService {
   static Future<User> getUser(String id) async {
@@ -10,7 +11,7 @@ class UserService {
             defaultValue: 'http://localhost:3000') +
         '/user/$id';
     Uri url = Uri.parse(baseUrl);
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/user/$id');
     }
 
@@ -28,7 +29,7 @@ class UserService {
             defaultValue: 'http://localhost:3000') +
         '/user/getbyusername/$userName';
     Uri url = Uri.parse(baseUrl);
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/user/getbyusername/$userName');
     }
 
@@ -47,7 +48,7 @@ class UserService {
         '/user/';
     Uri url = Uri.parse(baseUrl);
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/user/');
     }
 
