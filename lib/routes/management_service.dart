@@ -3,6 +3,7 @@ import 'package:ea_frontend/models/category.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
+import 'dart:io' show Platform;
 
 class ManagementService {
   static Future<List<Category>> getCategories() async {
@@ -11,7 +12,7 @@ class ManagementService {
         '/management/categories';
     Uri url = Uri.parse(baseUrl);
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/management/categories');
     }
 
@@ -23,13 +24,15 @@ class ManagementService {
     return Category.categoriesFromSnapshot(data);
   }
 
-  static Future<String> updateUserCategories(String id, String categories) async {
+  static Future<String> updateUserCategories(
+      String id, String categories) async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/management/updateCategories/' + id;
+        '/management/updateCategories/' +
+        id;
     Uri url = Uri.parse(baseUrl);
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/management/updateCategories/' + id);
     }
 
@@ -68,8 +71,6 @@ class Message {
   }
 
   static Map<String, dynamic> toJson(String values) {
-    return {
-      'categories': values
-    };
+    return {'categories': values};
   }
 }

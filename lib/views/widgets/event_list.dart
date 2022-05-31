@@ -97,6 +97,7 @@ class _EventListState extends State<EventList> {
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(
+                          controller: ScrollController(),
                           padding: const EdgeInsets.all(8),
                           itemCount: snapshot.data?.events.length,
                           itemBuilder: (BuildContext context, int index) {

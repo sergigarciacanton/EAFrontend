@@ -55,6 +55,7 @@ class _ChatListState extends State<ChatList> {
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(
+                          controller: ScrollController(),
                           padding: const EdgeInsets.all(8),
                           itemCount: snapshot.data?.chats.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -62,7 +63,8 @@ class _ChatListState extends State<ChatList> {
                               child: ListTile(
                                 onTap: () {
                                   if (widget.setMainComponent != null) {
-                                    widget.setMainComponent!(ChatPage());
+                                    widget.setMainComponent!(ChatPage(
+                                        snapshot.data?.chats[index].id, id));
                                   }
                                 },
                                 leading: FlutterLogo(size: 56.0),

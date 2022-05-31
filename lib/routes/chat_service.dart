@@ -4,6 +4,7 @@ import 'package:ea_frontend/models/newchat.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
+import 'dart:io' show Platform;
 
 class ChatService {
   static Future<List<Chat>> getChats() async {
@@ -12,7 +13,7 @@ class ChatService {
         '/chat/';
     Uri url = Uri.parse(baseUrl);
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/chat/');
     }
 
@@ -24,10 +25,28 @@ class ChatService {
     return Chat.chatsFromSnapshot(data);
   }
 
+  static Future<Chat> getChat(String id) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/chat/';
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      baseUrl = 'http://10.0.2.2:3000/chat/';
+    }
+    Uri url = Uri.parse(baseUrl + id + '/');
+
+    final response = await http.get(
+      url,
+      headers: {'authorization': LocalStorage('BookHub').getItem('token')},
+    );
+    Object data = jsonDecode(response.body);
+    return Chat.fromJson(data);
+  }
+
   static Future<String> newChat(NewChatModel values) async {
     Uri url = Uri.parse('http://localhost:3000/chat/');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/chat/');
     }
 
