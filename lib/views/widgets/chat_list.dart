@@ -64,7 +64,7 @@ class _ChatListState extends State<ChatList> {
                                 onTap: () {
                                   if (widget.setMainComponent != null) {
                                     widget.setMainComponent!(ChatPage(
-                                        snapshot.data?.chats[index].id));
+                                        snapshot.data?.chats[index].id, id));
                                   }
                                 },
                                 leading: FlutterLogo(size: 56.0),

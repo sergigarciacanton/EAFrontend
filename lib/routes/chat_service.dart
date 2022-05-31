@@ -25,6 +25,24 @@ class ChatService {
     return Chat.chatsFromSnapshot(data);
   }
 
+  static Future<Chat> getChat(String id) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/chat/';
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      baseUrl = 'http://10.0.2.2:3000/chat/';
+    }
+    Uri url = Uri.parse(baseUrl + id + '/');
+
+    final response = await http.get(
+      url,
+      headers: {'authorization': LocalStorage('BookHub').getItem('token')},
+    );
+    Object data = jsonDecode(response.body);
+    return Chat.fromJson(data);
+  }
+
   static Future<String> newChat(NewChatModel values) async {
     Uri url = Uri.parse('http://localhost:3000/chat/');
 

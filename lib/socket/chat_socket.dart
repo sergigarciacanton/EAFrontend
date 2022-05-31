@@ -1,13 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'package:ea_frontend/models/chat_message.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatSocket {
-  final _socketResponse = StreamController<String>();
+  final _socketResponse = StreamController<ChatMessage>();
 
-  void Function(String) get addResponse => _socketResponse.sink.add;
+  void Function(ChatMessage) get addResponse => _socketResponse.sink.add;
 
-  Stream<String> get getResponse => _socketResponse.stream;
+  Stream<ChatMessage> get getResponse => _socketResponse.stream;
 
   void dispose() {
     _socketResponse.close();
@@ -29,7 +31,8 @@ class ChatSocket {
     //When an event recieved from server, data is added to the stream
     socket.on('textMessage', (data) {
       print(data + ' received');
-      addResponse(data);
+      ChatMessage msg = ChatMessage.fromJson(jsonDecode(data));
+      addResponse(msg);
     });
     socket.onDisconnect((_) => print('disconnect'));
 

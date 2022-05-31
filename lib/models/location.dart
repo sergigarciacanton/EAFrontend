@@ -9,4 +9,7 @@ class Location {
       longitude: json['longitude'].toDouble(),
     );
   }
+  static Map<String, dynamic> toJson(Location values) {
+    return {'latitude': values.latitude, 'longitude': values.longitude};
+  }
 }
