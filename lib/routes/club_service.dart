@@ -26,7 +26,9 @@ class ClubService {
   }
 
   static Future<List<Club>> getClubs() async {
-    Uri url = Uri.parse('http://localhost:3000/club/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/');
@@ -89,7 +91,9 @@ class ClubService {
   }
 
   static Future<String> newClub(NewClubModel credentials) async {
-    Uri url = Uri.parse('http://localhost:3000/club/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/');

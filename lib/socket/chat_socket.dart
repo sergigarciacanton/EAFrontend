@@ -20,7 +20,9 @@ class ChatSocket {
 //STEP2: Add this function in main function in main.dart file and add incoming data to the stream
   IO.Socket connectAndListen(String chatId) {
     print('Executed connectAnd Listen');
-    IO.Socket socket = IO.io('http://localhost:3000',
+    IO.Socket socket = IO.io(
+        const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000'),
         IO.OptionBuilder().setTransports(['websocket']).build());
 
     socket.onConnect((_) {
