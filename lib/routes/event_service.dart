@@ -7,7 +7,9 @@ import 'dart:io' show Platform;
 
 class EventService {
   static Future<List<Event>> getEvents() async {
-    Uri url = Uri.parse('http://localhost:3000/event/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/event/');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/');
