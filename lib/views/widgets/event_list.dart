@@ -54,7 +54,7 @@ class _EventListState extends State<EventList> {
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
                         widget.setMainComponent!(BuildMap(
-                          modo: "AllEvents",
+                          modo: "UserEvent",
                           setMainComponent: widget.setMainComponent,
                         ));
                       },
@@ -69,7 +69,7 @@ class _EventListState extends State<EventList> {
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
                         widget.setMainComponent!(BuildCalendar(
-                          modo: "AllEvents",
+                          modo: "UserEvent",
                           setMainComponent: widget.setMainComponent,
                         ));
                       },
