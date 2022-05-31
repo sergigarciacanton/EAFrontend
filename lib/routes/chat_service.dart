@@ -44,7 +44,9 @@ class ChatService {
   }
 
   static Future<String> newChat(NewChatModel values) async {
-    Uri url = Uri.parse('http://localhost:3000/chat/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/chat/');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/chat/');

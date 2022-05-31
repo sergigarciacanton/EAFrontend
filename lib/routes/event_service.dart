@@ -43,7 +43,9 @@ class EventService {
 
   static Future<bool> joinEvent(String eventId) async {
     String userId = LocalStorage('BookHub').getItem('userId');
-    Uri url = Uri.parse('http://localhost:3000/event/join/$userId/$eventId');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/event/join/$userId/$eventId');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/join/$userId/$eventId');
@@ -63,7 +65,9 @@ class EventService {
 
   static Future<bool> leaveEvent(String eventId) async {
     String userId = LocalStorage('BookHub').getItem('userId');
-    Uri url = Uri.parse('http://localhost:3000/event/leave/$userId/$eventId');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/event/leave/$userId/$eventId');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/leave/$userId/$eventId');
