@@ -56,9 +56,9 @@ class _MyAppState extends State<MyApp> {
         create: (context) => ThemeProvider(),
         builder: (context, _) {
           final themeProvider = Provider.of<ThemeProvider>(context);
-          if (this._locale == null) {
-            setLocale(Locale('es'));
-          }
+          // if (this._locale == null) {
+          //   setLocale(Locale('es'));
+          // }
           return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: "BookHub",

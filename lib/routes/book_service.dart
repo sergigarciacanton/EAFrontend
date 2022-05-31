@@ -25,7 +25,9 @@ class BookService {
   }
 
   static Future<Book> getBook(String id) async {
-    Uri url = Uri.parse('http://localhost:3000/book/$id');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/book/$id');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/book/$id');
@@ -40,7 +42,9 @@ class BookService {
   }
 
   static Future<String> newBook(Book values) async {
-    Uri url = Uri.parse('http://localhost:3000/book/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/book/');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/book/');

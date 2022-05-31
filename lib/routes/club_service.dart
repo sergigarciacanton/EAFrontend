@@ -43,7 +43,9 @@ class ClubService {
   }
 
   static Future<bool> subscribeClub(String idClub) async {
-    Uri url = Uri.parse('http://localhost:3000/club/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/');
@@ -67,7 +69,9 @@ class ClubService {
   }
 
   static Future<bool> unsubscribeClub(String idClub) async {
-    Uri url = Uri.parse('http://localhost:3000/club/unsubscribe');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/unsubscribe');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/unsubscribe');
