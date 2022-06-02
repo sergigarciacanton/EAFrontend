@@ -219,7 +219,7 @@ class _HomeState extends State<Home> {
                             return GestureDetector(
                               child: BookCard(
                                 title: _books[index].title,
-                                author: _books[index].writer,
+                                author: _books[index].writer.name,
                                 rate: _books[index].rate.toString(),
                                 imageUrl: _books[index].photoURL,
                               ),
@@ -287,80 +287,96 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   child: _isLoadingEvent
-                  ? Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        LinearProgressIndicator(
-                          color: Theme.of(context).backgroundColor,
-                        ),
-                        const SizedBox(height: 200),
-                      ],
-                    )
-                  : Stack(
-                      children: [
-                        ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          controller: _controller,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _events.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              child: EventCard(
-                                title: _events[index].name,
-                                date: _events[index]
-                                        .eventDate
-                                        .day
-                                        .toString() +
-                                    "-" +
-                                    _events[index].eventDate.month.toString() +
-                                    "-" +
-                                    _events[index].eventDate.year.toString(),
-                                numberUsers:
-                                    _events[index].usersList.length.toString(),
-                                imageUrl:
-                                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
-                              ),
-                              onTap: () {
-                                widget.setMainComponent!(EventPage(
-                                    setMainComponent: widget.setMainComponent,
-                                    elementId: _events[index].id));
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            LinearProgressIndicator(
+                              color: Theme.of(context).backgroundColor,
+                            ),
+                            const SizedBox(height: 200),
+                          ],
+                        )
+                      : Stack(
+                          children: [
+                            ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              controller: _controller,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _events.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  child: EventCard(
+                                    title: _events[index].name,
+                                    date:
+                                        _events[index]
+                                                .eventDate
+                                                .day
+                                                .toString() +
+                                            "-" +
+                                            _events[index]
+                                                .eventDate
+                                                .month
+                                                .toString() +
+                                            "-" +
+                                            _events[index]
+                                                .eventDate
+                                                .year
+                                                .toString(),
+                                    numberUsers: _events[index]
+                                        .usersList
+                                        .length
+                                        .toString(),
+                                    imageUrl:
+                                        "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
+                                  ),
+                                  onTap: () {
+                                    widget.setMainComponent!(EventPage(
+                                        setMainComponent:
+                                            widget.setMainComponent,
+                                        elementId: _events[index].id));
+                                  },
+                                );
                               },
-                            );
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.15, vertical: 15.15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              FloatingActionButton(
-                                backgroundColor: Theme.of(context).indicatorColor,
-                                onPressed: () {
-                                  widget.setMainComponent!(BuildCalendar(
-                                    modo: "AllEvents",
-                                    setMainComponent: widget.setMainComponent,
-                                  ));
-                                },
-                                tooltip: getTranslated(context, "goCalendar"),
-                                child: const Icon(Icons.calendar_today),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.15, vertical: 15.15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  FloatingActionButton(
+                                    backgroundColor:
+                                        Theme.of(context).indicatorColor,
+                                    onPressed: () {
+                                      widget.setMainComponent!(BuildCalendar(
+                                        modo: "AllEvents",
+                                        setMainComponent:
+                                            widget.setMainComponent,
+                                      ));
+                                    },
+                                    tooltip:
+                                        getTranslated(context, "goCalendar"),
+                                    child: const Icon(Icons.calendar_today),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  FloatingActionButton(
+                                    backgroundColor:
+                                        Theme.of(context).indicatorColor,
+                                    onPressed: () {
+                                      widget.setMainComponent!(BuildMap(
+                                        modo: "AllEvents",
+                                        setMainComponent:
+                                            widget.setMainComponent,
+                                      ));
+                                    },
+                                    tooltip: getTranslated(context, "goMap"),
+                                    child: const Icon(Icons.map),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 5),
-                              FloatingActionButton(
-                                backgroundColor: Theme.of(context).indicatorColor,
-                                onPressed: () {
-                                  widget.setMainComponent!(BuildMap(
-                                    modo: "AllEvents",
-                                    setMainComponent: widget.setMainComponent,
-                                  ));
-                                },
-                                tooltip: getTranslated(context, "goMap"),
-                                child: const Icon(Icons.map),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -439,7 +455,8 @@ class _HomeState extends State<Home> {
                                 categories:
                                     getStringCategories(_clubs[index].category)
                                         .toString(),
-                                numberUsers: _clubs[index].usersList.length.toString(),
+                                numberUsers:
+                                    _clubs[index].usersList.length.toString(),
                                 imageUrl:
                                     "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
                               ),

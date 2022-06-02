@@ -1,5 +1,7 @@
 import 'package:ea_frontend/models/category.dart';
 
+import 'author.dart';
+
 class Book {
   String id;
   String title;
@@ -10,7 +12,8 @@ class Book {
   String editorial;
   dynamic rate;
   List<dynamic> category;
-  String writer;
+  //String writer;
+  AuthorPopulate writer;
 
   Book(
       {required this.id,
@@ -38,7 +41,8 @@ class Book {
       category: json['category'].toString().contains('{')
           ? Category.categoriesFromSnapshot(json['category'])
           : json['category'],
-      writer: json['writer'] as String,
+      //writer: json['writer'] as String
+      writer: AuthorPopulate.fromJson(json['writer']),
     );
   }
 
@@ -64,5 +68,20 @@ class Book {
       'category': values.category.toString(),
       'writer': values.writer
     };
+  }
+}
+
+class AuthorPopulate {
+  String id;
+  String name;
+
+  AuthorPopulate({
+    required this.id,
+    required this.name,
+  });
+
+  factory AuthorPopulate.fromJson(dynamic json) {
+    return AuthorPopulate(
+        id: json['_id'] as String, name: json['name'] as String);
   }
 }
