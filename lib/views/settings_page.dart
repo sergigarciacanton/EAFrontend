@@ -75,6 +75,10 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget buildAccountTheme(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [Text("Tema: "), const Spacer(), ChangeThemeButtonWidget()],
+        children: [
+          const Text("Tema: "),
+          const Spacer(),
+          ChangeThemeButtonWidget(),
+        ],
       );
 }

@@ -3,17 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:ea_frontend/views/provider/theme_provider.dart';
 
 class ChangeThemeButtonWidget extends StatelessWidget {
+  const ChangeThemeButtonWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
-    return Switch.adaptive(
-      value: themeProvider.isDarkMode,
-      activeColor: Theme.of(context).backgroundColor,
-      onChanged: (value) {
-        final provider = Provider.of<ThemeProvider>(context, listen: false);
-        provider.toggleTheme(value);
-      },
+    return Consumer<ThemeProvider>(
+      builder: (context, notifier, child) => Switch.adaptive(
+        onChanged: (value) {
+          notifier.toggleTheme();
+        },
+        value: notifier.isDarkMode,
+      ),
     );
   }
 }
