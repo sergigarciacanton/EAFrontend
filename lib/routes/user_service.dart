@@ -60,4 +60,32 @@ class UserService {
     print(data);
     return User.usersFromSnapshot(data);
   }
+
+  static Future<bool> updateUser(String id, String name, String userName,
+      String mail, String birthDate) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/user/update/$id';
+    Uri url = Uri.parse(baseUrl);
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/user/update/$id');
+    }
+
+    final response = await http.put(url,
+        headers: {
+          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          'name': name,
+          'userName': userName,
+          'mail': mail,
+          'birthDate': birthDate,
+        }));
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:ea_frontend/views/settings/account_page.dart';
+import 'package:ea_frontend/views/widgets/edit_profile.dart';
 import 'package:ea_frontend/views/widgets/icon_widget.dart';
 import 'package:ea_frontend/views/widgets/change_theme_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class _SettingPageState extends State<SettingPage> {
           children: <Widget>[
             buildAccountTheme(context),
             AccountPage(),
+            buildEditProfile(),
             buildLogout(),
             buildDeleteAccount(),
           ],
@@ -49,6 +51,12 @@ class _SettingPageState extends State<SettingPage> {
             ])
       ])));
 
+  Widget buildEditProfile() => SimpleSettingsTile(
+        title: "View Profile",
+        subtitle: '',
+        leading: const IconWidget(icon: Icons.face, color: Colors.orange),
+        child: EditProfile(),
+      );
   Widget buildLogout() => SimpleSettingsTile(
       title: getTranslated(context, 'logout')!,
       subtitle: '',
