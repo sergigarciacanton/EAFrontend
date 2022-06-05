@@ -1,9 +1,14 @@
 import 'dart:developer';
+import 'dart:html';
+import 'package:ea_frontend/routes/comment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
+import '../../models/comment.dart';
+import '../../models/user.dart';
+import '../../routes/user_service.dart';
 
 class BookPage extends StatefulWidget {
   final String? elementId;
@@ -18,8 +23,47 @@ class BookPage extends StatefulWidget {
 }
 
 class _BookPageState extends State<BookPage> {
+  List<Comment> commentList = List.empty(growable: true);
+  bool _nocomments = true;
+
+  String userid = "";
+  final titleController = TextEditingController();
+  final textController = TextEditingController();
+  String typeController = "";
+  List<dynamic> usersController = List.empty(growable: true);
+  dynamic likesController = "0";
+  dynamic dislikesController = "0";
+  String idBook = "";
+
+  void initState() {
+    super.initState();
+    fetchBook();
+    getCommentsList();
+    fetchUser();
+  }
+
   Future<Book> fetchBook() async {
     return BookService.getBook(widget.elementId!);
+  }
+
+  Future<void> getCommentsList() async {
+    idBook = widget.elementId!;
+    typeController = idBook;
+    commentList =
+        (await CommentService.getCommentByType(idBook)).cast<Comment>();
+    setState(() {
+      if (commentList.length != 0) {
+        _nocomments = false;
+      }
+    });
+  }
+
+  var storage;
+  Future<User> fetchUser() async {
+    storage = LocalStorage('BookHub');
+    await storage.ready;
+    userid = LocalStorage('BookHub').getItem('userId');
+    return UserService.getUser(userid);
   }
 
   @override
@@ -185,20 +229,148 @@ class _BookPageState extends State<BookPage> {
                         ))
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 30),
                   Container(
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        getTranslated(context, 'comments')! + ': PROXIMAMENTE',
-                        textAlign: TextAlign.left,
+                        getTranslated(context, 'comments')!,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline),
                       ),
                     ),
                   ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: SizedBox(
+                          height: 150.0,
+                          child: _nocomments
+                              ? Column(
+                                  children: [
+                                    Text(getTranslated(context, 'noComments')!),
+                                  ],
+                                )
+                              : ListView.builder(
+                                  itemCount: commentList.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return CommentItem(
+                                      commentList[index].user,
+                                      commentList[index].title,
+                                      commentList[index].text,
+                                      commentList[index].type,
+                                      commentList[index].users,
+                                      commentList[index].likes,
+                                      commentList[index].dislikes,
+                                      index,
+                                    );
+                                  }),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        getTranslated(context, 'addComment')!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: TextFormField(
+                        controller: titleController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return getTranslated(context, "fieldRequired");
+                          }
+                          return null;
+                        },
+                        style: const TextStyle(fontSize: 15),
+                        decoration: InputDecoration(
+                            labelText: getTranslated(context, "title")!,
+                            hintText: getTranslated(context, "writeTheTitle"),
+                            border: OutlineInputBorder()),
+                      )),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: TextFormField(
+                        controller: textController,
+                        maxLines: 4,
+                        maxLength: 300,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return getTranslated(context, "fieldRequired");
+                          }
+                          return null;
+                        },
+                        style: const TextStyle(fontSize: 15),
+                        decoration: InputDecoration(
+                            labelText: getTranslated(context, "text")!,
+                            hintText: getTranslated(context, "writeTheText"),
+                            border: OutlineInputBorder()),
+                      )),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    child: Text(
+                      getTranslated(context, "addNewComment")!,
+                      textScaleFactor: 1,
+                    ),
+                    onPressed: () async {
+                      print("Add new comment");
+                      var response = await CommentService.addComment(Comment(
+                          user: userid,
+                          title: titleController.text,
+                          text: textController.text,
+                          type: typeController,
+                          users: usersController,
+                          likes: likesController,
+                          dislikes: dislikesController));
+                      if (response == "200") {
+                        print("New comment added");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    BookPage(elementId: idBook)));
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text(response.toString()),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.orange,
+                        onPrimary: Colors.black,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                        textStyle: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                  )
                 ],
               ),
             )));
@@ -211,5 +383,25 @@ class _BookPageState extends State<BookPage> {
             child: CircularProgressIndicator(),
           );
         });
+  }
+
+  Widget CommentItem(dynamic user, String title, String text, String type,
+      List<dynamic> users, String likes, String dislikes, int index) {
+    return ListTile(
+      leading: const CircleAvatar(
+        backgroundColor: Colors.orange,
+        child: Icon(
+          Icons.person_outline_outlined,
+          color: Colors.white,
+        ),
+      ),
+      title: Text(
+        user.userName + ': ' + title,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(text),
+    );
   }
 }
