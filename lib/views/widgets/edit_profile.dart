@@ -36,6 +36,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController controllerMail = TextEditingController(text: 'mail');
   TextEditingController controllerBiography =
       TextEditingController(text: 'biography');
+
   String controllerBirthDay = "";
 
   Future<User> fetchUser() async {
@@ -47,6 +48,7 @@ class _EditProfileState extends State<EditProfile> {
     if (author.runtimeType == Author) {
       LocalStorage('BookHub').setItem('idAuthor', author.id);
     }
+
     return UserService.getUser(idUser);
   }
 
@@ -177,6 +179,7 @@ class _EditProfileState extends State<EditProfile> {
                                         controllerUserName.text,
                                         controllerMail.text,
                                         controllerBirthDay);
+
                                     if (author != null &&
                                         controllerBiography
                                             .value.text.isNotEmpty) {
@@ -189,6 +192,7 @@ class _EditProfileState extends State<EditProfile> {
                                               author.deathDate.toString(),
                                               author.photoURL);
                                     }
+
                                     if (response) {
                                       setState(() {
                                         isEditing = false;
@@ -539,6 +543,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+
   Widget buildEditBig(String labelText, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
@@ -585,4 +590,5 @@ class _EditProfileState extends State<EditProfile> {
       margin: const EdgeInsets.only(top: 6, bottom: 6),
     );
   }
+
 }

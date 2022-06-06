@@ -1,12 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.dark;
-  bool get isDarkMode => themeMode == ThemeMode.dark;
+  final String key = "theme";
+  late SharedPreferences _pref;
 
-  void toggleTheme(bool isOn) {
-    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+  bool _darkTheme = true;
+  bool get isDarkMode => _darkTheme;
+
+  toggleTheme() {
+    _darkTheme = !_darkTheme;
+    _saveToPrefs();
     notifyListeners();
+  }
+
+  ThemeProvider() {
+    _darkTheme = true;
+    _loadFromPrefs();
+  }
+
+  _initPrefs() async {
+    _pref = await SharedPreferences.getInstance();
+  }
+
+  _loadFromPrefs() async {
+    await _initPrefs();
+    _darkTheme = _pref.getBool(key) ?? true;
+    notifyListeners();
+  }
+
+  _saveToPrefs() async {
+    await _initPrefs();
+    _pref.setBool(key, _darkTheme);
   }
 }
 
@@ -22,9 +47,9 @@ class MyThemes {
     shadowColor: const Color.fromARGB(143, 255, 153, 0),
     appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade800),
     navigationBarTheme:
-      NavigationBarThemeData(backgroundColor: Colors.grey.shade800),
+        NavigationBarThemeData(backgroundColor: Colors.grey.shade800),
     bottomNavigationBarTheme:
-      BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
+        BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
     hintColor: Colors.orange,
   );
 
@@ -39,9 +64,9 @@ class MyThemes {
     shadowColor: const Color.fromARGB(153, 251, 202, 42),
     appBarTheme: const AppBarTheme(backgroundColor: Colors.red),
     navigationBarTheme:
-      const NavigationBarThemeData(backgroundColor: Colors.red),
+        const NavigationBarThemeData(backgroundColor: Colors.red),
     bottomNavigationBarTheme:
-      BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
+        BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
     hintColor: Colors.red,
   );
 }
