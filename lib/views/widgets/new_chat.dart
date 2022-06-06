@@ -3,6 +3,7 @@ import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import '../../localization/language_constants.dart';
 import '../../routes/user_service.dart';
 
@@ -20,22 +21,34 @@ class _NewChatState extends State<NewChat> {
   final nameController = TextEditingController();
   List<String> usersController = List.empty(growable: true);
   List<UserList> selectedUsers = List.empty(growable: true);
-
+  String idController = "";
   List<UserList> userList = [];
 
   @override
   void initState() {
     super.initState();
+    fetchUser();
     getUsers();
+  }
+
+  var storage;
+  Future<User> fetchUser() async {
+    storage = LocalStorage('BookHub');
+    await storage.ready;
+
+    idController = LocalStorage('BookHub').getItem('userId');
+    return UserService.getUser(idController);
   }
 
   Future<void> getUsers() async {
     _response = await UserService.getUsers();
     setState(() {
       for (int i = 0; i < _response.length; i++) {
-        UserList user1 = UserList(_response[i].id.toString(),
-            _response[i].userName.toString(), false);
-        userList.add(user1);
+        if (_response[i].id != idController) {
+          UserList user1 = new UserList(_response[i].id.toString(),
+              _response[i].userName.toString(), false);
+          userList.add(user1);
+        }
       }
       _isLoading = false;
     });
@@ -43,7 +56,6 @@ class _NewChatState extends State<NewChat> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: Text(getTranslated(context, "newChat")!,
@@ -77,8 +89,8 @@ class _NewChatState extends State<NewChat> {
                   style: const TextStyle(fontSize: 20, color: Colors.black),
                   decoration: InputDecoration(
                       labelText: getTranslated(context, "name"),
-                      hintText: getTranslated(context, "writeTheName"),
-                      border: const OutlineInputBorder()),
+                      hintText: getTranslated(context, "writeTheNameChat"),
+                      border: OutlineInputBorder()),
                 )),
             const SizedBox(
               height: 20,
@@ -183,7 +195,7 @@ class _NewChatState extends State<NewChat> {
             selectedUsers.removeWhere(
                 (item) => item.userName == userList[index].userName);
           }
-          usersController = [];
+          usersController = [idController];
           for (int i = 0; i < selectedUsers.length; i++) {
             usersController.add(selectedUsers[i].id);
           }

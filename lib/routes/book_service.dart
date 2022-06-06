@@ -62,6 +62,28 @@ class BookService {
       return Message.fromJson(await jsonDecode(response.body)).message;
     }
   }
+
+  static Future<bool> deleteBook(String id) async {
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/book/$id');
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/book/$id');
+    }
+
+    var response = await http.delete(
+      url,
+      headers: {
+        "Authorization": LocalStorage('BookHub').getItem('token'),
+      },
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 class Message {

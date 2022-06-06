@@ -20,7 +20,7 @@ class _NewBookState extends State<NewBook> {
   String categoryController = "";
   List<dynamic> categories = [];
   String publishedDateController = "";
-  dynamic rateController = "";
+  dynamic rateController = "0";
 
   @override
   Widget build(BuildContext context) {
@@ -185,27 +185,6 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "editorial"),
                         hintText: getTranslated(context, "writeTheEditorial"),
-                        border: const OutlineInputBorder()),
-                  )),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextFormField(
-                    //controller: rateController,
-                    cursorColor: Colors.black,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return getTranslated(context, "fieldRequired");
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
-                    decoration: InputDecoration(
-                        labelText: getTranslated(context, "rate"),
-                        hintText: getTranslated(context, "writeTheRate"),
                         border: const OutlineInputBorder()),
                   )),
               const SizedBox(
