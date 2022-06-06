@@ -151,10 +151,10 @@ class _SettingPageState extends State<SettingPage> {
       title: getTranslated(context, 'deleteAccount')!,
       subtitle: '',
       leading: const IconWidget(icon: Icons.delete, color: Colors.pink),
-      onTap: () => {
+      onTap: () async => {
+            await UserService.deleteAccount(
+                LocalStorage('BookHub').getItem('userId') as String),
             LocalStorage('BookHub').deleteItem('token'),
-            UserService.deleteAccount(
-                LocalStorage('BookHub').getItem('userId')),
             Navigator.pop(context),
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const LoginPage()))

@@ -118,13 +118,13 @@ class UserService {
   static Future<bool> deleteAccount(String id) async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/user/enable/$id';
+        '/user/$id';
     Uri url = Uri.parse(baseUrl);
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/user/enable/$id');
+      url = Uri.parse('http://10.0.2.2:3000/user/$id');
     }
 
-    final response = await http.get(
+    final response = await http.delete(
       url,
       headers: {
         'authorization': LocalStorage('BookHub').getItem('token'),
