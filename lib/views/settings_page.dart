@@ -1,3 +1,4 @@
+import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/login_page.dart';
 import 'package:ea_frontend/views/settings/account_page.dart';
 import 'package:ea_frontend/views/widgets/edit_profile.dart';
@@ -16,6 +17,10 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  TextEditingController controllerOld = TextEditingController(text: '');
+  TextEditingController controllerNew = TextEditingController(text: '');
+  TextEditingController controllerCheck = TextEditingController(text: '');
+
   @override
   Widget build(BuildContext context) => Scaffold(
           body: SafeArea(
@@ -36,6 +41,7 @@ class _SettingPageState extends State<SettingPage> {
             AccountPage(),
             buildEditProfile(),
             buildLogout(),
+            buildPassword(),
             buildDeleteAccount(),
           ],
         ),
@@ -65,14 +71,94 @@ class _SettingPageState extends State<SettingPage> {
       leading: const IconWidget(icon: Icons.logout, color: Colors.blueAccent),
       onTap: () => {
             LocalStorage('BookHub').deleteItem('token'),
-            Navigator.popAndPushNamed(context, "LoginPage")
+            Navigator.pop(context),
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()))
           });
+
+  Widget buildPassword() => SimpleSettingsTile(
+      title: "Change password",
+      subtitle: '',
+      leading: const IconWidget(icon: Icons.lock, color: Colors.purpleAccent),
+      onTap: () => {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      padding: EdgeInsets.all(30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Change Password",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          buildEdit("Old password", controllerOld),
+                          buildEdit("New password", controllerNew),
+                          buildEdit("Repeat password", controllerCheck),
+                          ElevatedButton(
+                              onPressed: () {
+                                if (controllerOld.text.isEmpty &&
+                                    controllerNew.text.isEmpty &&
+                                    controllerCheck.text.isEmpty) {
+                                  print("algun campo vacio");
+                                } else {
+                                  if (controllerCheck.text ==
+                                      controllerNew.text) {
+                                    UserService.changePassword(
+                                        LocalStorage('BookHub')
+                                            .getItem('userId'),
+                                        controllerNew.text,
+                                        controllerOld.text);
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    print("print psw no coincideixen");
+                                  }
+                                }
+                              },
+                              child: Text("Change"))
+                        ],
+                      ),
+                    ),
+                  );
+                })
+          });
+  Widget buildEdit(String labelText, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: TextField(
+        obscureText: true,
+        controller: controller,
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.only(bottom: 3),
+            labelText: labelText,
+            hintText: labelText,
+            hintStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).shadowColor,
+            )),
+      ),
+    );
+  }
 
   Widget buildDeleteAccount() => SimpleSettingsTile(
       title: getTranslated(context, 'deleteAccount')!,
       subtitle: '',
       leading: const IconWidget(icon: Icons.delete, color: Colors.pink),
-      onTap: () => {});
+      onTap: () => {
+            LocalStorage('BookHub').deleteItem('token'),
+            UserService.deleteAccount(
+                LocalStorage('BookHub').getItem('userId')),
+            Navigator.pop(context),
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()))
+          });
 
   Widget buildReportBug(BuildContext context) => SimpleSettingsTile(
       title: getTranslated(context, 'reportABug')!,
