@@ -19,7 +19,7 @@ class User {
   List<dynamic> chats;
   List<dynamic> categories;
   String photoURL;
-  List<String> roles;
+  List<String>? roles;
 
   User(
       {required this.id,
@@ -84,5 +84,40 @@ class User {
     return snapshot.map((data) {
       return User.fromJson(data);
     }).toList();
+  }
+
+//todo arreclar els subobjectes
+  static Map<String, dynamic> toJson(User values) {
+    if (values.location == null) {
+      return {
+        '_id': values.id,
+        'name': values.name,
+        'userName': values.userName,
+        'birthDate': values.birthDate.toString(),
+        'mail': values.mail,
+        'books': ["-1"],
+        'events': ["-1"],
+        'clubs': ["-1"],
+        'chats': ["-1"],
+        'categories': ["-1"],
+        'photoURL': values.photoURL,
+        'role': ["-1"]
+      };
+    }
+    return {
+      '_id': values.id,
+      'name': values.name,
+      'userName': values.userName,
+      'birthDate': values.birthDate.toString(),
+      'mail': values.mail,
+      'location': Location.toJson(values.location!),
+      'books': ["-1"],
+      'events': ["-1"],
+      'clubs': ["-1"],
+      'chats': ["-1"],
+      'categories': ["-1"],
+      'photoURL': values.photoURL,
+      'role': ["-1"]
+    };
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/icon_widget.dart';
 import 'package:flutter/material.dart';

@@ -138,7 +138,7 @@ class _BuildMapState extends State<BuildMap> {
                                         border: Border.all(width: 1),
                                         borderRadius:
                                             BorderRadius.circular(12.0),
-                                        color: Colors.amberAccent),
+                                        color: Theme.of(context).backgroundColor),
                                     margin: const EdgeInsets.symmetric(
                                         horizontal: 8.0, vertical: 4.0),
                                     child: ListTile(
@@ -198,8 +198,10 @@ class _BuildMapState extends State<BuildMap> {
             print(snapshot.error);
             //   throw snapshot.error.hashCode;
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ),
           );
         });
   }

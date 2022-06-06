@@ -259,6 +259,7 @@ class _NewBookState extends State<NewBook> {
                   textScaleFactor: 1,
                 ),
                 onPressed: () async {
+                  /*
                   print("Add new book");
 
                   var response = await BookService.newBook(Book(
@@ -286,7 +287,7 @@ class _NewBookState extends State<NewBook> {
                         );
                       },
                     );
-                  }
+                  }*/
                 },
                 style: ElevatedButton.styleFrom(
                     primary: Colors.orange,

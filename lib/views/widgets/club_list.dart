@@ -63,6 +63,7 @@ class _ClubListState extends State<ClubList> {
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(
+                          controller: ScrollController(),
                           padding: const EdgeInsets.all(8),
                           itemCount: snapshot.data?.clubs.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -92,8 +93,10 @@ class _ClubListState extends State<ClubList> {
             print(snapshot.error);
             //   throw snapshot.error.hashCode;
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ),
           );
         });
   }

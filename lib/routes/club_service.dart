@@ -3,7 +3,7 @@ import 'package:ea_frontend/models/club.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
-
+import 'dart:io' show Platform;
 import '../models/newclub.dart';
 
 class ClubService {
@@ -13,7 +13,7 @@ class ClubService {
         '/club/$id/';
     Uri url = Uri.parse(baseUrl);
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/$id');
     }
 
@@ -26,9 +26,11 @@ class ClubService {
   }
 
   static Future<List<Club>> getClubs() async {
-    Uri url = Uri.parse('http://localhost:3000/club/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/');
     }
 
@@ -41,9 +43,11 @@ class ClubService {
   }
 
   static Future<bool> subscribeClub(String idClub) async {
-    Uri url = Uri.parse('http://localhost:3000/club/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/');
     }
 
@@ -65,9 +69,11 @@ class ClubService {
   }
 
   static Future<bool> unsubscribeClub(String idClub) async {
-    Uri url = Uri.parse('http://localhost:3000/club/unsubscribe');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/unsubscribe');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/unsubscribe');
     }
 
@@ -89,9 +95,11 @@ class ClubService {
   }
 
   static Future<String> newClub(NewClubModel credentials) async {
-    Uri url = Uri.parse('http://localhost:3000/club/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/club/');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/club/');
     }
 

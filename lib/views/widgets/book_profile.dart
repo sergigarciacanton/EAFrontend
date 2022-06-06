@@ -93,27 +93,7 @@ class _BookPageState extends State<BookPage> {
                     ),
                   ),
                   Row(
-                    children: [
-                      for (int i = 0;
-                          i < ((snapshot.data!.rate / 2) - 0.1).round();
-                          i++)
-                        (const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                          size: 36.0,
-                        )),
-                      // No funciona el detectar si es par convencional asi que esto
-                      if ((snapshot.data!.rate) == 1 ||
-                          (snapshot.data!.rate) == 3 ||
-                          (snapshot.data!.rate) == 5 ||
-                          (snapshot.data!.rate) == 7 ||
-                          (snapshot.data!.rate) == 9)
-                        (const Icon(
-                          Icons.star_half,
-                          color: Colors.amber,
-                          size: 36.0,
-                        )),
-                    ],
+                    children: stars(snapshot.data!.rate),
                   ),
                   const SizedBox(height: 50),
                   Row(
@@ -128,7 +108,7 @@ class _BookPageState extends State<BookPage> {
                       ),
                       Expanded(
                         child: Text(
-                          snapshot.data!.writer,
+                          snapshot.data!.writer.name,
                           textAlign: TextAlign.left,
                           style: const TextStyle(
                               fontSize: 30, fontWeight: FontWeight.bold),
@@ -379,8 +359,10 @@ class _BookPageState extends State<BookPage> {
             log(snapshot.error.toString());
             print(snapshot.error);
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ),
           );
         });
   }
@@ -403,5 +385,34 @@ class _BookPageState extends State<BookPage> {
       ),
       subtitle: Text(text),
     );
+  }
+
+  stars(int rate) {
+    List<Widget> lista = [];
+    int i = 0;
+    for (i; i < ((rate / 2) - 0.1).round(); i++) {
+      lista.add(const Icon(
+        Icons.star,
+        color: Colors.amber,
+        size: 36.0,
+      ));
+    }
+    // No funciona el detectar si es par convencional asi que esto
+    if (rate.isOdd) {
+      i++;
+      lista.add(const Icon(
+        Icons.star_half,
+        color: Colors.amber,
+        size: 36.0,
+      ));
+    }
+    for (i; i < 5; i++) {
+      lista.add(const Icon(
+        Icons.star_border,
+        color: Colors.amber,
+        size: 36.0,
+      ));
+    }
+    return lista;
   }
 }

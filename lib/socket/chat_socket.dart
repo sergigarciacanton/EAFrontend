@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:ea_frontend/models/chat_message.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatSocket {
-  final _socketResponse = StreamController<String>();
+  final _socketResponse = StreamController<ChatMessage>();
 
-  void Function(String) get addResponse => _socketResponse.sink.add;
+  void Function(ChatMessage) get addResponse => _socketResponse.sink.add;
 
-  Stream<String> get getResponse => _socketResponse.stream;
+  Stream<ChatMessage> get getResponse => _socketResponse.stream;
 
   void dispose() {
     _socketResponse.close();
@@ -15,19 +18,28 @@ class ChatSocket {
   // ChatSocket streamSocket = ChatSocket();
 
 //STEP2: Add this function in main function in main.dart file and add incoming data to the stream
-  void connectAndListen() {
-    print("socket connect and listen");
-    IO.Socket socket = IO.io('http://localhost:3000',
+  IO.Socket connectAndListen(String chatId) {
+    print('Executed connectAnd Listen');
+    IO.Socket socket = IO.io(
+        const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000'),
         IO.OptionBuilder().setTransports(['websocket']).build());
 
-    print("2");
     socket.onConnect((_) {
-      print('connect');
-      socket.emit('msg', 'test');
+      print('connected websocket');
     });
 
+    socket.emit('new-chat', chatId);
     //When an event recieved from server, data is added to the stream
-    socket.on('event', (data) => this.addResponse);
+    socket.on('textMessage', (data) {
+      print(data + ' received');
+      ChatMessage msg = ChatMessage.fromJson(jsonDecode(data));
+      addResponse(msg);
+    });
     socket.onDisconnect((_) => print('disconnect'));
+
+    return socket;
   }
+
+  void sentMessage() {}
 }

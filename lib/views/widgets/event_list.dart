@@ -54,7 +54,7 @@ class _EventListState extends State<EventList> {
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
                         widget.setMainComponent!(BuildMap(
-                          modo: "AllEvents",
+                          modo: "UserEvent",
                           setMainComponent: widget.setMainComponent,
                         ));
                       },
@@ -69,7 +69,7 @@ class _EventListState extends State<EventList> {
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
                         widget.setMainComponent!(BuildCalendar(
-                          modo: "AllEvents",
+                          modo: "UserEvent",
                           setMainComponent: widget.setMainComponent,
                         ));
                       },
@@ -97,6 +97,7 @@ class _EventListState extends State<EventList> {
                   Expanded(
                     child: SizedBox(
                       child: ListView.builder(
+                          controller: ScrollController(),
                           padding: const EdgeInsets.all(8),
                           itemCount: snapshot.data?.events.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -126,8 +127,10 @@ class _EventListState extends State<EventList> {
             print(snapshot.error);
             //   throw snapshot.error.hashCode;
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).backgroundColor,
+            ),
           );
         });
   }

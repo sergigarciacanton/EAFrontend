@@ -3,12 +3,15 @@ import 'package:ea_frontend/models/event.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
+import 'dart:io' show Platform;
 
 class EventService {
   static Future<List<Event>> getEvents() async {
-    Uri url = Uri.parse('http://localhost:3000/event/');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/event/');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/');
     }
 
@@ -26,7 +29,7 @@ class EventService {
         '/event/$id/';
     Uri url = Uri.parse(baseUrl);
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/$id');
     }
 
@@ -40,9 +43,11 @@ class EventService {
 
   static Future<bool> joinEvent(String eventId) async {
     String userId = LocalStorage('BookHub').getItem('userId');
-    Uri url = Uri.parse('http://localhost:3000/event/join/$userId/$eventId');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/event/join/$userId/$eventId');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/join/$userId/$eventId');
     }
 
@@ -60,9 +65,11 @@ class EventService {
 
   static Future<bool> leaveEvent(String eventId) async {
     String userId = LocalStorage('BookHub').getItem('userId');
-    Uri url = Uri.parse('http://localhost:3000/event/leave/$userId/$eventId');
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/event/leave/$userId/$eventId');
 
-    if (!kIsWeb) {
+    if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/leave/$userId/$eventId');
     }
 

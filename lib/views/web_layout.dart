@@ -74,8 +74,9 @@ class _WebLayoutState extends State<WebLayout> {
             builder: (BuildContext context, BoxConstraints constraints) {
           return Row(children: <Widget>[
             SizedBox(
-                width: 4 * constraints.maxWidth / 5,
-                child: Scrollbar(isAlwaysShown: false, child: mainComponent)),
+              width: 4 * constraints.maxWidth / 5,
+              child: mainComponent,
+            ),
             SizedBox(
                 width: constraints.maxWidth / 5,
                 child: Column(
