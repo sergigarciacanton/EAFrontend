@@ -327,11 +327,11 @@ class _BookPageState extends State<BookPage> {
                           dislikes: dislikesController));
                       if (response == "200") {
                         print("New comment added");
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    BookPage(elementId: idBook)));
+                        setState(() {
+                          getCommentsList();
+                          titleController.text = "";
+                          textController.text = "";
+                        });
                       } else {
                         showDialog(
                           context: context,

@@ -38,6 +38,10 @@ class _EditProfileState extends State<EditProfile> {
       TextEditingController(text: 'biography');
 
   String controllerBirthDay = "";
+  void initState() {
+    super.initState();
+    fetchUser();
+  }
 
   Future<User> fetchUser() async {
     storage = LocalStorage('BookHub');
@@ -408,7 +412,9 @@ class _EditProfileState extends State<EditProfile> {
           onPressed: () async {
             bool response = await AuthorService.deleteAuthor(author.id);
             if (response) {
-              setState(() {});
+              setState(() {
+                fetchUser();
+              });
             }
           },
           style: ButtonStyle(
@@ -502,7 +508,9 @@ class _EditProfileState extends State<EditProfile> {
                             onPressed: () => {
                               AuthorService.deleteBook(bookId, author.id),
                               Navigator.pop(context, 'Anonymous'),
-                              setState(() {})
+                              setState(() {
+                                fetchUser();
+                              })
                             },
                             child: const Text("Anonymous"),
                           ),
@@ -542,7 +550,6 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-
 
   Widget buildEditBig(String labelText, TextEditingController controller) {
     return Padding(
@@ -590,5 +597,4 @@ class _EditProfileState extends State<EditProfile> {
       margin: const EdgeInsets.only(top: 6, bottom: 6),
     );
   }
-
 }
