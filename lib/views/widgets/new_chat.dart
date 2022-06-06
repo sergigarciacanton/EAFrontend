@@ -24,6 +24,7 @@ class _NewChatState extends State<NewChat> {
   String idController = "";
   List<UserList> userList = [];
 
+  @override
   void initState() {
     super.initState();
     fetchUser();
@@ -58,10 +59,8 @@ class _NewChatState extends State<NewChat> {
     return Scaffold(
         appBar: AppBar(
           title: Text(getTranslated(context, "newChat")!,
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          foregroundColor: Colors.black,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
-          backgroundColor: Colors.orange,
         ),
         body: SingleChildScrollView(
             child: Column(
@@ -112,7 +111,7 @@ class _NewChatState extends State<NewChat> {
                         : ListView.builder(
                             itemCount: userList.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return UserItem(
+                              return userItem(
                                 userList[index].id,
                                 userList[index].userName,
                                 userList[index].isSlected,
@@ -152,23 +151,23 @@ class _NewChatState extends State<NewChat> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                  primary: Colors.orange,
-                  onPrimary: Colors.black,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  primary: Theme.of(context).backgroundColor,
+                  onPrimary: Theme.of(context).primaryColor,
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   textStyle:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             )
           ],
         )));
   }
 
-  Widget UserItem(String id, String userName, bool isSelected, int index) {
+  Widget userItem(String id, String userName, bool isSelected, int index) {
     return ListTile(
-      leading: const CircleAvatar(
-        backgroundColor: Colors.orange,
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).backgroundColor,
         child: Icon(
           Icons.person_outline_outlined,
-          color: Colors.white,
+          color: Theme.of(context).primaryColor,
         ),
       ),
       title: Text(
@@ -181,9 +180,9 @@ class _NewChatState extends State<NewChat> {
       trailing: isSelected
           ? Icon(
               Icons.check_circle,
-              color: Colors.orange,
+              color: Theme.of(context).backgroundColor,
             )
-          : Icon(
+          : const Icon(
               Icons.check_circle_outline,
               color: Colors.grey,
             ),

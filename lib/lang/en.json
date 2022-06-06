@@ -87,5 +87,6 @@
   "configCategories": "Configure categories",
   "questionnaireText": "We would like to know which are your favourite book categories for being able to offer you a better service. Choose the categories you like more or skip this proccess:",
   "skip": "Skip",
-  "accept": "Accept"
+  "accept": "Accept",
+  "mailError": "Error, mail address has an invalid format"
 }

@@ -4,7 +4,6 @@ import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/register_page.dart';
 import 'package:flutter/material.dart';
-import 'package:ea_frontend/views/widgets/book_profile.dart';
 import 'package:localstorage/localstorage.dart';
 
 class LoginPage extends StatefulWidget {

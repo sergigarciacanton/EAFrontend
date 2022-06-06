@@ -5,11 +5,13 @@ class ClubCard extends StatelessWidget {
   final String categories;
   final String numberUsers;
   final String imageUrl;
+  final bool admin;
   ClubCard({
     required this.title,
     required this.categories,
     required this.numberUsers,
     required this.imageUrl,
+    required this.admin,
   });
 
   @override
@@ -123,6 +125,36 @@ class ClubCard extends StatelessWidget {
             ),
             alignment: Alignment.bottomLeft,
           ),
+          admin ? Align(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: Colors.orange,
+                    size: 18,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ],
+            ),
+            alignment: Alignment.bottomRight,
+          )
+          : const SizedBox(height: 0)
         ],
       ),
     );
