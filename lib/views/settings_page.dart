@@ -1,3 +1,4 @@
+import 'package:ea_frontend/views/login_page.dart';
 import 'package:ea_frontend/views/settings/account_page.dart';
 import 'package:ea_frontend/views/widgets/edit_profile.dart';
 import 'package:ea_frontend/views/widgets/icon_widget.dart';
@@ -5,6 +6,7 @@ import 'package:ea_frontend/views/widgets/change_theme_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:localstorage/localstorage.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -61,7 +63,10 @@ class _SettingPageState extends State<SettingPage> {
       title: getTranslated(context, 'logout')!,
       subtitle: '',
       leading: const IconWidget(icon: Icons.logout, color: Colors.blueAccent),
-      onTap: () => {});
+      onTap: () => {
+            LocalStorage('BookHub').deleteItem('token'),
+            Navigator.popAndPushNamed(context, "LoginPage")
+          });
 
   Widget buildDeleteAccount() => SimpleSettingsTile(
       title: getTranslated(context, 'deleteAccount')!,
