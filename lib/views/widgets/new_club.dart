@@ -1,11 +1,8 @@
-import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/club_service.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../localization/language_constants.dart';
-import '../../main.dart';
 import '../../models/newclub.dart';
 
 class NewClub extends StatefulWidget {
@@ -23,16 +20,13 @@ class _NewClubState extends State<NewClub> {
 
   @override
   Widget build(BuildContext context) {
-    ClubService clubService = ClubService();
     String category = "MYSTERY";
 
     return Scaffold(
         appBar: AppBar(
           title: Text(getTranslated(context, "newClub")!,
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          foregroundColor: Colors.black,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
-          backgroundColor: Colors.orange,
         ),
         body: SingleChildScrollView(
             child:
@@ -62,7 +56,7 @@ class _NewClubState extends State<NewClub> {
                 decoration: InputDecoration(
                     labelText: getTranslated(context, "name"),
                     hintText: getTranslated(context, "writeTheName"),
-                    border: OutlineInputBorder()),
+                    border: const OutlineInputBorder()),
               )),
           const SizedBox(
             height: 10,
@@ -85,7 +79,7 @@ class _NewClubState extends State<NewClub> {
                 decoration: InputDecoration(
                     labelText: getTranslated(context, "description"),
                     hintText: getTranslated(context, "writeTheDescription"),
-                    border: OutlineInputBorder()),
+                    border: const OutlineInputBorder()),
               )),
           const SizedBox(
             height: 10,
@@ -106,7 +100,7 @@ class _NewClubState extends State<NewClub> {
                 decoration: InputDecoration(
                     labelText: "ID",
                     hintText: getTranslated(context, "writeID"),
-                    border: OutlineInputBorder()),
+                    border: const OutlineInputBorder()),
               )),
           const SizedBox(
             height: 20,
@@ -118,43 +112,73 @@ class _NewClubState extends State<NewClub> {
             children: [
               DropdownButton(
                 value: category,
-                items: const [
+                items: [
                   DropdownMenuItem<String>(
                       value: 'SCI-FI',
                       child: Text(
                         'SCI-FI',
-                        style: TextStyle(color: Colors.white),
-                      )),
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      ),
+                  ),
                   DropdownMenuItem<String>(
                       value: 'MYSTERY',
                       child: Text('MYSTERY',
-                          style: TextStyle(color: Colors.white))),
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      ),
+                  ),
                   DropdownMenuItem<String>(
                       value: 'THRILLER',
                       child: Text('THRILLER',
-                          style: TextStyle(color: Colors.white))),
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      )
+                  ),
                   DropdownMenuItem<String>(
                       value: 'ROMANCE',
                       child: Text('ROMANCE',
-                          style: TextStyle(color: Colors.white))),
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      )
+                  ),
                   DropdownMenuItem<String>(
                       value: 'WESTERN',
                       child: Text('WESTERN',
-                          style: TextStyle(color: Colors.white))),
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      )
+                  ),
                   DropdownMenuItem<String>(
                       value: 'DYSTOPIAN',
                       child: Text('DYSTOPIAN',
-                          style: TextStyle(color: Colors.white))),
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      )
+                  ),
                   DropdownMenuItem<String>(
                       value: 'CONTEMPORANY',
                       child: Text('CONTEMPORANY',
-                          style: TextStyle(color: Colors.white))),
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      )
+                  ),
                   DropdownMenuItem<String>(
                       value: 'FANTASY',
                       child: Text(
                         'FANTASY',
-                        style: TextStyle(color: Colors.white),
-                      ))
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      )
+                  ),
                 ],
                 onChanged: (category) =>
                     categoryController = category.toString(),
@@ -194,11 +218,11 @@ class _NewClubState extends State<NewClub> {
               }
             },
             style: ElevatedButton.styleFrom(
-                primary: Colors.orange,
-                onPrimary: Colors.black,
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                primary: Theme.of(context).backgroundColor,
+                onPrimary: Theme.of(context).primaryColor,
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 textStyle:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           )
         ])));
   }

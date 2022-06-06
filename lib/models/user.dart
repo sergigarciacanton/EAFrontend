@@ -1,3 +1,5 @@
+import 'package:ea_frontend/models/category.dart';
+
 import 'book.dart';
 import 'chat.dart';
 import 'location.dart';
@@ -58,8 +60,9 @@ class User {
     var chats = json['chats'].toString().contains('{')
         ? Chat.chatsFromSnapshot(json['chats'])
         : json['chats'];
-    var categories =
-        myCategory.Category.categoriesFromSnapshot(json['categories']);
+    var categories = json['categories'].toString().contains('{')
+        ? Category.categoriesFromSnapshot(json['categories'])
+        : json['categories'];
     var photoURL = json['photoURL'] as String;
     var roles = json['role'].cast<String>() as List<String>;
 

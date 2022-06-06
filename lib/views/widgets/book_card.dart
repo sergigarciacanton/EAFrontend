@@ -100,26 +100,15 @@ class BookCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Row(
-                    children: <Widget>[
-                      for (int i = 0;
-                          i < ((int.parse(rate) / 2) - 0.1).round();
-                          i++)
-                        (const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                          size: 36.0,
-                        )),
-                      // No funciona el detectar si es par convencional asi que esto
-                      if (int.parse(rate) == 1 ||
-                          int.parse(rate) == 3 ||
-                          int.parse(rate) == 5 ||
-                          int.parse(rate) == 7 ||
-                          int.parse(rate) == 9)
-                        (const Icon(
-                          Icons.star_half,
-                          color: Colors.amber,
-                          size: 36.0,
-                        )),
+                    children: [
+                      const Icon(
+                        Icons.people,
+                        color: Colors.orange,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 7),
+                      Text((int.parse(rate) / 2).toString(),
+                      style: const TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),

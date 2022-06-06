@@ -12,12 +12,10 @@ class NewBookPage extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'NewBookPage',
         home: Scaffold(
-          backgroundColor: Color.fromARGB(124, 247, 202, 111),
+          backgroundColor: const Color.fromARGB(124, 247, 202, 111),
           appBar: AppBar(
             title: Text(getTranslated(context, "newBook")!),
-            foregroundColor: Colors.black,
             centerTitle: true,
-            backgroundColor: Colors.orange,
           ),
           body: const NewBook(),
         ));

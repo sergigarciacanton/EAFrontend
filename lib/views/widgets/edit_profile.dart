@@ -1,14 +1,12 @@
 import 'dart:developer';
-
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/routes/user_service.dart';
-import 'package:ea_frontend/views/provider/theme_provider.dart';
+import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
-
-import '../../localization/language_constants.dart';
 import '../settings_page.dart';
 
 class EditProfile extends StatefulWidget {
@@ -66,15 +64,15 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
               body: Container(
-                padding: EdgeInsets.only(left: 16, top: 25, right: 16),
+                padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
                 child: ListView(
                   children: [
                     Text(
                       "Edit Profile",
                       style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                          const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Center(
@@ -92,10 +90,10 @@ class _EditProfileState extends State<EditProfile> {
                                       spreadRadius: 2,
                                       blurRadius: 10,
                                       color: Colors.black.withOpacity(0.1),
-                                      offset: Offset(0, 10))
+                                      offset: const Offset(0, 10))
                                 ],
                                 shape: BoxShape.circle,
-                                image: DecorationImage(
+                                image: const DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
                                       "https://images.pexels.com/photos/3307758/pexels-photo-3307758.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250",
@@ -116,7 +114,7 @@ class _EditProfileState extends State<EditProfile> {
                                 color: Colors.green,
                               ),
                               child: InkWell(
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.edit,
                                     color: Colors.white,
                                   ),
@@ -128,11 +126,34 @@ class _EditProfileState extends State<EditProfile> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 35,
                     ),
                     buildData(snapshot),
-                    SizedBox(
+                    const SizedBox(
+                      height: 35,
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).backgroundColor),
+                        minimumSize: MaterialStateProperty.all(
+                            Size(MediaQuery.of(context).size.width, 60)),
+                      ),
+                      child: Text(
+                        getTranslated(context, 'configCategories')!,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                         Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const Questionnaire()));
+                      }
+                    ),
+                    const SizedBox(
                       height: 35,
                     ),
                     (isEditing
@@ -145,8 +166,8 @@ class _EditProfileState extends State<EditProfile> {
                                     isEditing = false;
                                   });
                                 },
-                                child: Text("CANCEL",
-                                    style: TextStyle(
+                                child: Text(getTranslated(context, 'returnToHome')!,
+                                    style: const TextStyle(
                                         fontSize: 14,
                                         letterSpacing: 2.2,
                                         color: Colors.black)),
@@ -179,7 +200,7 @@ class _EditProfileState extends State<EditProfile> {
                                         : null;
                                     !EmailValidator.validate(
                                             controllerMail.text)
-                                        ? error = "Invalid email"
+                                        ? error = getTranslated(context, 'mailError')!
                                         : null;
                                     showDialog(
                                       context: context,
@@ -197,8 +218,8 @@ class _EditProfileState extends State<EditProfile> {
                                           Colors.green),
                                 ),
                                 child: Text(
-                                  "SAVE",
-                                  style: TextStyle(
+                                  getTranslated(context, 'accept')!,
+                                  style: const TextStyle(
                                       fontSize: 14,
                                       letterSpacing: 2.2,
                                       color: Colors.white),
@@ -227,9 +248,9 @@ class _EditProfileState extends State<EditProfile> {
   Widget buildData(AsyncSnapshot<User> snapshot) {
     return Column(
       children: [
-        buildEdit("Full Name", controllerName),
-        buildEdit("User Name", controllerUserName),
-        buildEdit("E-mail", controllerMail),
+        buildEdit(getTranslated(context, 'name')!, controllerName),
+        buildEdit(getTranslated(context, 'username')!, controllerUserName),
+        buildEdit(getTranslated(context, 'mail')!, controllerMail),
         Container(
           constraints: const BoxConstraints(maxWidth: 200),
           child: DateTimePicker(
@@ -239,7 +260,7 @@ class _EditProfileState extends State<EditProfile> {
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
             icon: const Icon(Icons.event),
-            dateLabelText: "birthDate",
+            dateLabelText: getTranslated(context, 'birthDate')!,
             onSaved: (val) => controllerBirthDay = val!,
             onChanged: (val) => controllerBirthDay = val,
             onFieldSubmitted: (val) => controllerBirthDay = val,
@@ -262,7 +283,7 @@ class _EditProfileState extends State<EditProfile> {
               : null;
         },
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(bottom: 3),
+            contentPadding: const EdgeInsets.only(bottom: 3),
             labelText: labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
             hintText: labelText,

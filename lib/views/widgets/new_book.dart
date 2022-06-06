@@ -1,10 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:ea_frontend/routes/book_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import '../../localization/language_constants.dart';
-import '../../models/book.dart';
 import 'event_list.dart';
 
 class NewBook extends StatefulWidget {
@@ -28,16 +24,13 @@ class _NewBookState extends State<NewBook> {
 
   @override
   Widget build(BuildContext context) {
-    BookService bookService = BookService();
     String category = "MYSTERY";
 
     return Scaffold(
         appBar: AppBar(
           title: Text(getTranslated(context, "newBook")!,
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          foregroundColor: Colors.black,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
-          backgroundColor: Colors.orange,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -67,7 +60,7 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "title")!,
                         hintText: getTranslated(context, "writeTheTitle"),
-                        border: OutlineInputBorder()),
+                        border: const OutlineInputBorder()),
                   )),
               const SizedBox(
                 height: 10,
@@ -88,7 +81,7 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "ISBN"),
                         hintText: getTranslated(context, "writeTheISBN"),
-                        border: OutlineInputBorder()),
+                        border: const OutlineInputBorder()),
                   )),
               const SizedBox(
                 height: 10,
@@ -109,7 +102,7 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "writer"),
                         hintText: getTranslated(context, "writeTheWriter"),
-                        border: OutlineInputBorder()),
+                        border: const OutlineInputBorder()),
                   )),
               const SizedBox(
                 height: 10,
@@ -130,7 +123,7 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "photoURL"),
                         hintText: getTranslated(context, "writeThePhotoURL"),
-                        border: OutlineInputBorder()),
+                        border: const OutlineInputBorder()),
                   )),
               const SizedBox(
                 height: 10,
@@ -153,7 +146,7 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "description"),
                         hintText: getTranslated(context, "writeTheDescription"),
-                        border: OutlineInputBorder()),
+                        border: const OutlineInputBorder()),
                   )),
               const SizedBox(
                 height: 10,
@@ -192,7 +185,7 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "editorial"),
                         hintText: getTranslated(context, "writeTheEditorial"),
-                        border: OutlineInputBorder()),
+                        border: const OutlineInputBorder()),
                   )),
               const SizedBox(
                 height: 10,
@@ -213,7 +206,7 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "rate"),
                         hintText: getTranslated(context, "writeTheRate"),
-                        border: OutlineInputBorder()),
+                        border: const OutlineInputBorder()),
                   )),
               const SizedBox(
                 height: 10,
@@ -225,42 +218,42 @@ class _NewBookState extends State<NewBook> {
                 children: [
                   DropdownButton(
                     value: category,
-                    items: const [
+                    items: [
                       DropdownMenuItem<String>(
                           value: 'SCI-FI',
                           child: Text(
                             'SCI-FI',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Theme.of(context).backgroundColor),
                           )),
                       DropdownMenuItem<String>(
                           value: 'MYSTERY',
                           child: Text('MYSTERY',
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Theme.of(context).backgroundColor))),
                       DropdownMenuItem<String>(
                           value: 'THRILLER',
                           child: Text('THRILLER',
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Theme.of(context).backgroundColor))),
                       DropdownMenuItem<String>(
                           value: 'ROMANCE',
                           child: Text('ROMANCE',
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Theme.of(context).backgroundColor))),
                       DropdownMenuItem<String>(
                           value: 'WESTERN',
                           child: Text('WESTERN',
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Theme.of(context).backgroundColor))),
                       DropdownMenuItem<String>(
                           value: 'DYSTOPIAN',
                           child: Text('DYSTOPIAN',
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Theme.of(context).backgroundColor))),
                       DropdownMenuItem<String>(
                           value: 'CONTEMPORANY',
                           child: Text('CONTEMPORANY',
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Theme.of(context).backgroundColor))),
                       DropdownMenuItem<String>(
                           value: 'FANTASY',
                           child: Text(
                             'FANTASY',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Theme.of(context).backgroundColor),
                           ))
                     ],
                     onChanged: (category) =>
@@ -311,11 +304,11 @@ class _NewBookState extends State<NewBook> {
                   }*/
                 },
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.orange,
-                    onPrimary: Colors.black,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    primary: Theme.of(context).backgroundColor,
+                    onPrimary: Theme.of(context).primaryColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     textStyle:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(
                 height: 20,
@@ -339,16 +332,16 @@ class _NewBookState extends State<NewBook> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EventList()),
+                                    builder: (context) => const EventList()),
                               );
                               print("backButton");
                             },
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.orange,
-                                onPrimary: Colors.black,
-                                padding: EdgeInsets.symmetric(
+                                primary: Theme.of(context).backgroundColor,
+                                onPrimary: Theme.of(context).primaryColor,
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 15),
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
                           ),
                         )

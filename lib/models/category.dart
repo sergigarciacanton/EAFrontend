@@ -2,14 +2,18 @@ import 'dart:developer';
 
 class Category {
   String? name;
+  String? id;
 
-  Category({this.name});
+  Category({this.name, this.id});
 
   factory Category.fromJson(dynamic json) {
     if (json.runtimeType == String) {
       return Category(name: null);
     }
-    return Category(name: json['name'] == null ? null : json['name'] as String);
+    return Category(
+      id: json['_id'] as String,
+      name: json['name'] == null ? null : json['name'] as String
+    );
   }
 
   static List<Category> categoriesFromSnapshot(List snapshot) {
