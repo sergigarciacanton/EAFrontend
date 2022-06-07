@@ -42,6 +42,24 @@ class ReportService {
     return Report.reportsFromSnapshot(data);
   }
 
+  static Future<List<Report>> getReportByType(String type) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/report/type/$type';
+    Uri url = Uri.parse(baseUrl);
+    if (!kIsWeb) {
+      url = Uri.parse('http://10.0.2.2:3000/report/type/$type');
+    }
+
+    final response = await http.get(
+      url,
+      headers: {'authorization': LocalStorage('BookHub').getItem('token')},
+    );
+    List data = jsonDecode(response.body);
+    print(data);
+    return Report.reportsFromSnapshot(data);
+  }
+
   static Future<List<Report>> getReports() async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +

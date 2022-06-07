@@ -5,11 +5,13 @@ class Report {
   dynamic user;
   String title;
   String text;
+  String type;
 
   Report({
     required this.user,
     required this.title,
     required this.text,
+    required this.type,
   });
 
   factory Report.fromJson(dynamic json) {
@@ -18,7 +20,8 @@ class Report {
             ? UserPopulate.fromJson(json['user'])
             : json['user'],
         title: json['title'] as String,
-        text: json['text'] as String);
+        text: json['text'] as String,
+        type: json['type'] as String);
   }
 
   static Map<String, dynamic> toJson(Report values) {
@@ -26,6 +29,7 @@ class Report {
       'user': values.user,
       'title': values.title,
       'text': values.text,
+      'type': values.type,
     };
   }
 

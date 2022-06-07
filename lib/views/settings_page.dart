@@ -25,6 +25,7 @@ class _SettingPageState extends State<SettingPage> {
   String userid = "";
   final titleController = TextEditingController();
   final textController = TextEditingController();
+  final typeController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -106,6 +107,7 @@ class _SettingPageState extends State<SettingPage> {
                             reportList[index].user,
                             reportList[index].title,
                             reportList[index].text,
+                            reportList[index].type,
                             index,
                           );
                         }),
@@ -166,6 +168,28 @@ class _SettingPageState extends State<SettingPage> {
                   hintText: getTranslated(context, "writeTheText"),
                   border: OutlineInputBorder()),
             )),
+        const SizedBox(height: 10),
+        Container(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              getTranslated(context, 'UserReportInfo')!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 15),
+            ),
+          ),
+        ),
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: TextFormField(
+              controller: typeController,
+              style: const TextStyle(fontSize: 15),
+              decoration: InputDecoration(
+                  labelText: getTranslated(context, "userReport")!,
+                  hintText: getTranslated(context, "writeTheUserReport"),
+                  border: OutlineInputBorder()),
+            )),
         const SizedBox(
           height: 10,
         ),
@@ -176,9 +200,16 @@ class _SettingPageState extends State<SettingPage> {
           ),
           onPressed: () async {
             print("Add new report");
+            String idReport = "";
+            if (typeController.text != "") {
+              User userReport =
+                  await UserService.getUserByUserName(typeController.text);
+              String idReport = userReport.id;
+            } else {}
             var response = await ReportService.addReport(Report(
                 user: userid,
                 title: titleController.text,
+                type: idReport,
                 text: textController.text));
             if (response == "200") {
               print("New report added");
@@ -230,7 +261,8 @@ class _SettingPageState extends State<SettingPage> {
         ],
       );
 
-  Widget ReportItem(dynamic user, String title, String text, int index) {
+  Widget ReportItem(
+      dynamic user, String title, String text, String type, int index) {
     return ListTile(
       leading: const CircleAvatar(
         backgroundColor: Colors.orange,
