@@ -2,6 +2,8 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/help.dart';
 import 'package:ea_frontend/views/home.dart';
+import 'package:ea_frontend/views/jovo_questionaire.dart';
+import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
@@ -64,7 +66,7 @@ class _WebLayoutState extends State<WebLayout> {
               tooltip: 'Help',
               onPressed: () {
                 setState(() {
-                  mainComponent = Help();
+                  mainComponent = JovoQuestionaire(); // Help();
                 });
               },
             )
