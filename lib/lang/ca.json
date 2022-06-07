@@ -18,6 +18,7 @@
   "description": "Descripció",
   "category": "Categoria",
   "addNewClub": "Crear nou club",
+  "addNewComment": "Crear nou comentari",
   "addNewBook": "Crear nou llibre",
   "newBook": "N O U  L L I B R E",
   "title": "Títol",
@@ -47,10 +48,15 @@
   "birthDate": "Data de naixement",
   "alreadyWithAccount": "Ja tens un compte?",
   "termsAndConditions": "Acceptar terminis i condicions",
-  "writeTheTitle": "Escriu el títol del llibre",
+  "writeTheTitle": "Escriu el títol",
+  "writeTheText": "Escriu el text",
+  "addComment": "Escriu un nou comentari",
+  "noComments": "No hi ha comentaris",
+  "text": "Text",
   "writeTheISBN": "Escriu el ISBN del llibre",
   "writeTheDescription": "Escriu la descripció",
-  "writeTheName": "Escriu el nom del club",
+  "writeTheNameClub": "Escriu el nom del club",
+  "writeTheNameChat": "Escriu el nom del xat",
   "fieldRequired": "Aquest camp és obligatori",
   "termsError": "Si us plau, accepta els terminis i condicions.",
   "returnToHome": "Tornar",
@@ -81,5 +87,6 @@
   "configCategories": "Configurar categories",
   "questionnaireText": "Voldríem saber quines són les teves categories de llibres preferides per poder donar-te un millor servei. Escull les categories que més t'agradin o salta't aquest procés:",
   "skip": "Saltar",
-  "accept": "Acceptar"
+  "accept": "Acceptar",
+  "mailError": "Error, la direcció de correu té un format invàlid"
 }

@@ -5,6 +5,7 @@ import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:localstorage/localstorage.dart';
 import '../localization/language_constants.dart';
+import 'package:email_validator/email_validator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -202,7 +203,18 @@ class _RegisterPageState extends State<RegisterPage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
-                        if (passwordController.text !=
+                        if(!EmailValidator.validate(mailController.text)) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Text(
+                                    getTranslated(context, 'mailError')!),
+                              );
+                            },
+                          );
+                        }
+                        else if (passwordController.text !=
                             repeatPasswordController.text) {
                           showDialog(
                             context: context,

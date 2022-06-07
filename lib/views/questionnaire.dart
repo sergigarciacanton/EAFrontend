@@ -38,7 +38,9 @@ class _HomeState extends State<Questionnaire> {
       _checkedBoxes = List<bool>.filled(_categories.length, false);
       for(int i = 0; i < _categories.length; i++) {
         for(var userCategory in user.categories) {
-          if(_categories[i] == userCategory) {
+          print(userCategory.toString());
+          print(_categories[i].id);
+          if(_categories[i].id == userCategory) {
             _checkedBoxes[i] = true;
           }
         }
@@ -60,7 +62,6 @@ class _HomeState extends State<Questionnaire> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: _isLoading 
         ? Center(child: 
             CircularProgressIndicator(
@@ -102,23 +103,27 @@ class _HomeState extends State<Questionnaire> {
                           controller: _controller,
                           itemCount: _categories.length,
                           itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                Checkbox(
-                                  //checkColor: Colors.white,
-                                  //fillColor: MaterialStateProperty.resolveWith(getColor),
-                                  value: _checkedBoxes[index],
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      _checkedBoxes[index] = value!;
-                                      print(_checkedBoxes);
-                                    });
-                                  },
+                            return ListTile(
+                              title: Text(
+                                _categories[index].name!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Text(
-                                  _categories[index].name!
-                                )
-                              ],
+                              ),
+                              trailing: _checkedBoxes[index]
+                                ? Icon(
+                                    Icons.check_circle,
+                                    color: Theme.of(context).backgroundColor,
+                                  )
+                                : const Icon(
+                                    Icons.check_circle_outline,
+                                    color: Colors.grey,
+                                  ),
+                              onTap: () {
+                                setState(() {
+                                  _checkedBoxes[index] = !_checkedBoxes[index];
+                                });
+                              },
                             );
                           },
                         ),

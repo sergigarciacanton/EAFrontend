@@ -1,3 +1,4 @@
+import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/models/userPopulate.dart';
 
 import 'book.dart';
@@ -28,24 +29,6 @@ class Author {
       required this.user});
 
   factory Author.fromJson(dynamic json) {
-    print("_id " + json['_id'] as String);
-    print("name " + json['name'] as String);
-    print("birthDate " +
-        DateTime.parse((json['birthDate'] as String).replaceAll("T", " "))
-            .toString());
-    print("deathDate " +
-        DateTime.parse((json['deathDate'] as String).replaceAll("T", " "))
-            .toString());
-    print("biography " + json['biography'] as String);
-    print("books " +
-        (json['books'].toString().contains('{')
-            ? Book.booksFromSnapshot(json['books'])
-            : json['books']));
-    print("categories " +
-        myCategory.Category.categoriesFromSnapshot(json['categories'])
-            .toString());
-    print("photoURL " + json['photoURL'] as String);
-    print("user " + User.fromJson(json['user']).toString());
     var id = json['_id'] as String;
     var name = json['name'] as String;
     var birthDate =
@@ -53,13 +36,14 @@ class Author {
     var deathDate =
         DateTime.parse((json['deathDate'] as String).replaceAll("T", " "));
     var biography = json['biography'] as String;
-    var books = json['books'].toString().contains('{')
-        ? Book.booksFromSnapshot(json['books'])
-        : json['books'];
-    var categories =
-        myCategory.Category.categoriesFromSnapshot(json['categories']);
+    var categories = json['categories'].toString().contains('{')
+        ? Category.categoriesFromSnapshot(json['categories'])
+        : json['categories'];
     var photoURL = json['photoURL'] as String;
     var user = UserPopulate.fromJson(json['user']);
+    var books = json['books'].toString().contains('{')
+        ? BookPopulate.booksPopulateFromSnapshot(json['books'])
+        : json['books'];
 
     var author = Author(
         id: id,
@@ -77,6 +61,34 @@ class Author {
   static List<Author> authorsFromSnapshot(List snapshot) {
     return snapshot.map((data) {
       return Author.fromJson(data);
+    }).toList();
+  }
+}
+
+class BookPopulate {
+  String id;
+  String title;
+  DateTime publishedDate;
+
+  BookPopulate(
+      {required this.id, required this.title, required this.publishedDate});
+
+  factory BookPopulate.fromJson(dynamic json) {
+    var id = json['_id'] as String;
+    var title = json['title'] as String;
+    var publishedDate =
+        DateTime.parse((json['publishedDate'] as String).replaceAll("T", " "));
+
+    var book = BookPopulate(
+      id: id,
+      title: title,
+      publishedDate: publishedDate,
+    );
+    return book;
+  }
+  static List<BookPopulate> booksPopulateFromSnapshot(List snapshot) {
+    return snapshot.map((data) {
+      return BookPopulate.fromJson(data);
     }).toList();
   }
 }
