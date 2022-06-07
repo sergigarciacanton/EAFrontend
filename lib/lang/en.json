@@ -51,6 +51,8 @@
   "writeTheTitle": "Write the title",
   "writeTheText": "Write the text",
   "addComment": "Write a new comment",
+  "addReport": "Write a new report",
+  "addNewReport": "Add new report",
   "noComments": "There are no comments",
   "text": "Text",
   "writeTheISBN": "Write the ISBN of the book",
