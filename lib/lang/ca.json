@@ -53,6 +53,8 @@
   "addComment": "Escriu un nou comentari",
   "addReport": "Escriu un nou report",
   "addNewReport": "Crear nou report",
+  "reports": "Reports",
+  "noReports": "No hi ha reports",
   "noComments": "No hi ha comentaris",
   "text": "Text",
   "writeTheISBN": "Escriu el ISBN del llibre",

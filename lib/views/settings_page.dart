@@ -20,6 +20,8 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  List<Report> reportList = List.empty(growable: true);
+  bool _noreports = true;
   String userid = "";
   final titleController = TextEditingController();
   final textController = TextEditingController();
@@ -27,6 +29,7 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     super.initState();
     fetchUser();
+    getReportsList();
   }
 
   var storage;
@@ -35,6 +38,18 @@ class _SettingPageState extends State<SettingPage> {
     await storage.ready;
     userid = LocalStorage('BookHub').getItem('userId');
     return UserService.getUser(userid);
+  }
+
+  Future<void> getReportsList() async {
+    storage = LocalStorage('BookHub');
+    await storage.ready;
+    userid = LocalStorage('BookHub').getItem('userId');
+    reportList = (await ReportService.getReportByUser(userid)).cast<Report>();
+    setState(() {
+      if (reportList.length != 0) {
+        _noreports = false;
+      }
+    });
   }
 
   @override
@@ -61,7 +76,45 @@ class _SettingPageState extends State<SettingPage> {
           ],
         ),
         const SizedBox(
-          height: 32,
+          height: 30,
+        ),
+        Container(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              getTranslated(context, 'reports')!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 40),
+            ),
+          ),
+        ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: SizedBox(
+                height: 150.0,
+                child: _noreports
+                    ? Column(
+                        children: [
+                          Text(getTranslated(context, 'noReports')!),
+                        ],
+                      )
+                    : ListView.builder(
+                        itemCount: reportList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ReportItem(
+                            reportList[index].user,
+                            reportList[index].title,
+                            reportList[index].text,
+                            index,
+                          );
+                        }),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
         ),
         Container(
           child: Align(
@@ -100,7 +153,7 @@ class _SettingPageState extends State<SettingPage> {
             child: TextFormField(
               controller: textController,
               maxLines: 4,
-              maxLength: 300,
+              maxLength: 400,
               validator: (value) {
                 if (value!.isEmpty) {
                   return getTranslated(context, "fieldRequired");
@@ -176,4 +229,23 @@ class _SettingPageState extends State<SettingPage> {
           ChangeThemeButtonWidget(),
         ],
       );
+
+  Widget ReportItem(dynamic user, String title, String text, int index) {
+    return ListTile(
+      leading: const CircleAvatar(
+        backgroundColor: Colors.orange,
+        child: Icon(
+          Icons.warning,
+          color: Colors.white,
+        ),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(text),
+    );
+  }
 }

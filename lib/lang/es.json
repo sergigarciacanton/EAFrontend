@@ -53,6 +53,8 @@
   "addComment": "Escriba un nuevo comentario",
   "addReport": "Escriba un nuevo reporte",
   "addNewReport": "Crear nuevo reporte",
+  "reports": "Reportes",
+  "noReports": "No hay reportes",
   "noComments": "No hay comentarios",
   "text": "Texto",
   "writeTheISBN": "Escriba el ISBN del libro",
