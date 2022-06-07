@@ -28,17 +28,24 @@ class JovoRequest {
       this.input,
       this.context});
 
-  static Future<JovoRequest> textRequest(String text) async {
+  static Future<JovoRequest> textRequest(String text, JovoRequest launchRequest,
+      JovoRequest launchResponse) async {
     String version = "4.0";
     String platform = "web";
     String id = const Uuid().v1().toString();
     String timestamp = DateTime.now().toUtc().toIso8601String();
     String timeZone =
         "Europe/Madrid"; //await FlutterNativeTimezone.getLocalTimezone();
-    String locale = await getLocale().then((value) => value.toString());
+    String locale =
+        "en"; // await getLocale().then((value) => value.toString());
 
     Input input = Input.text(text); //change to data input
-    Context context = Context.preset();
+    Context context = Context.textPreset(
+        launchRequest.context!.device!.id!,
+        launchRequest.context!.session!.id!,
+        launchRequest.context!.user!.id!,
+        launchResponse.context!.session!.state!,
+        launchResponse.context!.session!.data!);
 
     return JovoRequest(
         version: version,
@@ -54,14 +61,15 @@ class JovoRequest {
   static Future<JovoRequest> launchRequest() async {
     String version = "4.0";
     String platform = "web";
-    String id = const Uuid().v1().toString();
+    String id = const Uuid().v4().toString();
     String timestamp = DateTime.now().toUtc().toIso8601String();
     String timeZone =
         "Europe/Madrid"; //await FlutterNativeTimezone.getLocalTimezone();
     String locale = await getLocale().then((value) => value.toString());
 
     Input input = Input.launch(); //change to data input
-    Context context = Context.preset();
+    Context context = Context.launchPreset(const Uuid().v4().toString(),
+        const Uuid().v4().toString(), const Uuid().v4().toString());
 
     return JovoRequest(
         version: version,
@@ -140,12 +148,17 @@ class Output {
 }
 
 class Data {
-  Data();
+  String? uuid;
 
-  Data.fromJson(Map<String, dynamic> json) {}
+  Data({this.uuid});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['uuid'] = this.uuid;
     return data;
   }
 }
@@ -175,7 +188,9 @@ class Input {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['type'] = this.type;
-    data['intent'] = this.intent;
+    if (intent != null) {
+      data['intent'] = this.intent;
+    }
     data['text'] = this.text;
     return data;
   }
@@ -188,15 +203,30 @@ class Context {
 
   Context({this.device, this.session, this.user});
 
-  Context.preset() {
-    device = Device.textCapability();
+  Context.launchPreset(String deviceId, String sessionId, String userId) {
+    device = Device.textCapability(deviceId);
     // no data in session
     session = Session(
-        id: const Uuid().v1().toString(),
+        id: sessionId,
         isNew: true,
         updatedAt: DateTime.now().toUtc().toIso8601String());
     // no data in user
-    user = User(id: const Uuid().v1().toString());
+    user = User(id: userId);
+  }
+
+  Context.textPreset(String deviceId, String sessionId, String userId,
+      List<JovoState> state, Data responseData) {
+    device = Device.textCapability(deviceId);
+    // no data in session
+    session = Session(
+        id: sessionId,
+        isNew: false,
+        data: responseData,
+        updatedAt: DateTime.now().toUtc().toIso8601String(),
+        state: state);
+
+    // no data in user
+    user = User(id: userId);
   }
 
   Context.fromJson(Map<String, dynamic> json) {
@@ -224,19 +254,23 @@ class Context {
 
 class Device {
   List<String>? capabilities;
+  String? id;
 
-  Device({this.capabilities});
+  Device({this.id, this.capabilities});
 
-  Device.textCapability() {
+  Device.textCapability(String deviceId) {
+    id = deviceId;
     capabilities = ["TEXT"];
   }
 
   Device.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     capabilities = json['capabilities'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['capabilities'] = this.capabilities;
     return data;
   }
@@ -247,14 +281,21 @@ class Session {
   Data? data;
   bool? isNew;
   String? updatedAt;
+  List<JovoState>? state;
 
-  Session({this.id, this.data, this.isNew, this.updatedAt});
+  Session({this.id, this.data, this.isNew, this.updatedAt, this.state});
 
   Session.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
     isNew = json['isNew'];
     updatedAt = json['updatedAt'];
+    if (json['state'] != null) {
+      state = <JovoState>[];
+      json['state'].forEach((v) {
+        state!.add(new JovoState.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -265,6 +306,9 @@ class Session {
     }
     data['isNew'] = this.isNew;
     data['updatedAt'] = this.updatedAt;
+    if (this.state != null) {
+      data['state'] = this.state!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -286,6 +330,22 @@ class User {
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
+    return data;
+  }
+}
+
+class JovoState {
+  String? component;
+
+  JovoState({this.component});
+
+  JovoState.fromJson(Map<String, dynamic> json) {
+    component = json['component'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['component'] = this.component;
     return data;
   }
 }

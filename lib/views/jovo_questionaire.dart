@@ -38,29 +38,35 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
     addResponse(res);
   }
 
-  void sendMessage(TextEditingController textEditingController) async {
-    JovoRequest res = await JovoService.sendRequest(
-        await JovoRequest.textRequest(textEditingController.text));
+  void sendMessage(TextEditingController textEditingController,
+      JovoRequest launchRequest, JovoRequest launchResponse) async {
+    JovoRequest req = await JovoRequest.textRequest(
+        textEditingController.text, launchRequest, launchResponse);
+    addResponse(req);
+
+    JovoRequest res = await JovoService.sendRequest(req);
     addResponse(res);
 
     textEditingController.clear();
-  }
-
-  Future<JovoRequest> fetchLaunchRequest() async {
-    return JovoService.sendRequest(await JovoRequest.launchRequest());
   }
 
   @override
   Widget build(BuildContext context) {
     List<JovoRequest> msgList = [];
 
-    JovoRequest? initialData;
+    JovoRequest? launchRequest;
+    JovoRequest? launchResponse;
+
+    Future<JovoRequest> fetchLaunchRequest() async {
+      launchRequest = await JovoRequest.launchRequest();
+      return JovoService.sendRequest(launchRequest!);
+    }
 
     return FutureBuilder(
         future: fetchLaunchRequest(),
         builder: (context, AsyncSnapshot<JovoRequest> snapshot) {
           if (snapshot.hasData) {
-            initialData = snapshot.data;
+            launchResponse = snapshot.data;
             return Scaffold(
                 appBar: AppBar(
                     title: const ListTile(
@@ -84,13 +90,16 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
                           child: TextField(
                             controller: textEditingController,
                             onSubmitted: (value) {
-                              sendMessage(textEditingController);
+                              sendMessage(textEditingController, launchRequest!,
+                                  launchResponse!);
                             },
                           ),
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            sendMessage(textEditingController);
+                            print(launchResponse!.toJson().toString());
+                            sendMessage(textEditingController, launchRequest!,
+                                launchResponse!);
                           },
                           child: Icon(Icons.send, color: Colors.black),
                           style: ElevatedButton.styleFrom(
@@ -106,7 +115,7 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
                 })),
                 body: StreamBuilder(
                   stream: getResponse,
-                  initialData: initialData,
+                  initialData: launchResponse,
                   builder: (context, AsyncSnapshot<JovoRequest> snapshot) {
                     if (snapshot.hasData) {
                       print('has data!!' + snapshot.data!.toString());
@@ -116,17 +125,31 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
                           padding: const EdgeInsets.all(8),
                           itemCount: msgList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              child: ListTile(
-                                onTap: () {},
-                                leading: FlutterLogo(size: 56.0),
-                                title: Text("Input/Output"),
-                                subtitle: Text(msgList[index].output == null
-                                    ? 'no output'
-                                    : msgList[index].output![0].message!),
-                                //trailing: Icon(Icons.more_vert),
-                              ),
-                            );
+                            if (msgList[index].output == null) {
+                              return Card(
+                                child: ListTile(
+                                  onTap: () {},
+                                  leading: FlutterLogo(size: 56.0),
+                                  title: Text("Input"),
+                                  subtitle: Text(msgList[index].input == null
+                                      ? 'no input'
+                                      : msgList[index].input!.text!),
+                                  //trailing: Icon(Icons.more_vert),
+                                ),
+                              );
+                            } else {
+                              return Card(
+                                child: ListTile(
+                                  onTap: () {},
+                                  leading: FlutterLogo(size: 56.0),
+                                  title: Text("Output"),
+                                  subtitle: Text(msgList[index].output == null
+                                      ? 'no output'
+                                      : msgList[index].output![0].message!),
+                                  //trailing: Icon(Icons.more_vert),
+                                ),
+                              );
+                            }
                           });
                     } else if (snapshot.hasError) {
                       log(snapshot.error.toString());
