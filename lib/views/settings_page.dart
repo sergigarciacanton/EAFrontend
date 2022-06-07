@@ -25,7 +25,7 @@ class _SettingPageState extends State<SettingPage> {
   String userid = "";
   final titleController = TextEditingController();
   final textController = TextEditingController();
-  final typeController = TextEditingController();
+  final typeController = TextEditingController(text: "");
 
   void initState() {
     super.initState();
@@ -204,8 +204,8 @@ class _SettingPageState extends State<SettingPage> {
             if (typeController.text != "") {
               User userReport =
                   await UserService.getUserByUserName(typeController.text);
-              String idReport = userReport.id;
-            } else {}
+              idReport = userReport.id;
+            }
             var response = await ReportService.addReport(Report(
                 user: userid,
                 title: titleController.text,
