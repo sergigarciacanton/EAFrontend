@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'package:ea_frontend/routes/videoconference_service.dart';
+import 'package:http/http.dart' as http;
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
@@ -25,6 +26,7 @@ class _CallPageState extends State<CallPage> {
   final _infoStrings = <String>[];
   bool muted = false;
   late RtcEngine _engine;
+  late String token;
 
   @override
   void dispose() {
@@ -39,8 +41,22 @@ class _CallPageState extends State<CallPage> {
   @override
   void initState() {
     super.initState();
+    getToken();
     // initialize agora sdk
     initialize();
+  }
+
+  Future<void> getToken() async {
+    String response = await VideoService.getToken(widget.channelName!);
+
+    if (response != 'Failed to fetch the token') {
+      print("response");
+      setState(() {
+        token = response;
+      });
+    } else {
+      print(response);
+    }
   }
 
   Future<void> initialize() async {
@@ -114,13 +130,8 @@ class _CallPageState extends State<CallPage> {
     if (widget.role == ClientRole.Broadcaster) {
       list.add(RtcLocalView.SurfaceView());
     }
-    _users.forEach((uid) => {
-          if (widget.channelName != null)
-            {
-              list.add(RtcRemoteView.SurfaceView(
-                  uid: uid, channelId: widget.channelName as String))
-            }
-        });
+    _users.forEach((uid) => list.add(RtcRemoteView.SurfaceView(
+        uid: uid, channelId: widget.channelName as String)));
     return list;
   }
 
