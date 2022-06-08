@@ -5,7 +5,6 @@ import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
-import 'package:ea_frontend/views/widgets/index.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
@@ -91,8 +90,7 @@ class _MobileLayoutState extends State<MobileLayout> {
           unselectedIconTheme: Theme.of(context).iconTheme,
           onTap: onTapped),
       body: PageView(controller: pageController, children: [
-        IndexPage(),
-        //Home(setMainComponent: setMainComponent),
+        Home(setMainComponent: setMainComponent),
         ClubList(setMainComponent: setMainComponent),
         EventList(setMainComponent: setMainComponent),
         ChatList(setMainComponent: setMainComponent),

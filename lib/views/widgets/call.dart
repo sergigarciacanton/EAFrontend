@@ -41,16 +41,13 @@ class _CallPageState extends State<CallPage> {
   @override
   void initState() {
     super.initState();
-    getToken();
     // initialize agora sdk
     initialize();
   }
 
   Future<void> getToken() async {
     String response = await VideoService.getToken(widget.channelName!);
-
     if (response != 'Failed to fetch the token') {
-      print("response");
       setState(() {
         token = response;
       });
@@ -69,6 +66,7 @@ class _CallPageState extends State<CallPage> {
       });
       return;
     }
+    await getToken();
 
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
@@ -76,7 +74,7 @@ class _CallPageState extends State<CallPage> {
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(width: 1920, height: 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
-    await _engine.joinChannel(Token, widget.channelName!, null, 0);
+    await _engine.joinChannel(token, widget.channelName!, null, 0);
   }
 
   /// Create agora sdk instance and initialize
@@ -190,7 +188,23 @@ class _CallPageState extends State<CallPage> {
 
   /// Toolbar layout
   Widget _toolbar() {
-    if (widget.role == ClientRole.Audience) return Container();
+    if (widget.role == ClientRole.Audience) {
+      return Container(
+          alignment: Alignment.bottomCenter,
+          padding: const EdgeInsets.symmetric(vertical: 48),
+          child: RawMaterialButton(
+            onPressed: () => _onCallEnd(context),
+            child: const Icon(
+              Icons.call_end,
+              color: Colors.white,
+              size: 35.0,
+            ),
+            shape: CircleBorder(),
+            elevation: 2.0,
+            fillColor: Colors.redAccent,
+            padding: const EdgeInsets.all(15.0),
+          ));
+    }
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),
@@ -308,8 +322,7 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Videoconference'),
-      ),
+          title: Text(widget.channelName!), automaticallyImplyLeading: false),
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(

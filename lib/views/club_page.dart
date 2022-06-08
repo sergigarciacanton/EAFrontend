@@ -3,8 +3,13 @@ import 'dart:developer';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/club.dart';
 import 'package:ea_frontend/routes/club_service.dart';
+import 'package:ea_frontend/views/widgets/call.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'dart:async';
+
+import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ClubPage extends StatefulWidget {
   final String? elementId;
@@ -21,7 +26,8 @@ class ClubPage extends StatefulWidget {
 class _ClubPageState extends State<ClubPage> {
   late String idUser;
   var storage;
-  //GET ELEMENTID WITH widget.elementId;
+  ClientRole? _role = ClientRole.Broadcaster;
+
   Future<Club> fetchClub() async {
     storage = LocalStorage('BookHub');
     await storage.ready;
@@ -165,6 +171,7 @@ class _ClubPageState extends State<ClubPage> {
         _buildSeparator(screenSize),
         _buildDescription(context, snapshot),
         _buildSeparator(screenSize),
+        _buildVideoConference(snapshot),
         _buildButtons(snapshot),
         _buildSeparator(screenSize),
         Container(
@@ -418,6 +425,60 @@ class _ClubPageState extends State<ClubPage> {
         ),
       );
     }
+  }
+
+  Widget _buildVideoConference(AsyncSnapshot<Club> snapshot) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: InkWell(
+              onTap: () async => {
+                // await for camera and mic permissions before pushing video page
+                //await _handleCameraAndMic(Permission.camera);
+                //await _handleCameraAndMic(Permission.microphone);
+                // push video page with given channel name
+
+                if (snapshot.data!.usersList
+                    .where((item) => item.id == idUser)
+                    .isEmpty)
+                  {_role = ClientRole.Audience},
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CallPage(
+                      channelName: snapshot.data!.name,
+                      role: _role,
+                    ),
+                  ),
+                )
+              },
+              child: Container(
+                height: 40.0,
+                decoration: BoxDecoration(
+                    border: Border.all(), color: Colors.blueAccent),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      getTranslated(context, 'videoconference')!,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _handleCameraAndMic(Permission permission) async {
+    final status = await permission.request();
+    print(status);
   }
 }
 

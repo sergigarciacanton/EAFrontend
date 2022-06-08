@@ -21,12 +21,25 @@ class VideoService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    print("data");
-    print(data);
-    if (response.statusCode == 200) {
-      return data as String;
-    } else {
-      return 'Failed to fetch the token';
-    }
+    return Message.fromJson(await jsonDecode(response.body)).message;
+  }
+}
+
+class Message {
+  final String message;
+
+  const Message({
+    required this.message,
+  });
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      message: json['rtcToken'] as String,
+    );
+  }
+
+  @override
+  String toString() {
+    return message;
   }
 }

@@ -6,7 +6,6 @@ import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
-import 'package:ea_frontend/views/widgets/index.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
@@ -47,8 +46,7 @@ class _WebLayoutState extends State<WebLayout> {
               tooltip: 'Home',
               onPressed: () {
                 setState(() {
-                  mainComponent = IndexPage();
-                  //mainComponent = Home(setMainComponent: setMainComponent);
+                  mainComponent = Home(setMainComponent: setMainComponent);
                 });
               },
             ),
