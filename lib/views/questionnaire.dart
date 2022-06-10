@@ -38,8 +38,6 @@ class _HomeState extends State<Questionnaire> {
       _checkedBoxes = List<bool>.filled(_categories.length, false);
       for(int i = 0; i < _categories.length; i++) {
         for(var userCategory in user.categories) {
-          print(userCategory.toString());
-          print(_categories[i].id);
           if(_categories[i].id == userCategory) {
             _checkedBoxes[i] = true;
           }
@@ -129,6 +127,7 @@ class _HomeState extends State<Questionnaire> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 25),
                     ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
