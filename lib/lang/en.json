@@ -90,5 +90,6 @@
   "accept": "Accept",
   "mailError": "Error, mail address has an invalid format",
   "loginGoogle": "Login with Google",
-  "registerGoogle": "Register with Google"
+  "registerGoogle": "Register with Google",
+  "videoconference": "Join video conference"
 }

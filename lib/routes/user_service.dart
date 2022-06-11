@@ -88,4 +88,52 @@ class UserService {
     }
     return false;
   }
+
+  static Future<bool> changePassword(
+      String id, String password, String old) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/user/$id';
+    Uri url = Uri.parse(baseUrl);
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/user/$id');
+    }
+
+    final response = await http.post(url,
+        headers: {
+          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          'password': password,
+          'old': old,
+        }));
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> deleteAccount(String id) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/user/$id';
+    Uri url = Uri.parse(baseUrl);
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/user/$id');
+    }
+
+    final response = await http.delete(
+      url,
+      headers: {
+        'authorization': LocalStorage('BookHub').getItem('token'),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 }

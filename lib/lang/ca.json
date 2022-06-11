@@ -90,5 +90,6 @@
   "accept": "Acceptar",
   "mailError": "Error, la direcció de correu té un format invàlid",
   "loginGoogle": "Iniciar sessió amb Google",
-  "registerGoogle": "Registra't amb Google"
+  "registerGoogle": "Registra't amb Google",
+  "videoconference": "Uneix-te a la videoconferència"
 }
