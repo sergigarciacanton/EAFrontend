@@ -72,8 +72,9 @@ Future<Position> _determinePosition() async {
   return await Geolocator.getCurrentPosition();
 }
 
-int range = 700000;
+int range = 12742000;
 bool changeDistance = false;
+String dropdownValue = 'All';
 
 class _BuildMapState extends State<BuildMapDistance> {
   final PopupController _popupController = PopupController();
@@ -145,7 +146,6 @@ class _BuildMapState extends State<BuildMapDistance> {
     return false;
   }
 
-  String dropdownValue = '700Km';
   Widget buildLocationDistance(context, Function reload) {
     return DropdownButton<String>(
       value: dropdownValue,
