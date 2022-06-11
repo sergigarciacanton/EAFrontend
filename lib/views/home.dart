@@ -9,6 +9,7 @@ import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/club_card.dart';
 import 'package:ea_frontend/views/widgets/event_card.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
+import 'package:ea_frontend/views/widgets/map_by_distance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -139,19 +140,17 @@ class _HomeState extends State<Home> {
   }
 
   bool verifyAdminEvent(int index) {
-    if(_events[index].admin.id == LocalStorage('BookHub').getItem('userId')) {
+    if (_events[index].admin.id == LocalStorage('BookHub').getItem('userId')) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   bool verifyAdminClub(int index) {
-    if(_clubs[index].admin.id == LocalStorage('BookHub').getItem('userId')) {
+    if (_clubs[index].admin.id == LocalStorage('BookHub').getItem('userId')) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -382,7 +381,7 @@ class _HomeState extends State<Home> {
                                     backgroundColor:
                                         Theme.of(context).indicatorColor,
                                     onPressed: () {
-                                      widget.setMainComponent!(BuildMap(
+                                      widget.setMainComponent!(BuildMapDistance(
                                         modo: "AllEvents",
                                         setMainComponent:
                                             widget.setMainComponent,
