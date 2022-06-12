@@ -89,6 +89,9 @@
   "skip": "Saltar",
   "accept": "Acceptar",
   "mailError": "Error, la direcció de correu té un format invàlid",
+  "jovoQuestionnaire": "Siusplau respon les següents pregutnes, només serà un minut!",
+  "goToOldQuestionnaire": "Qüestionari Manual",
+  "proceed": "Prosseguir",
   "loginGoogle": "Iniciar sessió amb Google",
   "registerGoogle": "Registra't amb Google",
   "videoconference": "Uneix-te a la videoconferència"
