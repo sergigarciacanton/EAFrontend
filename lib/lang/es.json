@@ -88,5 +88,8 @@
   "questionnaireText": "Quisiéramos saber cuales son tus categorias de libros favoritas para poder darte un mejor servicio. Escoge las categorias que más te gusten o sáltate este proceso:",
   "skip": "Saltar",
   "accept": "Aceptar",
-  "mailError": "Error, la dirección de correo tiene un formato inválido"
+  "mailError": "Error, la dirección de correo tiene un formato inválido",
+  "loginGoogle": "Iniciar sesión con Google",
+  "registerGoogle": "Regístrate con Google",
+  "videoconference": "Unirse a la videoconferencia"
 }

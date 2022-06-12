@@ -53,7 +53,10 @@ dependencies:
   textfield_search: ^0.10.0
   uuid: ^3.0.6
   flutter_native_timezone: ^2.0.0
+  google_sign_in: ^5.0.1
   email_validator: "^2.0.1"
+  agora_rtc_engine: ^5.2.0
+  permission_handler: ^9.2.0
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +87,7 @@ flutter:
     - public/logo.png
     - public/logowhite.png
     - public/logosplash.png
+    - public/google.png
     - .env
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
