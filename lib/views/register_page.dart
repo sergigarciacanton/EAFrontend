@@ -1,4 +1,5 @@
 import 'package:ea_frontend/models/register.dart';
+import 'package:ea_frontend/views/jovo_questionaire.dart';
 import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
@@ -203,18 +204,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
-                        if(!EmailValidator.validate(mailController.text)) {
+                        if (!EmailValidator.validate(mailController.text)) {
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                content: Text(
-                                    getTranslated(context, 'mailError')!),
+                                content:
+                                    Text(getTranslated(context, 'mailError')!),
                               );
                             },
                           );
-                        }
-                        else if (passwordController.text !=
+                        } else if (passwordController.text !=
                             repeatPasswordController.text) {
                           showDialog(
                             context: context,
@@ -250,12 +250,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             isLoading = false;
                           });
                           if (response == "201") {
-                            storage.setItem('userName', usernameController.text.toString());
+                            storage.setItem(
+                                'userName', usernameController.text.toString());
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const Questionnaire()));
+                                    builder: (context) => JovoQuestionaire()));
                           } else {
                             showDialog(
                               context: context,

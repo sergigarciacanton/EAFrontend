@@ -2,15 +2,20 @@ import 'dart:async';
 
 import 'package:ea_frontend/jovo_client/models/request.dart';
 import 'package:ea_frontend/jovo_client/services/jovo_service.dart';
+import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/chat_message.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/socket/chat_socket.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
+import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/chat.dart';
+import 'package:localstorage/localstorage.dart';
 import 'dart:developer';
 import 'dart:convert';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:chat_bubbles/chat_bubbles.dart';
 
 class JovoQuestionaire extends StatefulWidget {
   // JovoQuestionaire(this.chatId, this.userId);
@@ -32,12 +37,6 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
     _jovoResponse.close();
   }
 
-  void fetchRequest() async {
-    JovoRequest res =
-        await JovoService.sendRequest(await JovoRequest.launchRequest());
-    addResponse(res);
-  }
-
   void sendMessage(TextEditingController textEditingController,
       JovoRequest launchRequest, JovoRequest launchResponse) async {
     JovoRequest req = await JovoRequest.textRequest(
@@ -57,8 +56,45 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
     JovoRequest? launchRequest;
     JovoRequest? launchResponse;
 
+    Widget bottomAppbar = LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      TextEditingController textEditingController = TextEditingController();
+
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            SizedBox(
+              width: constraints.maxWidth * 4 / 5,
+              child: TextField(
+                controller: textEditingController,
+                onSubmitted: (value) {
+                  sendMessage(
+                      textEditingController, launchRequest!, launchResponse!);
+                },
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                print(launchResponse!.toJson().toString());
+                sendMessage(
+                    textEditingController, launchRequest!, launchResponse!);
+              },
+              child: Icon(Icons.send, color: Colors.black),
+              style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                padding: EdgeInsets.all(20),
+                primary: Theme.of(context).backgroundColor, // <-- Button color
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+
     Future<JovoRequest> fetchLaunchRequest() async {
-      launchRequest = await JovoRequest.launchRequest();
+      launchRequest = await JovoRequest.launchRequest(
+          LocalStorage('BookHub').getItem('userId'));
       return JovoService.sendRequest(launchRequest!);
     }
 
@@ -69,50 +105,53 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
             launchResponse = snapshot.data;
             return Scaffold(
                 appBar: AppBar(
-                    title: const ListTile(
-                      title: Text("Questioanaire"),
-                    ),
-                    leading: const CircleAvatar(
-                      radius: 48, // Image radius
-                      backgroundImage: NetworkImage(
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKr-4_3JHSaiKkrTwXGXdRXkpl5dl2o7EaGg&usqp=CAU'),
-                    )),
-                bottomNavigationBar: BottomAppBar(child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  TextEditingController textEditingController =
-                      TextEditingController();
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: constraints.maxWidth * 4 / 5,
-                          child: TextField(
-                            controller: textEditingController,
-                            onSubmitted: (value) {
-                              sendMessage(textEditingController, launchRequest!,
-                                  launchResponse!);
-                            },
-                          ),
+                  actions: [
+                    Container(
+                      width: 250,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).backgroundColor),
+                          minimumSize: MaterialStateProperty.all(
+                              Size(MediaQuery.of(context).size.width, 60)),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            print(launchResponse!.toJson().toString());
-                            sendMessage(textEditingController, launchRequest!,
-                                launchResponse!);
-                          },
-                          child: Icon(Icons.send, color: Colors.black),
-                          style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
-                            padding: EdgeInsets.all(20),
-                            primary: Theme.of(context)
-                                .backgroundColor, // <-- Button color
-                          ),
+                        child: Text(
+                          getTranslated(context, 'goToOldQuestionnaire')!,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                      ],
+                        onPressed: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Questionnaire()));
+                        },
+                      ),
                     ),
-                  );
-                })),
+                    TextButton(
+                      child: Text(
+                        getTranslated(context, 'skip')!,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(context).backgroundColor,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomeScaffold()));
+                      },
+                    ),
+                  ],
+                  title: ListTile(
+                    title: Text(
+                      getTranslated(context, 'jovoQuestionnaire')!,
+                      textScaleFactor: 1.2,
+                    ),
+                  ),
+                ),
+                bottomNavigationBar: BottomAppBar(child: bottomAppbar),
                 body: StreamBuilder(
                   stream: getResponse,
                   initialData: launchResponse,
@@ -120,44 +159,87 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
                     if (snapshot.hasData) {
                       print('has data!!' + snapshot.data!.toString());
                       msgList.add(snapshot.data!);
+
                       return ListView.builder(
                           controller: ScrollController(),
                           padding: const EdgeInsets.all(8),
                           itemCount: msgList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            if (msgList[index].output == null) {
-                              return Card(
-                                child: ListTile(
-                                  onTap: () {},
-                                  leading: FlutterLogo(size: 56.0),
-                                  title: Text("Input"),
-                                  subtitle: Text(msgList[index].input == null
-                                      ? 'no input'
-                                      : msgList[index].input!.text!),
-                                  //trailing: Icon(Icons.more_vert),
+                            if (msgList[index].context!.session!.end != null &&
+                                msgList[index].context!.session!.end!) {
+                              return Container(
+                                width: 250,
+                                child: Column(
+                                  children: [
+                                    BubbleSpecialThree(
+                                      text: snapshot.data!.output == null
+                                          ? 'no output'
+                                          : snapshot.data!.output![0].message!,
+                                      isSender: false,
+                                      color: Theme.of(context).indicatorColor,
+                                      tail: true,
+                                      textStyle: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Theme.of(context)
+                                                    .backgroundColor),
+                                        minimumSize: MaterialStateProperty.all(
+                                            Size(
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                60)),
+                                      ),
+                                      child: Text(
+                                        getTranslated(context, 'proceed')!,
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const HomeScaffold()));
+                                      },
+                                    ),
+                                  ],
                                 ),
                               );
+                            }
+
+                            if (msgList[index].output == null) {
+                              return BubbleSpecialThree(
+                                text: msgList[index].input == null
+                                    ? 'no input'
+                                    : msgList[index].input!.text!,
+                                color: Theme.of(context).backgroundColor,
+                                tail: true,
+                                isSender: true,
+                                textStyle: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              );
                             } else {
-                              return Card(
-                                child: ListTile(
-                                  onTap: () {},
-                                  leading: FlutterLogo(size: 56.0),
-                                  title: Text("Output"),
-                                  subtitle: Text(msgList[index].output == null
-                                      ? 'no output'
-                                      : msgList[index].output![0].message!),
-                                  //trailing: Icon(Icons.more_vert),
-                                ),
+                              return BubbleSpecialThree(
+                                text: msgList[index].output == null
+                                    ? 'no output'
+                                    : msgList[index].output![0].message!,
+                                isSender: false,
+                                color: Theme.of(context).indicatorColor,
+                                tail: true,
+                                textStyle: TextStyle(
+                                    color: Colors.white, fontSize: 16),
                               );
                             }
                           });
                     } else if (snapshot.hasError) {
                       log(snapshot.error.toString());
                       print(snapshot.error);
-                      //   throw snapshot.error.hashCode;
-                      // return const Center(
-                      //   child: CircularProgressIndicator(),
-                      // );
                     }
                     return Center(
                       child: Text('No messages yet'),

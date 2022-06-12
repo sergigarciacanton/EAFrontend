@@ -36,16 +36,16 @@ class JovoRequest {
     String timestamp = DateTime.now().toUtc().toIso8601String();
     String timeZone =
         "Europe/Madrid"; //await FlutterNativeTimezone.getLocalTimezone();
-    String locale =
-        "en"; // await getLocale().then((value) => value.toString());
+    String locale = 'en'; //await getLocale().then((value) => value.toString());
 
     Input input = Input.text(text); //change to data input
     Context context = Context.textPreset(
-        launchRequest.context!.device!.id!,
-        launchRequest.context!.session!.id!,
-        launchRequest.context!.user!.id!,
-        launchResponse.context!.session!.state!,
-        launchResponse.context!.session!.data!);
+      launchRequest.context!.device!.id!,
+      launchRequest.context!.session!.id!,
+      launchRequest.context!.user!.id!,
+      launchResponse.context!.session!.state!,
+      launchRequest.context!.session!.data!,
+    );
 
     return JovoRequest(
         version: version,
@@ -58,18 +58,20 @@ class JovoRequest {
         context: context);
   }
 
-  static Future<JovoRequest> launchRequest() async {
+  static Future<JovoRequest> launchRequest(String user) async {
     String version = "4.0";
     String platform = "web";
     String id = const Uuid().v4().toString();
     String timestamp = DateTime.now().toUtc().toIso8601String();
     String timeZone =
         "Europe/Madrid"; //await FlutterNativeTimezone.getLocalTimezone();
-    String locale = await getLocale().then((value) => value.toString());
+    String locale = 'en'; //await getLocale().then((value) => value.toString());
 
     Input input = Input.launch(); //change to data input
     Context context = Context.launchPreset(const Uuid().v4().toString(),
-        const Uuid().v4().toString(), const Uuid().v4().toString());
+        const Uuid().v4().toString(), const Uuid().v4().toString(), user);
+
+    //  Data data = Data(d: Map.of({'user': user}));
 
     return JovoRequest(
         version: version,
@@ -79,6 +81,7 @@ class JovoRequest {
         timeZone: timeZone,
         locale: locale,
         input: input,
+        //  data: data,
         context: context);
   }
 
@@ -148,18 +151,16 @@ class Output {
 }
 
 class Data {
-  String? uuid;
+  Map<String, dynamic>? d;
 
-  Data({this.uuid});
+  Data({this.d});
 
   Data.fromJson(Map<String, dynamic> json) {
-    uuid = json['uuid'];
+    d = json;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['uuid'] = this.uuid;
-    return data;
+    return d!;
   }
 }
 
@@ -203,12 +204,15 @@ class Context {
 
   Context({this.device, this.session, this.user});
 
-  Context.launchPreset(String deviceId, String sessionId, String userId) {
+  Context.launchPreset(
+      String deviceId, String sessionId, String userId, String myUserId) {
     device = Device.textCapability(deviceId);
     // no data in session
     session = Session(
+        data: Data(d: Map.of({'user': myUserId})),
         id: sessionId,
         isNew: true,
+        end: false,
         updatedAt: DateTime.now().toUtc().toIso8601String());
     // no data in user
     user = User(id: userId);
@@ -280,15 +284,18 @@ class Session {
   String? id;
   Data? data;
   bool? isNew;
+  bool? end;
   String? updatedAt;
   List<JovoState>? state;
 
-  Session({this.id, this.data, this.isNew, this.updatedAt, this.state});
+  Session(
+      {this.id, this.data, this.isNew, this.end, this.updatedAt, this.state});
 
   Session.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
     isNew = json['isNew'];
+    end = json['end'];
     updatedAt = json['updatedAt'];
     if (json['state'] != null) {
       state = <JovoState>[];
@@ -304,7 +311,8 @@ class Session {
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
-    data['isNew'] = this.isNew;
+    if (this.isNew != null) data['isNew'] = this.isNew;
+    if (this.end != null) data['end'] = this.end;
     data['updatedAt'] = this.updatedAt;
     if (this.state != null) {
       data['state'] = this.state!.map((v) => v.toJson()).toList();
