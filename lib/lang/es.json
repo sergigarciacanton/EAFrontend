@@ -89,13 +89,10 @@
   "skip": "Saltar",
   "accept": "Aceptar",
   "mailError": "Error, la dirección de correo tiene un formato inválido",
-<<<<<<< HEAD
   "jovoQuestionnaire": "Porfavor responde las siguientes preguntas, solo será un minuto!",
   "goToOldQuestionnaire": "Cuestionario Manual",
-  "proceed": "Proceder"
-=======
+  "proceed": "Proceder",
   "loginGoogle": "Iniciar sesión con Google",
   "registerGoogle": "Regístrate con Google",
   "videoconference": "Unirse a la videoconferencia"
->>>>>>> develop
 }
