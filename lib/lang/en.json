@@ -89,7 +89,13 @@
   "skip": "Skip",
   "accept": "Accept",
   "mailError": "Error, mail address has an invalid format",
+<<<<<<< HEAD
   "jovoQuestionnaire": "Please take one minute to anwser these questions!",
   "goToOldQuestionnaire": "Manual Questionnaire",
   "proceed": "Proceed"
+=======
+  "loginGoogle": "Login with Google",
+  "registerGoogle": "Register with Google",
+  "videoconference": "Join video conference"
+>>>>>>> develop
 }
