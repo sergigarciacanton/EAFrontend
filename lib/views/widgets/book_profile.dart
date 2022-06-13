@@ -109,7 +109,7 @@ class _BookPageState extends State<BookPage> {
                           children: [
                             Text(
                               'A',
-                              style: TextStyle(fontSize: 15),
+                              style: TextStyle(fontSize: 12),
                             ),
                             Text(
                               'A',
@@ -184,7 +184,7 @@ class _BookPageState extends State<BookPage> {
                         getTranslated(context, 'description')! +
                             ' : ' +
                             snapshot.data!.description,
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.justify,
                         style: TextStyle(
                           fontSize: fontSize,
                           fontWeight: FontWeight.bold,
@@ -407,8 +407,8 @@ class _BookPageState extends State<BookPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.orange,
-                        onPrimary: Colors.black,
+                        primary: Theme.of(context).backgroundColor,
+                        onPrimary: Theme.of(context).primaryColor,
                         padding:
                             EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                         textStyle: TextStyle(
@@ -434,11 +434,11 @@ class _BookPageState extends State<BookPage> {
   Widget CommentItem(dynamic user, String title, String text, String type,
       List<dynamic> users, String likes, String dislikes, int index) {
     return ListTile(
-      leading: const CircleAvatar(
-        backgroundColor: Colors.orange,
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).backgroundColor,
         child: Icon(
           Icons.person_outline_outlined,
-          color: Colors.white,
+          color: Theme.of(context).primaryColor,
         ),
       ),
       title: Text(
