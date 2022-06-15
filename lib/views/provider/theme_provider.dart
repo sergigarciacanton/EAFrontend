@@ -51,6 +51,7 @@ class MyThemes {
     bottomNavigationBarTheme:
         BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
     hintColor: Colors.orange,
+    toggleButtonsTheme: ToggleButtonsThemeData(color: Colors.grey.shade800),
   );
 
   static final lightTheme = ThemeData(
@@ -68,5 +69,6 @@ class MyThemes {
     bottomNavigationBarTheme:
         BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
     hintColor: Colors.red,
+    toggleButtonsTheme: ToggleButtonsThemeData(color: Colors.red.shade100),
   );
 }

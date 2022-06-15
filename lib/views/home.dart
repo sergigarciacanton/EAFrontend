@@ -9,6 +9,7 @@ import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/club_card.dart';
 import 'package:ea_frontend/views/widgets/event_card.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
+import 'package:ea_frontend/views/widgets/map_by_distance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -135,6 +136,22 @@ class _HomeState extends State<Home> {
         widget.setMainComponent!(ClubPage(elementId: _clubs[i].id));
         findClubsController.text = "";
       }
+    }
+  }
+
+  bool verifyAdminEvent(int index) {
+    if (_events[index].admin.id == LocalStorage('BookHub').getItem('userId')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool verifyAdminClub(int index) {
+    if (_clubs[index].admin.id == LocalStorage('BookHub').getItem('userId')) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -328,6 +345,7 @@ class _HomeState extends State<Home> {
                                         .toString(),
                                     imageUrl:
                                         "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
+                                    admin: verifyAdminEvent(index),
                                   ),
                                   onTap: () {
                                     widget.setMainComponent!(EventPage(
@@ -363,7 +381,7 @@ class _HomeState extends State<Home> {
                                     backgroundColor:
                                         Theme.of(context).indicatorColor,
                                     onPressed: () {
-                                      widget.setMainComponent!(BuildMap(
+                                      widget.setMainComponent!(BuildMapDistance(
                                         modo: "AllEvents",
                                         setMainComponent:
                                             widget.setMainComponent,
@@ -459,6 +477,7 @@ class _HomeState extends State<Home> {
                                     _clubs[index].usersList.length.toString(),
                                 imageUrl:
                                     "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
+                                admin: verifyAdminClub(index),
                               ),
                               onTap: () {
                                 widget.setMainComponent!(

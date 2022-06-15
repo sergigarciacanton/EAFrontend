@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
           builder: (context, ThemeProvider notifier, child) {
             final themeProvider = Provider.of<ThemeProvider>(context);
             if (this._locale == null) {
-              setLocale(Locale('es'));
+              //   setLocale(Locale('es'));
             }
             return MaterialApp(
                 debugShowCheckedModeBanner: false,
@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
                   return supportedLocales.first;
                 },
                 home: AnimatedSplashScreen.withScreenFunction(
-                    duration: 3000,
+                    duration: 500,
                     splash: "public/logosplash.png",
                     splashIconSize: 500,
                     screenFunction: () async {

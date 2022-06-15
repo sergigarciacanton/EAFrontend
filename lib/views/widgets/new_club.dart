@@ -3,12 +3,10 @@ import 'dart:developer';
 import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/club_service.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
 import '../../localization/language_constants.dart';
-import '../../main.dart';
 import '../../models/newclub.dart';
 import '../../models/user.dart';
 import '../../routes/user_service.dart';
@@ -38,7 +36,6 @@ class _NewClubState extends State<NewClub> {
 
   @override
   Widget build(BuildContext context) {
-    ClubService clubService = ClubService();
     String category = "MYSTERY";
     return FutureBuilder(
         future: fetchUser(),

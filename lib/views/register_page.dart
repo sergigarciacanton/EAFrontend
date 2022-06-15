@@ -1,10 +1,13 @@
 import 'package:ea_frontend/models/register.dart';
+import 'package:ea_frontend/views/jovo_questionaire.dart';
 import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/routes/auth_service.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../localization/language_constants.dart';
+import 'package:email_validator/email_validator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -23,6 +26,20 @@ class _RegisterPageState extends State<RegisterPage> {
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
   final repeatPasswordController = TextEditingController();
+  bool darkTheme = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getThemeMode();
+  }
+
+  Future<void> getThemeMode() async {
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    setState(() {
+      darkTheme = _pref.getBool("theme")!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +62,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-                  Image.asset("public/logo.png"),
+                  darkTheme
+                  ? Image.asset("public/logowhite.png")
+                  : Image.asset("public/logo.png"),
                   Text(
                     getTranslated(context, 'register')!,
                     style: const TextStyle(
@@ -202,7 +221,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () async {
-                        if (passwordController.text !=
+                        if (!EmailValidator.validate(mailController.text)) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content:
+                                    Text(getTranslated(context, 'mailError')!),
+                              );
+                            },
+                          );
+                        } else if (passwordController.text !=
                             repeatPasswordController.text) {
                           showDialog(
                             context: context,
@@ -228,22 +257,25 @@ class _RegisterPageState extends State<RegisterPage> {
                             isLoading = true;
                           });
                           var response = await authService.register(
-                              RegisterModel(
-                                  username: usernameController.text,
-                                  password: passwordController.text,
-                                  birthDate: DateTime.parse(birthDate),
-                                  mail: mailController.text,
-                                  name: nameController.text));
+                            RegisterModel(
+                              username: usernameController.text,
+                              password: passwordController.text,
+                              birthDate: DateTime.parse(birthDate),
+                              mail: mailController.text,
+                              name: nameController.text,
+                              google: false
+                            )
+                          );
                           setState(() {
                             isLoading = false;
                           });
                           if (response == "201") {
-                            storage.setItem('userName', usernameController.text.toString());
+                            storage.setItem(
+                                'userName', usernameController.text.toString());
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const Questionnaire()));
+                                    builder: (context) => JovoQuestionaire()));
                           } else {
                             showDialog(
                               context: context,

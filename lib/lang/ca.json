@@ -94,5 +94,13 @@
   "configCategories": "Configurar categories",
   "questionnaireText": "Voldríem saber quines són les teves categories de llibres preferides per poder donar-te un millor servei. Escull les categories que més t'agradin o salta't aquest procés:",
   "skip": "Saltar",
-  "accept": "Acceptar"
+  "accept": "Acceptar",
+  "mailError": "Error, la direcció de correu té un format invàlid",
+  "jovoQuestionnaire": "Siusplau respon les següents pregutnes, només serà un minut!",
+  "goToOldQuestionnaire": "Qüestionari Manual",
+  "proceed": "Prosseguir",
+  "loginGoogle": "Iniciar sessió amb Google",
+  "registerGoogle": "Registra't amb Google",
+  "videoconference": "Uneix-te a la videoconferència",
+  "leave_chat": "Abandona el Chat"
 }
