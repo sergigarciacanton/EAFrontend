@@ -94,5 +94,6 @@
   "proceed": "Proceed",
   "loginGoogle": "Login with Google",
   "registerGoogle": "Register with Google",
-  "videoconference": "Join video conference"
+  "videoconference": "Join video conference",
+  "leave_chat": "Leave Chat"
 }

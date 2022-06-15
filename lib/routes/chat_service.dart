@@ -64,6 +64,28 @@ class ChatService {
       return Message.fromJson(await jsonDecode(response.body)).message;
     }
   }
+
+  static Future<String> leaveChat(String chatId, String userId) async {
+    String url = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/chat/';
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = 'http://10.0.2.2:3000/chat/';
+    }
+
+    var response =
+        await http.delete(Uri.parse("${url}leave/$chatId/$userId"), headers: {
+      "Authorization": LocalStorage('BookHub').getItem('token'),
+      "Content-Type": "application/json"
+    });
+
+    if (response.statusCode == 200) {
+      return "200";
+    } else {
+      return Message.fromJson(await jsonDecode(response.body)).message;
+    }
+  }
 }
 
 class Message {
