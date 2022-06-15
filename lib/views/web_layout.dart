@@ -1,4 +1,5 @@
 import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:ea_frontend/main.dart';
 import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/help.dart';
 import 'package:ea_frontend/views/home.dart';
@@ -26,6 +27,7 @@ class _WebLayoutState extends State<WebLayout> {
   }
 
   setMainComponent(Widget component) {
+    print("set MC");
     setState(() {
       mainComponent = component;
     });
