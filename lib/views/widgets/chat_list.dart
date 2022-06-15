@@ -4,6 +4,7 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/views/chat_page.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -22,6 +23,24 @@ class ChatList extends StatefulWidget {
 class _ChatListState extends State<ChatList> {
   late String id;
   final List<int> colorCodes = <int>[600, 500, 400];
+  late final Future<User> myfuture;
+
+  String parseUsernames(List<User> userList) {
+    String s = "";
+    userList.forEach((element) {
+      s = s + element.userName + ", ";
+    });
+
+    if (s != null && s.length >= 2) {
+      s = s.substring(0, s.length - 2);
+    }
+    return s;
+  }
+
+  @override
+  void initState() {
+    myfuture = fetchUser();
+  }
 
   var storage;
   Future<User> fetchUser() async {
@@ -35,7 +54,7 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: fetchUser(),
+        future: myfuture,
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -63,13 +82,14 @@ class _ChatListState extends State<ChatList> {
                               child: ListTile(
                                 onTap: () {
                                   if (widget.setMainComponent != null) {
-                                    widget.setMainComponent!(ChatPage(
+                                    widget.setMainComponent!(new ChatPage(
                                         snapshot.data?.chats[index].id, id));
                                   }
                                 },
                                 leading: FlutterLogo(size: 56.0),
                                 title: Text(snapshot.data?.chats[index].name),
-                                subtitle: Text('this will be the last message'),
+                                subtitle: Text(parseUsernames(snapshot
+                                    .data?.chats[index].users as List<User>)),
                                 //trailing: Icon(Icons.more_vert),
                               ),
                             );
