@@ -73,10 +73,11 @@ class _EditProfileState extends State<EditProfile> {
 
             return Scaffold(
               appBar: AppBar(
+                foregroundColor: Theme.of(context).primaryColor,
                 title: Text(
                   "Edit Profile",
                 ),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 1,
                 leading: IconButton(
                   icon: Icon(
@@ -158,25 +159,23 @@ class _EditProfileState extends State<EditProfile> {
                       height: 35,
                     ),
                     ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).backgroundColor),
-                        minimumSize: MaterialStateProperty.all(
-                            Size(MediaQuery.of(context).size.width, 60)),
-                      ),
-                      child: Text(
-                        getTranslated(context, 'configCategories')!,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: () {
-                         Navigator.push(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).backgroundColor),
+                          minimumSize: MaterialStateProperty.all(
+                              Size(MediaQuery.of(context).size.width, 60)),
+                        ),
+                        child: Text(
+                          getTranslated(context, 'configCategories')!,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const Questionnaire()));
-                      }
-                    ),
+                                  builder: (context) => const Questionnaire()));
+                        }),
                     const SizedBox(
                       height: 35,
                     ),
@@ -190,7 +189,8 @@ class _EditProfileState extends State<EditProfile> {
                                     isEditing = false;
                                   });
                                 },
-                                child: Text(getTranslated(context, 'returnToHome')!,
+                                child: Text(
+                                    getTranslated(context, 'returnToHome')!,
                                     style: const TextStyle(
                                         fontSize: 14,
                                         letterSpacing: 2.2,
@@ -238,7 +238,8 @@ class _EditProfileState extends State<EditProfile> {
                                         : null;
                                     !EmailValidator.validate(
                                             controllerMail.text)
-                                        ? error = getTranslated(context, 'mailError')!
+                                        ? error =
+                                            getTranslated(context, 'mailError')!
                                         : null;
                                     showDialog(
                                       context: context,

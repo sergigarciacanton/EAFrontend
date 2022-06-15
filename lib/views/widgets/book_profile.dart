@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:ea_frontend/routes/comment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
@@ -24,7 +25,7 @@ class BookPage extends StatefulWidget {
 class _BookPageState extends State<BookPage> {
   List<Comment> commentList = List.empty(growable: true);
   bool _nocomments = true;
-
+  double rating = 0;
   String userid = "";
   final titleController = TextEditingController();
   final textController = TextEditingController();
@@ -141,7 +142,7 @@ class _BookPageState extends State<BookPage> {
                       child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      snapshot.data!.title,
+                      snapshot.data!.title + rating.toString(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: fontSize * 2,
@@ -154,7 +155,19 @@ class _BookPageState extends State<BookPage> {
                   Row(
                     children: stars(snapshot.data!.rate),
                   ),
-                  const SizedBox(height: 50),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      child: Text(
+                        '(rate)',
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                      onPressed: () => showRating(),
+                    ),
+                  ),
                   Row(
                     children: <Widget>[
                       const SizedBox(
@@ -485,4 +498,43 @@ class _BookPageState extends State<BookPage> {
     }
     return lista;
   }
+
+  Widget buildRating() => RatingBar.builder(
+        minRating: 0.5,
+        itemPadding: const EdgeInsets.symmetric(horizontal: 3),
+        itemBuilder: (context, _) => const Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        allowHalfRating: true,
+        updateOnDrag: true,
+        onRatingUpdate: (rating) => setState(() {
+          this.rating = rating;
+        }),
+      );
+
+  void showRating() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text('Rate this book'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                buildRating(),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text(
+                  'ok',
+                  style: TextStyle(fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          ));
 }
