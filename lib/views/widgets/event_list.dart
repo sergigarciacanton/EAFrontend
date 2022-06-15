@@ -26,6 +26,13 @@ class _EventListState extends State<EventList> {
   late String id;
   final List<int> colorCodes = <int>[600, 500, 400];
 
+  late final Future<User> myfuture;
+
+  @override
+  void initState() {
+    myfuture = fetchUser();
+  }
+
   var storage;
   Future<User> fetchUser() async {
     storage = LocalStorage('BookHub');
@@ -43,7 +50,7 @@ class _EventListState extends State<EventList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: fetchUser(),
+        future: myfuture,
         builder: (context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(

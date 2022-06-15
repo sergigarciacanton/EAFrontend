@@ -37,7 +37,7 @@ class JovoRequest {
     String timeZone =
         "Europe/Madrid"; //await FlutterNativeTimezone.getLocalTimezone();
     String locale = 'en'; //await getLocale().then((value) => value.toString());
-
+    Data data = Data(d: Map.of({'uuid': const Uuid().v4().toString()}));
     Input input = Input.text(text); //change to data input
     Context context = Context.textPreset(
       launchRequest.context!.device!.id!,
@@ -55,6 +55,7 @@ class JovoRequest {
         timeZone: timeZone,
         locale: locale,
         input: input,
+        data: data,
         context: context);
   }
 
@@ -71,7 +72,7 @@ class JovoRequest {
     Context context = Context.launchPreset(const Uuid().v4().toString(),
         const Uuid().v4().toString(), const Uuid().v4().toString(), user);
 
-    //  Data data = Data(d: Map.of({'user': user}));
+    Data data = Data(d: Map.of({'uuid': const Uuid().v4().toString()}));
 
     return JovoRequest(
         version: version,
@@ -81,7 +82,7 @@ class JovoRequest {
         timeZone: timeZone,
         locale: locale,
         input: input,
-        //  data: data,
+        data: data,
         context: context);
   }
 

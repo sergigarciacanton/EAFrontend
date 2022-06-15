@@ -3,7 +3,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'user.dart';
 
 class ChatMessage {
-  User user;
+  dynamic user;
   String message;
   DateTime date;
 
