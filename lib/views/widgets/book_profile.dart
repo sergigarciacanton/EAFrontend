@@ -39,6 +39,11 @@ class _BookPageState extends State<BookPage> {
     fetchBook();
     getCommentsList();
     fetchUser();
+    isSelected = [
+      false,
+      true,
+      false,
+    ];
   }
 
   Future<Book> fetchBook() async {
@@ -65,6 +70,20 @@ class _BookPageState extends State<BookPage> {
     return UserService.getUser(userid);
   }
 
+  late List<bool> isSelected;
+  double fontSize = 17;
+  double getFontSize(int index) {
+    if (index == 0) {
+      return 15;
+    } else if (index == 1) {
+      return 17;
+    } else if (index == 2) {
+      return 21;
+    } else {
+      return 15;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -77,20 +96,61 @@ class _BookPageState extends State<BookPage> {
               padding: EdgeInsets.all(20),
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
-                  Container(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        snapshot.data!.title,
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ToggleButtons(
+                          color: Theme.of(context).backgroundColor,
+                          borderRadius: BorderRadius.circular(6),
+                          selectedColor: Theme.of(context).backgroundColor,
+                          fillColor: Theme.of(context).toggleButtonsTheme.color,
+                          children: [
+                            Text(
+                              'A',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            Text(
+                              'A',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            Text(
+                              'A',
+                              style: TextStyle(fontSize: 21),
+                            ),
+                          ],
+                          isSelected: isSelected,
+                          onPressed: (index) {
+                            for (var i = 0; i < isSelected.length; i++) {
+                              if (i == index) {
+                                isSelected[i] = true;
+                              } else {
+                                isSelected[i] = false;
+                              }
+                            }
+                            fontSize = getFontSize(index);
+                            setState(() {});
+                          },
                         ),
-                      ),
-                    ),
+                      )
+                    ],
                   ),
+                  const SizedBox(height: 10),
+                  Container(
+                      child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      snapshot.data!.title,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: fontSize * 2,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )),
                   Row(
                     children: stars(snapshot.data!.rate),
                   ),
@@ -109,8 +169,9 @@ class _BookPageState extends State<BookPage> {
                         child: Text(
                           snapshot.data!.writer.name,
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: fontSize * 2,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -123,9 +184,9 @@ class _BookPageState extends State<BookPage> {
                         getTranslated(context, 'description')! +
                             ' : ' +
                             snapshot.data!.description,
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(
-                          fontSize: 15,
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          fontSize: fontSize,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -138,8 +199,8 @@ class _BookPageState extends State<BookPage> {
                       child: Text(
                         getTranslated(context, 'specs')!,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 30,
+                        style: TextStyle(
+                            fontSize: fontSize * 2,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline),
                       ),
@@ -158,8 +219,8 @@ class _BookPageState extends State<BookPage> {
                             "-" +
                             snapshot.data!.publishedDate.year.toString(),
                         textAlign: TextAlign.left,
-                        style: const TextStyle(
-                          fontSize: 15,
+                        style: TextStyle(
+                          fontSize: fontSize,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -174,8 +235,8 @@ class _BookPageState extends State<BookPage> {
                             ': ' +
                             snapshot.data!.editorial,
                         textAlign: TextAlign.left,
-                        style: const TextStyle(
-                          fontSize: 15,
+                        style: TextStyle(
+                          fontSize: fontSize,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -190,8 +251,8 @@ class _BookPageState extends State<BookPage> {
                           child: Text(
                             getTranslated(context, 'categories')! + ': ',
                             textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 15,
+                            style: TextStyle(
+                              fontSize: fontSize,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -201,8 +262,8 @@ class _BookPageState extends State<BookPage> {
                       for (int i = 0; i < snapshot.data!.category.length; i++)
                         (Text(
                           snapshot.data?.category[i].name + "  ",
-                          style: const TextStyle(
-                            fontSize: 15,
+                          style: TextStyle(
+                            fontSize: fontSize,
                             fontWeight: FontWeight.bold,
                           ),
                         ))
@@ -215,8 +276,8 @@ class _BookPageState extends State<BookPage> {
                       child: Text(
                         getTranslated(context, 'comments')!,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 30,
+                        style: TextStyle(
+                            fontSize: fontSize * 2,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline),
                       ),
@@ -261,8 +322,8 @@ class _BookPageState extends State<BookPage> {
                       child: Text(
                         getTranslated(context, 'addComment')!,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: fontSize, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -278,7 +339,7 @@ class _BookPageState extends State<BookPage> {
                           }
                           return null;
                         },
-                        style: const TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: fontSize),
                         decoration: InputDecoration(
                             labelText: getTranslated(context, "title")!,
                             hintText: getTranslated(context, "writeTheTitle"),
@@ -300,7 +361,7 @@ class _BookPageState extends State<BookPage> {
                           }
                           return null;
                         },
-                        style: const TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: fontSize),
                         decoration: InputDecoration(
                             labelText: getTranslated(context, "text")!,
                             hintText: getTranslated(context, "writeTheText"),
@@ -312,7 +373,10 @@ class _BookPageState extends State<BookPage> {
                   ElevatedButton(
                     child: Text(
                       getTranslated(context, "addNewComment")!,
-                      textScaleFactor: 1,
+                      style: TextStyle(
+                          fontSize: fontSize * 1.75,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
                     onPressed: () async {
                       print("Add new comment");
@@ -343,12 +407,13 @@ class _BookPageState extends State<BookPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.orange,
-                        onPrimary: Colors.black,
+                        primary: Theme.of(context).backgroundColor,
+                        onPrimary: Theme.of(context).primaryColor,
                         padding:
                             EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                         textStyle: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                            fontSize: fontSize * 1.75,
+                            fontWeight: FontWeight.bold)),
                   )
                 ],
               ),
@@ -369,20 +434,26 @@ class _BookPageState extends State<BookPage> {
   Widget CommentItem(dynamic user, String title, String text, String type,
       List<dynamic> users, String likes, String dislikes, int index) {
     return ListTile(
-      leading: const CircleAvatar(
-        backgroundColor: Colors.orange,
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).backgroundColor,
         child: Icon(
           Icons.person_outline_outlined,
-          color: Colors.white,
+          color: Theme.of(context).primaryColor,
         ),
       ),
       title: Text(
         user.userName + ': ' + title,
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.w500,
+          fontSize: fontSize,
         ),
       ),
-      subtitle: Text(text),
+      subtitle: Text(
+        text,
+        style: TextStyle(
+          fontSize: fontSize,
+        ),
+      ),
     );
   }
 
