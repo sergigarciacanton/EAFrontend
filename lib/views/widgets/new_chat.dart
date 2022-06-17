@@ -153,9 +153,10 @@ class _NewChatState extends State<NewChat> {
               style: ElevatedButton.styleFrom(
                   primary: Theme.of(context).backgroundColor,
                   onPrimary: Theme.of(context).primaryColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  textStyle:
-                      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  textStyle: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
             )
           ],
         )));
@@ -176,7 +177,6 @@ class _NewChatState extends State<NewChat> {
           fontWeight: FontWeight.w500,
         ),
       ),
-      subtitle: Text(id),
       trailing: isSelected
           ? Icon(
               Icons.check_circle,

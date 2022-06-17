@@ -1,6 +1,8 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import '../../localization/language_constants.dart';
+import '../../models/category.dart';
+import '../../routes/management_service.dart';
 import 'event_list.dart';
 
 class NewBook extends StatefulWidget {
@@ -17,10 +19,30 @@ class _NewBookState extends State<NewBook> {
   final descriptionController = TextEditingController();
   final editorialController = TextEditingController();
   final writerController = TextEditingController();
-  String categoryController = "";
-  List<dynamic> categories = [];
   String publishedDateController = "";
   dynamic rateController = "0";
+  String categoriesController = "";
+  List<CategoryList> selectedCategory = List.empty(growable: true);
+  List<CategoryList> categoryList = [];
+  List<Category> _response = List.empty(growable: true);
+  bool _isLoading = true;
+
+  void initState() {
+    super.initState();
+    getCategories();
+  }
+
+  Future<void> getCategories() async {
+    _response = await ManagementService.getCategories();
+    setState(() {
+      for (int i = 0; i < _response.length; i++) {
+        CategoryList category1 = new CategoryList(
+            _response[i].id.toString(), _response[i].name.toString(), false);
+        categoryList.add(category1);
+      }
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,61 +210,35 @@ class _NewBookState extends State<NewBook> {
                         border: const OutlineInputBorder()),
                   )),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
-              Container(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  DropdownButton(
-                    value: category,
-                    items: [
-                      DropdownMenuItem<String>(
-                          value: 'SCI-FI',
-                          child: Text(
-                            'SCI-FI',
-                            style: TextStyle(color: Theme.of(context).backgroundColor),
-                          )),
-                      DropdownMenuItem<String>(
-                          value: 'MYSTERY',
-                          child: Text('MYSTERY',
-                              style: TextStyle(color: Theme.of(context).backgroundColor))),
-                      DropdownMenuItem<String>(
-                          value: 'THRILLER',
-                          child: Text('THRILLER',
-                              style: TextStyle(color: Theme.of(context).backgroundColor))),
-                      DropdownMenuItem<String>(
-                          value: 'ROMANCE',
-                          child: Text('ROMANCE',
-                              style: TextStyle(color: Theme.of(context).backgroundColor))),
-                      DropdownMenuItem<String>(
-                          value: 'WESTERN',
-                          child: Text('WESTERN',
-                              style: TextStyle(color: Theme.of(context).backgroundColor))),
-                      DropdownMenuItem<String>(
-                          value: 'DYSTOPIAN',
-                          child: Text('DYSTOPIAN',
-                              style: TextStyle(color: Theme.of(context).backgroundColor))),
-                      DropdownMenuItem<String>(
-                          value: 'CONTEMPORANY',
-                          child: Text('CONTEMPORANY',
-                              style: TextStyle(color: Theme.of(context).backgroundColor))),
-                      DropdownMenuItem<String>(
-                          value: 'FANTASY',
-                          child: Text(
-                            'FANTASY',
-                            style: TextStyle(color: Theme.of(context).backgroundColor),
-                          ))
-                    ],
-                    onChanged: (category) =>
-                        categoryController = categoryController,
-                  ),
-                  const SizedBox(
-                    width: 20,
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: SizedBox(
+                      height: 300.0,
+                      child: _isLoading
+                          ? Column(
+                              children: const [
+                                SizedBox(height: 10),
+                                LinearProgressIndicator(),
+                                SizedBox(height: 200),
+                              ],
+                            )
+                          : ListView.builder(
+                              itemCount: categoryList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return categoryItem(
+                                  categoryList[index].id,
+                                  categoryList[index].name,
+                                  categoryList[index].isSlected,
+                                  index,
+                                );
+                              }),
+                    ),
                   ),
                 ],
-              )),
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -263,7 +259,7 @@ class _NewBookState extends State<NewBook> {
                       description: descriptionController.text,
                       editorial: editorialController.text,
                       writer: writerController.text,
-                      category: categories,
+                      category: categoriesController,
                       publishedDate: DateTime.parse(publishedDateController),
                       rate: rateController));
                   if (response == "200") {
@@ -285,9 +281,10 @@ class _NewBookState extends State<NewBook> {
                 style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).backgroundColor,
                     onPrimary: Theme.of(context).primaryColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                    textStyle:
-                        const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
+                    textStyle: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(
                 height: 20,
@@ -330,5 +327,45 @@ class _NewBookState extends State<NewBook> {
             ],
           ),
         ));
+  }
+
+  Widget categoryItem(String id, String name, bool isSelected, int index) {
+    return ListTile(
+      title: Text(
+        name,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: isSelected
+          ? Icon(
+              Icons.check_circle,
+              color: Theme.of(context).backgroundColor,
+            )
+          : const Icon(
+              Icons.check_circle_outline,
+              color: Colors.grey,
+            ),
+      onTap: () {
+        setState(() {
+          categoryList[index].isSlected = !categoryList[index].isSlected;
+          if (categoryList[index].isSlected == true) {
+            selectedCategory.add(CategoryList(id, name, true));
+          } else if (categoryList[index].isSlected == false) {
+            selectedCategory
+                .removeWhere((item) => item.name == categoryList[index].name);
+          }
+          categoriesController = "";
+          for (int i = 0; i < selectedCategory.length; i++) {
+            if (i == 0) {
+              categoriesController = selectedCategory[i].name;
+            } else {
+              categoriesController =
+                  categoriesController + "," + selectedCategory[i].name;
+            }
+          }
+        });
+      },
+    );
   }
 }
