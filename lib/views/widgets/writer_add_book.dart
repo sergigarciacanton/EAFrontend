@@ -2,7 +2,6 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/book.dart';
 import 'package:ea_frontend/routes/author_service.dart';
 import 'package:ea_frontend/routes/book_service.dart';
-import 'package:ea_frontend/views/new_book_page.dart';
 import 'package:ea_frontend/views/widgets/edit_profile.dart';
 import 'package:ea_frontend/views/widgets/new_book.dart';
 import 'package:flutter/material.dart';

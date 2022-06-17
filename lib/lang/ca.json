@@ -13,7 +13,7 @@
   "stillWithoutAccount": "Encara sense compte?",
   "register": "Registrar-se",
   "interest": "Et pot interessar",
-  "newClub": "N E W  C L U B",
+  "newClub": "N O U  C L U B",
   "name": "Nom",
   "description": "Descripció",
   "category": "Categoria",
@@ -102,5 +102,7 @@
   "loginGoogle": "Iniciar sessió amb Google",
   "registerGoogle": "Registra't amb Google",
   "videoconference": "Uneix-te a la videoconferència",
-  "leave_chat": "Abandona el Chat"
+  "leave_chat": "Abandona el Chat",
+  "editClub": "E D I T A R  C L U B",
+  "submitEditClub": "Editar club"
 }

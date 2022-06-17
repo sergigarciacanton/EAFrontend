@@ -4,6 +4,7 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/club.dart';
 import 'package:ea_frontend/routes/club_service.dart';
 import 'package:ea_frontend/views/widgets/call.dart';
+import 'package:ea_frontend/views/widgets/new_club.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'dart:async';
@@ -62,6 +63,10 @@ class _ClubPageState extends State<ClubPage> {
                         backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NewClub(clubId: widget.elementId)),
+                          );
                           log('editClub');
                         },
                       )
@@ -107,7 +112,7 @@ class _ClubPageState extends State<ClubPage> {
 
   Widget _buildAdmin(AsyncSnapshot<Club> snapshot) {
     return Container(
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         padding: const EdgeInsets.all(5),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
@@ -509,7 +514,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           ),
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
+          padding: const EdgeInsets.fromLTRB(30, 15, 0, 0),
           child: Opacity(
             opacity: shrinkOffset / expandedHeight,
             child: Text(

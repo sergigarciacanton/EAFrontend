@@ -102,5 +102,7 @@
   "loginGoogle": "Iniciar sesión con Google",
   "registerGoogle": "Regístrate con Google",
   "videoconference": "Unirse a la videoconferencia",
-  "leave_chat": "Abandonar Chat"
+  "leave_chat": "Abandonar Chat",
+  "editClub": "E D I T A R  C L U B",
+  "submitEditClub": "Editar club"
 }
