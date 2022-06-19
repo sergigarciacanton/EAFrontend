@@ -103,8 +103,8 @@ class EventService {
           "Content-Type": "application/json"
         },
         body: json.encode(NewEventModel.toJson(values)));
-    if (response.statusCode == 200) {
-      return "200";
+    if (response.statusCode == 201) {
+      return "201";
     } else {
       return Message.fromJson(await jsonDecode(response.body)).message;
     }

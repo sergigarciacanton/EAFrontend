@@ -61,6 +61,7 @@ class _NewChatState extends State<NewChat> {
           title: Text(getTranslated(context, "newChat")!,
               style: const TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
+          backgroundColor: Theme.of(context).backgroundColor,
         ),
         body: SingleChildScrollView(
             child: Column(
@@ -79,14 +80,13 @@ class _NewChatState extends State<NewChat> {
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
                   controller: nameController,
-                  cursorColor: Colors.black,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return getTranslated(context, "fieldRequired");
                     }
                     return null;
                   },
-                  style: const TextStyle(fontSize: 20, color: Colors.black),
+                  style: const TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                       labelText: getTranslated(context, "name"),
                       hintText: getTranslated(context, "writeTheNameChat"),
@@ -157,7 +157,10 @@ class _NewChatState extends State<NewChat> {
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   textStyle: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold)),
-            )
+            ),
+            const SizedBox(
+              height: 30,
+            ),
           ],
         )));
   }

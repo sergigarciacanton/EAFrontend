@@ -91,6 +91,8 @@
   "eventDate": "Data de l'event",
   "addNewEvent": "Crear nou event",
   "writeTheNameEvent": "Escriu el nom de l'event",
+  "selectCategories": "Seleccioneu les categories relacionades",
+  "mapIndication":"Seleccioneu clicant al mapa la ubicació de l'event",
   "addNewChat": "Crear nou xat",
   "EventPage": "Event",
   "ClubPage": "Club",

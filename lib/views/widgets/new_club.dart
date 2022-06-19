@@ -57,7 +57,6 @@ class _NewClubState extends State<NewClub> {
 
   @override
   Widget build(BuildContext context) {
-    String category = "MYSTERY";
     return FutureBuilder(
         future: fetchUser(),
         builder: (context, AsyncSnapshot<User> snapshot) {
@@ -66,9 +65,8 @@ class _NewClubState extends State<NewClub> {
                 appBar: AppBar(
                   title: Text(getTranslated(context, "newClub")!,
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  foregroundColor: Colors.black,
                   centerTitle: true,
-                  backgroundColor: Colors.orange,
+                  backgroundColor: Theme.of(context).backgroundColor,
                 ),
                 body: SingleChildScrollView(
                     child: Column(
@@ -88,15 +86,13 @@ class _NewClubState extends State<NewClub> {
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextFormField(
                             controller: nameController,
-                            cursorColor: Colors.black,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return getTranslated(context, "fieldRequired");
                               }
                               return null;
                             },
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.black),
+                            style: const TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 labelText: getTranslated(context, "name"),
                                 hintText:
@@ -113,15 +109,13 @@ class _NewClubState extends State<NewClub> {
                             controller: descriptionController,
                             maxLines: 8,
                             maxLength: 500,
-                            cursorColor: Colors.black,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return getTranslated(context, "fieldRequired");
                               }
                               return null;
                             },
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.black),
+                            style: const TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 labelText:
                                     getTranslated(context, "description"),
@@ -132,11 +126,21 @@ class _NewClubState extends State<NewClub> {
                       const SizedBox(
                         height: 20,
                       ),
+                      Container(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            getTranslated(context, 'selectCategories')!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ),
                       Row(
                         children: <Widget>[
                           Expanded(
                             child: SizedBox(
-                              height: 300.0,
+                              height: 450.0,
                               child: _isLoading
                                   ? Column(
                                       children: const [
@@ -192,13 +196,16 @@ class _NewClubState extends State<NewClub> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.orange,
-                            onPrimary: Colors.black,
+                            primary: Theme.of(context).backgroundColor,
+                            onPrimary: Theme.of(context).primaryColor,
                             padding: EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                             textStyle: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
-                      )
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
                     ])));
           } else if (snapshot.hasError) {
             log(snapshot.error.toString());

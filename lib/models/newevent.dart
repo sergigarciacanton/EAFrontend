@@ -1,6 +1,8 @@
+import 'package:ea_frontend/models/location.dart';
 import 'package:ea_frontend/models/userPopulate.dart';
 
 import 'category.dart';
+import 'location.dart';
 
 class NewEventModel {
   String name;
@@ -8,18 +10,21 @@ class NewEventModel {
   dynamic admin;
   DateTime eventDate;
   String categories;
+  Location location;
 
   NewEventModel(
       {required this.name,
       required this.description,
       required this.admin,
       required this.eventDate,
-      required this.categories});
+      required this.categories,
+      required this.location});
 
   factory NewEventModel.fromJson(dynamic json) {
     return NewEventModel(
         name: json['name'] as String,
         description: json['description'] as String,
+        location: json['location'] as Location,
         admin: json['admin'].toString().contains('{')
             ? UserPopulate.fromJson(json['admin'])
             : json['admin'],
@@ -36,7 +41,8 @@ class NewEventModel {
       'description': values.description,
       'admin': values.admin,
       'eventDate': values.eventDate.toString(),
-      'category': values.categories
+      'category': values.categories,
+      'location': Location.toJson(values.location)
     };
   }
 

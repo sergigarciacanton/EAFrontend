@@ -182,7 +182,7 @@ class _SettingPageState extends State<SettingPage> {
             child: Text(
               getTranslated(context, 'UserReportInfo')!,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 20),
             ),
           ),
         ),
@@ -234,8 +234,8 @@ class _SettingPageState extends State<SettingPage> {
             }
           },
           style: ElevatedButton.styleFrom(
-              primary: Colors.orange,
-              onPrimary: Colors.black,
+              primary: Theme.of(context).backgroundColor,
+              onPrimary: Theme.of(context).primaryColor,
               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         )
@@ -355,10 +355,10 @@ class _SettingPageState extends State<SettingPage> {
       dynamic user, String title, String text, String type, int index) {
     return ListTile(
       leading: const CircleAvatar(
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.blueGrey,
         child: Icon(
           Icons.warning,
-          color: Colors.white,
+          color: Colors.yellow,
         ),
       ),
       title: Text(

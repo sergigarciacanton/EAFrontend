@@ -46,13 +46,12 @@ class _NewBookState extends State<NewBook> {
 
   @override
   Widget build(BuildContext context) {
-    String category = "MYSTERY";
-
     return Scaffold(
         appBar: AppBar(
           title: Text(getTranslated(context, "newBook")!,
               style: const TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
+          backgroundColor: Theme.of(context).backgroundColor,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -71,14 +70,13 @@ class _NewBookState extends State<NewBook> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                     controller: titleController,
-                    cursorColor: Colors.black,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return getTranslated(context, "fieldRequired");
                       }
                       return null;
                     },
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "title")!,
                         hintText: getTranslated(context, "writeTheTitle"),
@@ -92,14 +90,13 @@ class _NewBookState extends State<NewBook> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                     controller: ISBNController,
-                    cursorColor: Colors.black,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return getTranslated(context, "fieldRequired");
                       }
                       return null;
                     },
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "ISBN"),
                         hintText: getTranslated(context, "writeTheISBN"),
@@ -113,14 +110,13 @@ class _NewBookState extends State<NewBook> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                     controller: writerController,
-                    cursorColor: Colors.black,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return getTranslated(context, "fieldRequired");
                       }
                       return null;
                     },
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "writer"),
                         hintText: getTranslated(context, "writeTheWriter"),
@@ -134,14 +130,13 @@ class _NewBookState extends State<NewBook> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                     controller: photoURLController,
-                    cursorColor: Colors.black,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return getTranslated(context, "fieldRequired");
                       }
                       return null;
                     },
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "photoURL"),
                         hintText: getTranslated(context, "writeThePhotoURL"),
@@ -157,14 +152,13 @@ class _NewBookState extends State<NewBook> {
                     controller: descriptionController,
                     maxLines: 8,
                     maxLength: 500,
-                    cursorColor: Colors.black,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return getTranslated(context, "fieldRequired");
                       }
                       return null;
                     },
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "description"),
                         hintText: getTranslated(context, "writeTheDescription"),
@@ -196,14 +190,13 @@ class _NewBookState extends State<NewBook> {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                     controller: editorialController,
-                    cursorColor: Colors.black,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return getTranslated(context, "fieldRequired");
                       }
                       return null;
                     },
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "editorial"),
                         hintText: getTranslated(context, "writeTheEditorial"),
@@ -211,6 +204,16 @@ class _NewBookState extends State<NewBook> {
                   )),
               const SizedBox(
                 height: 20,
+              ),
+              Container(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    getTranslated(context, 'selectCategories')!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
               ),
               Row(
                 children: <Widget>[
@@ -324,6 +327,9 @@ class _NewBookState extends State<NewBook> {
                       ],
                     ),
                   ]),
+              const SizedBox(
+                height: 30,
+              ),
             ],
           ),
         ));

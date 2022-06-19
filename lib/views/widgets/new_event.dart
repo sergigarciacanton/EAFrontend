@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:html';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:ea_frontend/models/location.dart';
 import 'package:ea_frontend/models/newevent.dart';
 import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/event_service.dart';
@@ -8,8 +10,11 @@ import 'package:ea_frontend/routes/management_service.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../localization/language_constants.dart';
+import '../../models/event.dart';
 import '../../models/user.dart';
 import '../../routes/user_service.dart';
 
@@ -31,10 +36,14 @@ class _NewEventState extends State<NewEvent> {
   List<CategoryList> categoryList = [];
   List<Category> _response = List.empty(growable: true);
   bool _isLoading = true;
+  double latitudeController = 40.410931;
+  double longitudeController = -3.699313;
+  List<Marker> markers = [];
 
   void initState() {
     super.initState();
     getCategories();
+    fetchUser();
   }
 
   var storage;
@@ -58,19 +67,31 @@ class _NewEventState extends State<NewEvent> {
     });
   }
 
+  Future<Event> fetchEvent() async {
+    storage = LocalStorage('BookHub');
+    await storage.ready;
+
+    idController = LocalStorage('BookHub').getItem('userId');
+    return EventService.getEvent('62695d51c0d07f7296b9c2f2');
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width < 11000) {
+      screenSize = screenSize / 5 * 4;
+    }
     return FutureBuilder(
-        future: fetchUser(),
-        builder: (context, AsyncSnapshot<User> snapshot) {
+        future: fetchEvent(),
+        builder: (context, AsyncSnapshot<Event> snapshot) {
           if (snapshot.hasData) {
+            var _mapController;
             return Scaffold(
                 appBar: AppBar(
                   title: Text(getTranslated(context, "newEvent")!,
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  foregroundColor: Colors.black,
                   centerTitle: true,
-                  backgroundColor: Colors.orange,
+                  backgroundColor: Theme.of(context).backgroundColor,
                 ),
                 body: SingleChildScrollView(
                     child: Column(
@@ -80,7 +101,7 @@ class _NewEventState extends State<NewEvent> {
                         height: 30,
                       ),
                       Image.network(
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-BW9HUOUd-Ba8Xrx7so3Rg-7wv34SI-EPaw&usqp=CAU",
+                          "https://img.icons8.com/ios7/12x/calendar--v3.png",
                           height: 200),
                       const SizedBox(
                         height: 20,
@@ -90,15 +111,13 @@ class _NewEventState extends State<NewEvent> {
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           child: TextFormField(
                             controller: nameController,
-                            cursorColor: Colors.black,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return getTranslated(context, "fieldRequired");
                               }
                               return null;
                             },
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.black),
+                            style: const TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 labelText: getTranslated(context, "name"),
                                 hintText:
@@ -115,15 +134,13 @@ class _NewEventState extends State<NewEvent> {
                             controller: descriptionController,
                             maxLines: 8,
                             maxLength: 500,
-                            cursorColor: Colors.black,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return getTranslated(context, "fieldRequired");
                               }
                               return null;
                             },
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.black),
+                            style: const TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 labelText:
                                     getTranslated(context, "description"),
@@ -135,7 +152,7 @@ class _NewEventState extends State<NewEvent> {
                         height: 10,
                       ),
                       Container(
-                        constraints: const BoxConstraints(maxWidth: 200),
+                        constraints: const BoxConstraints(maxWidth: 300),
                         child: DateTimePicker(
                           type: DateTimePickerType.date,
                           dateMask: 'dd/MM/yyyy',
@@ -152,11 +169,21 @@ class _NewEventState extends State<NewEvent> {
                       const SizedBox(
                         height: 20,
                       ),
+                      Container(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            getTranslated(context, 'selectCategories')!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ),
                       Row(
                         children: <Widget>[
                           Expanded(
                             child: SizedBox(
-                              height: 300.0,
+                              height: 450.0,
                               child: _isLoading
                                   ? Column(
                                       children: const [
@@ -183,6 +210,60 @@ class _NewEventState extends State<NewEvent> {
                       const SizedBox(
                         height: 20,
                       ),
+                      Container(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            getTranslated(context, 'mapIndication')!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        height: screenSize.height / 2,
+                        width: screenSize.width / 1.5,
+                        child: FlutterMap(
+                          mapController: _mapController,
+                          options: MapOptions(
+                            center: LatLng(snapshot.data!.location.latitude,
+                                snapshot.data!.location.longitude),
+                            zoom: 15.0,
+                            onTap: (TapPosition, LatLng) {
+                              print(LatLng);
+                              latitudeController = LatLng.latitude;
+                              longitudeController = LatLng.longitude;
+                              setState(() {});
+                            },
+                          ),
+                          layers: [
+                            TileLayerOptions(
+                              urlTemplate:
+                                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              subdomains: ['a', 'b', 'c'],
+                            ),
+                            MarkerLayerOptions(
+                              markers: [
+                                Marker(
+                                  width: 150.0,
+                                  height: 150.0,
+                                  point: LatLng(
+                                      latitudeController, longitudeController),
+                                  builder: (ctx) => const Icon(
+                                    Icons.location_on,
+                                    color: Colors.red,
+                                    size: 35.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       ElevatedButton(
                         child: Text(
                           getTranslated(context, "addNewEvent")!,
@@ -190,6 +271,9 @@ class _NewEventState extends State<NewEvent> {
                         ),
                         onPressed: () async {
                           print("Add new event");
+                          Location newLoc = Location(
+                              latitude: latitudeController,
+                              longitude: longitudeController);
                           var response = await EventService.newEvent(
                               NewEventModel(
                                   name: nameController.text,
@@ -197,7 +281,8 @@ class _NewEventState extends State<NewEvent> {
                                   admin: idController,
                                   eventDate:
                                       DateTime.parse(eventDateController),
-                                  categories: categoriesController));
+                                  categories: categoriesController,
+                                  location: newLoc));
                           if (response == "201") {
                             Navigator.push(
                                 context,
@@ -215,13 +300,16 @@ class _NewEventState extends State<NewEvent> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.orange,
-                            onPrimary: Colors.black,
+                            primary: Theme.of(context).backgroundColor,
+                            onPrimary: Theme.of(context).primaryColor,
                             padding: EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                             textStyle: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
-                      )
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
                     ])));
           } else if (snapshot.hasError) {
             log(snapshot.error.toString());

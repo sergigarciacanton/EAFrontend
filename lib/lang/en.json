@@ -92,6 +92,8 @@
   "addNewEvent": "Create new event",
   "addNewChat": "Create new chat",
   "writeTheNameEvent": "Write the name of the event",
+  "selectCategories": "Select related categories",
+  "mapIndication":"Select by clicking on the map the location of the event",
   "EventPage": "Event",
   "ClubPage": "Club",
   "BookPage": "Book",
