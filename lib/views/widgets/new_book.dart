@@ -219,7 +219,7 @@ class _NewBookState extends State<NewBook> {
                 children: <Widget>[
                   Expanded(
                     child: SizedBox(
-                      height: 300.0,
+                      height: 450.0,
                       child: _isLoading
                           ? Column(
                               children: const [
