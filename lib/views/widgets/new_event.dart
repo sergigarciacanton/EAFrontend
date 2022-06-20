@@ -270,7 +270,7 @@ class _NewEventState extends State<NewEvent> {
                           textScaleFactor: 1,
                         ),
                         onPressed: () async {
-                          print("Add new event");
+                          print("Add new event ");
                           Location newLoc = Location(
                               latitude: latitudeController,
                               longitude: longitudeController);
