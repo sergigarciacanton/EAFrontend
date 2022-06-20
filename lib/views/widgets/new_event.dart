@@ -1,37 +1,49 @@
 import 'dart:developer';
+import 'dart:html';
 
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:ea_frontend/models/location.dart';
+import 'package:ea_frontend/models/newevent.dart';
 import 'package:ea_frontend/models/category.dart';
-import 'package:ea_frontend/routes/club_service.dart';
-import 'package:ea_frontend/views/widgets/club_list.dart';
+import 'package:ea_frontend/routes/event_service.dart';
+import 'package:ea_frontend/routes/management_service.dart';
+import 'package:ea_frontend/views/widgets/event_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../localization/language_constants.dart';
-import '../../models/newclub.dart';
+import '../../models/event.dart';
 import '../../models/user.dart';
-import '../../routes/management_service.dart';
 import '../../routes/user_service.dart';
 
-class NewClub extends StatefulWidget {
-  const NewClub({Key? key}) : super(key: key);
+class NewEvent extends StatefulWidget {
+  const NewEvent({Key? key}) : super(key: key);
 
   @override
-  _NewClubState createState() => _NewClubState();
+  State<NewEvent> createState() => _NewEventState();
 }
 
-class _NewClubState extends State<NewClub> {
+class _NewEventState extends State<NewEvent> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  String eventDateController = "";
   String idController = "";
+  String categoryController = "";
   String categoriesController = "";
   List<CategoryList> selectedCategory = List.empty(growable: true);
   List<CategoryList> categoryList = [];
   List<Category> _response = List.empty(growable: true);
   bool _isLoading = true;
+  double latitudeController = 40.410931;
+  double longitudeController = -3.699313;
+  List<Marker> markers = [];
 
   void initState() {
     super.initState();
     getCategories();
+    fetchUser();
   }
 
   var storage;
@@ -55,15 +67,28 @@ class _NewClubState extends State<NewClub> {
     });
   }
 
+  Future<Event> fetchEvent() async {
+    storage = LocalStorage('BookHub');
+    await storage.ready;
+
+    idController = LocalStorage('BookHub').getItem('userId');
+    return EventService.getEvent('62695d51c0d07f7296b9c2f2');
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width < 11000) {
+      screenSize = screenSize / 5 * 4;
+    }
     return FutureBuilder(
-        future: fetchUser(),
-        builder: (context, AsyncSnapshot<User> snapshot) {
+        future: fetchEvent(),
+        builder: (context, AsyncSnapshot<Event> snapshot) {
           if (snapshot.hasData) {
+            var _mapController;
             return Scaffold(
                 appBar: AppBar(
-                  title: Text(getTranslated(context, "newClub")!,
+                  title: Text(getTranslated(context, "newEvent")!,
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   centerTitle: true,
                   backgroundColor: Theme.of(context).backgroundColor,
@@ -76,8 +101,8 @@ class _NewClubState extends State<NewClub> {
                         height: 30,
                       ),
                       Image.network(
-                          "https://cdn-icons-png.flaticon.com/512/4693/4693893.png",
-                          height: 150),
+                          "https://img.icons8.com/ios7/12x/calendar--v3.png",
+                          height: 200),
                       const SizedBox(
                         height: 20,
                       ),
@@ -96,7 +121,7 @@ class _NewClubState extends State<NewClub> {
                             decoration: InputDecoration(
                                 labelText: getTranslated(context, "name"),
                                 hintText:
-                                    getTranslated(context, "writeTheNameClub"),
+                                    getTranslated(context, "writeTheNameEvent"),
                                 border: OutlineInputBorder()),
                           )),
                       const SizedBox(
@@ -123,6 +148,24 @@ class _NewClubState extends State<NewClub> {
                                     context, "writeTheDescription"),
                                 border: OutlineInputBorder()),
                           )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 300),
+                        child: DateTimePicker(
+                          type: DateTimePickerType.date,
+                          dateMask: 'dd/MM/yyyy',
+                          initialValue: DateTime.now().toString(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2030),
+                          icon: const Icon(Icons.event),
+                          dateLabelText: getTranslated(context, "eventDate")!,
+                          onSaved: (val) => eventDateController = val!,
+                          onChanged: (val) => eventDateController = val,
+                          onFieldSubmitted: (val) => eventDateController = val,
+                        ),
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -167,23 +210,84 @@ class _NewClubState extends State<NewClub> {
                       const SizedBox(
                         height: 20,
                       ),
+                      Container(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            getTranslated(context, 'mapIndication')!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        height: screenSize.height / 2,
+                        width: screenSize.width / 1.5,
+                        child: FlutterMap(
+                          mapController: _mapController,
+                          options: MapOptions(
+                            center: LatLng(snapshot.data!.location.latitude,
+                                snapshot.data!.location.longitude),
+                            zoom: 15.0,
+                            onTap: (TapPosition, LatLng) {
+                              print(LatLng);
+                              latitudeController = LatLng.latitude;
+                              longitudeController = LatLng.longitude;
+                              setState(() {});
+                            },
+                          ),
+                          layers: [
+                            TileLayerOptions(
+                              urlTemplate:
+                                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              subdomains: ['a', 'b', 'c'],
+                            ),
+                            MarkerLayerOptions(
+                              markers: [
+                                Marker(
+                                  width: 150.0,
+                                  height: 150.0,
+                                  point: LatLng(
+                                      latitudeController, longitudeController),
+                                  builder: (ctx) => const Icon(
+                                    Icons.location_on,
+                                    color: Colors.red,
+                                    size: 35.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       ElevatedButton(
                         child: Text(
-                          getTranslated(context, "addNewClub")!,
+                          getTranslated(context, "addNewEvent")!,
                           textScaleFactor: 1,
                         ),
                         onPressed: () async {
-                          print("Add new club");
-                          var response = await ClubService.newClub(NewClubModel(
-                              clubName: nameController.text,
-                              description: descriptionController.text,
-                              idAdmin: idController,
-                              categories: categoriesController));
-                          if (response == "200") {
+                          print("Add new event ");
+                          Location newLoc = Location(
+                              latitude: latitudeController,
+                              longitude: longitudeController);
+                          var response = await EventService.newEvent(
+                              NewEventModel(
+                                  name: nameController.text,
+                                  description: descriptionController.text,
+                                  admin: idController,
+                                  eventDate:
+                                      DateTime.parse(eventDateController),
+                                  categories: categoriesController,
+                                  location: newLoc));
+                          if (response == "201") {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const ClubList()));
+                                    builder: (context) => const EventList()));
                           } else {
                             showDialog(
                               context: context,

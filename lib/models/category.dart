@@ -11,9 +11,8 @@ class Category {
       return Category(name: null);
     }
     return Category(
-      id: json['_id'] as String,
-      name: json['name'] == null ? null : json['name'] as String
-    );
+        id: json['_id'] as String,
+        name: json['name'] == null ? null : json['name'] as String);
   }
 
   static List<Category> categoriesFromSnapshot(List snapshot) {
@@ -21,4 +20,12 @@ class Category {
       return Category.fromJson(data);
     }).toList();
   }
+}
+
+class CategoryList {
+  String id;
+  String name;
+  bool isSlected;
+
+  CategoryList(this.id, this.name, this.isSlected);
 }
