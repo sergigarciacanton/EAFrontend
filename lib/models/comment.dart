@@ -2,25 +2,26 @@ import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/models/userPopulate.dart';
 
 class Comment {
+  String id;
   dynamic user;
   String title;
   String text;
   String type;
   List<dynamic> users;
   dynamic likes;
-  dynamic dislikes;
 
   Comment(
-      {required this.user,
+      {required this.id,
+      required this.user,
       required this.title,
       required this.text,
       required this.type,
       required this.users,
-      required this.likes,
-      required this.dislikes});
+      required this.likes});
 
   factory Comment.fromJson(dynamic json) {
     return Comment(
+        id: json['_id'] as String,
         user: json['user'].toString().contains('{')
             ? UserPopulate.fromJson(json['user'])
             : json['user'],
@@ -28,8 +29,7 @@ class Comment {
         text: json['text'] as String,
         type: json['type'] as String,
         users: json['users'],
-        likes: json['likes'].toString(),
-        dislikes: json['dislikes'].toString());
+        likes: json['likes'].toString());
   }
 
   static Map<String, dynamic> toJson(Comment values) {
@@ -39,8 +39,7 @@ class Comment {
       'text': values.text,
       'type': values.type,
       'users': values.users,
-      'likes': values.likes,
-      'dislikes': values.dislikes
+      'likes': values.likes
     };
   }
 
@@ -53,10 +52,9 @@ class Comment {
   }
 }
 
-class UserLikes {
-  String id;
-  String userName;
-  bool like;
+class CommentLike {
+  Comment comment;
+  bool isSlected;
 
-  UserLikes(this.id, this.userName, this.like);
+  CommentLike(this.comment, this.isSlected);
 }
