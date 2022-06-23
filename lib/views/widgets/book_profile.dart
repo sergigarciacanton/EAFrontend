@@ -10,6 +10,7 @@ import '../../models/comment.dart';
 import '../../models/user.dart';
 import '../../routes/user_service.dart';
 import 'package:ea_frontend/models/rate.dart';
+import 'package:ea_frontend/models/rating.dart';
 import 'package:ea_frontend/routes/rate_service.dart';
 
 class BookPage extends StatefulWidget {
@@ -27,6 +28,7 @@ class BookPage extends StatefulWidget {
 class _BookPageState extends State<BookPage> {
   List<Comment> commentList = List.empty(growable: true);
   bool _nocomments = true;
+  bool isRated = false;
   double rating = 0;
   String userid = "";
   final titleController = TextEditingController();
@@ -160,7 +162,54 @@ class _BookPageState extends State<BookPage> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   )),
-                  setBookStars(),
+                  FutureBuilder(
+                      future: fetchRate(),
+                      builder: (context, AsyncSnapshot<Rate> snapshot) {
+                        int i = 0;
+                        if (snapshot.hasData) {
+                          isRated = true;
+                          return Row(
+                            children: [
+                              for (i;
+                                  i < ((updateTotalRate() / 2) - 0.1).round();
+                                  i++)
+                                (const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                )),
+                              // No funciona el detectar si es par convencional asi que esto
+                              if (updateTotalRate().toInt().isOdd)
+                                (const Icon(
+                                  Icons.star_half,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                )),
+                              for (int z = 0;
+                                  z < (5 - (updateTotalRate() / 2).round());
+                                  z++)
+                                (const Icon(
+                                  Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                )),
+                              Text(rate.rating.length.toString())
+                            ],
+                          );
+                        } else {
+                          isRated = false;
+                          return Row(
+                            children: [
+                              for (int i = 0; i < 5; i++)
+                                (const Icon(
+                                  Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                ))
+                            ],
+                          );
+                        }
+                      }),
                   Container(
                     alignment: Alignment.centerLeft,
                     child: TextButton(
@@ -476,81 +525,31 @@ class _BookPageState extends State<BookPage> {
     );
   }
 
-  Widget setBookStars() {
-    int i = 0;
-    return FutureBuilder(
-        future: fetchRate(),
-        builder: (context, AsyncSnapshot<Rate> snapshot) {
-          print(snapshot);
-          if (snapshot.hasData) {
-            return Row(
-              children: [
-                for (i; i < ((rate.totalRate / 2) - 0.1).round(); i++)
-                  (const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 36.0,
-                  )),
-                // No funciona el detectar si es par convencional asi que esto
-                if (rate.totalRate.isOdd)
-                  (const Icon(
-                    Icons.star_half,
-                    color: Colors.amber,
-                    size: 36.0,
-                  )),
-                for (i; i < 5; i++)
-                  (const Icon(
-                    Icons.star_border,
-                    color: Colors.amber,
-                    size: 36.0,
-                  ))
-              ],
-            );
-          } else {
-            return Row(
-              children: [
-                for (int i = 0; i < 5; i++)
-                  (const Icon(
-                    Icons.star_border,
-                    color: Colors.amber,
-                    size: 36.0,
-                  ))
-              ],
-            );
-          }
-        });
+  num updateTotalRate() {
+    num total = 0;
+    for (int x = 0; x < rate.rating.length; x++) {
+      total = total + rate.rating[x].rate;
+    }
+    total = total / rate.rating.length;
+    return total.round();
   }
 
-  stars() {
-    List<Widget> lista = [];
-    int i = 0;
-    if (rate != null) {
-      for (i; i < ((rate.totalRate / 2) - 0.1).round(); i++) {
-        lista.add(const Icon(
-          Icons.star,
-          color: Colors.amber,
-          size: 36.0,
-        ));
-      }
-      // No funciona el detectar si es par convencional asi que esto
-      if (rate.totalRate.isOdd) {
-        i++;
-        lista.add(const Icon(
-          Icons.star_half,
-          color: Colors.amber,
-          size: 36.0,
-        ));
-      }
-    }
+  userRate(double actualRate) async {
+    Rating userRate = Rating(
+        userId: LocalStorage('BookHub').getItem('userId'), rate: actualRate);
 
-    for (i; i < 5; i++) {
-      lista.add(const Icon(
-        Icons.star_border,
-        color: Colors.amber,
-        size: 36.0,
-      ));
-    }
-    return lista;
+    await RateService.rateBook(widget.elementId!, userRate);
+  }
+
+  firstRate(double actualRate) async {
+    Rating userRate = Rating(
+        userId: LocalStorage('BookHub').getItem('userId'), rate: actualRate);
+    Rate newRate = Rate(
+        id: "",
+        bookId: widget.elementId!,
+        rating: [userRate],
+        totalRate: actualRate);
+    await RateService.newRate(newRate);
   }
 
   Widget buildRating() => RatingBar.builder(
@@ -583,12 +582,54 @@ class _BookPageState extends State<BookPage> {
             ),
             actions: [
               TextButton(
-                child: Text(
+                child: const Text(
                   'ok',
                   style: TextStyle(fontSize: 20),
                 ),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => {
+                  Navigator.pop(context),
+                  setState(() {
+                    if (isRated) {
+                      userRate(this.rating * 2);
+                    } else if (!isRated) {
+                      firstRate(this.rating * 2);
+                    }
+                  })
+                },
               )
             ],
           ));
+
+  /* stars() {
+    List<Widget> lista = [];
+    int i = 0;
+    if (rate != null) {
+      for (i; i < ((rate.totalRate / 2) - 0.1).round(); i++) {
+        lista.add(const Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: 36.0,
+        ));
+      }
+      // No funciona el detectar si es par convencional asi que esto
+      if (rate.totalRate.isOdd) {
+        i++;
+        lista.add(const Icon(
+          Icons.star_half,
+          color: Colors.amber,
+          size: 36.0,
+        ));
+      }
+    }
+
+    for (i; i < 5; i++) {
+      lista.add(const Icon(
+        Icons.star_border,
+        color: Colors.amber,
+        size: 36.0,
+      ));
+    }
+    return lista;
+  }
+  */
 }

@@ -18,9 +18,9 @@ class Rate {
       id: json['_id'] as String,
       bookId: json['bookId'] as String,
       rating: json['rating'].toString().contains('{')
-          ? Rating.fromJson(json['rating'])
+          ? Rating.ratingFromSnapshot(json['rating'])
           : json['rating'],
-      totalRate: json['rate'],
+      totalRate: json['totalRate'],
     );
   }
 

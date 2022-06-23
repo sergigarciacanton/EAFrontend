@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:ea_frontend/models/rate.dart';
+import 'package:ea_frontend/models/rating.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
@@ -38,14 +39,14 @@ class RateService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    print(data);
+
     return Rate.fromJson(data);
   }
 
-  static Future<bool> rateBook(String bookId) async {
+  static Future<bool> updateTotalRate(String bookId) async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/rate/rating/$bookId');
+        '/rate/$bookId');
 
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/event/join/$bookId');
@@ -57,6 +58,29 @@ class RateService {
         'authorization': LocalStorage('BookHub').getItem('token'),
       },
     );
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> rateBook(String bookId, Rating rating) async {
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/rate/rating/$bookId');
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/event/join/$bookId');
+    }
+
+    final response = await http.put(url,
+        headers: {
+          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          'rating': Rating.toJson(rating),
+        }));
     if (response.statusCode == 200) {
       return true;
     }
