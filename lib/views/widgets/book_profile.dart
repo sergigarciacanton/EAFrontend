@@ -378,6 +378,7 @@ class _BookPageState extends State<BookPage> {
                     ),
                     onPressed: () async {
                       print("Add new comment");
+                      /*
                       var response = await CommentService.addComment(Comment(
                           id: "",
                           user: userid,
@@ -402,7 +403,7 @@ class _BookPageState extends State<BookPage> {
                             );
                           },
                         );
-                      }
+                      }*/
                     },
                     style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).backgroundColor,
@@ -462,30 +463,34 @@ class _BookPageState extends State<BookPage> {
                 Icons.favorite_border_outlined,
                 color: Colors.grey,
               ),
-        onTap: () {
+        onTap: () async {
+          int likes = int.parse(commentLikeList[index].comment.likes);
           setState(() {
             commentLikeList[index].isSlected =
                 !commentLikeList[index].isSlected;
-            /*
             if (commentLikeList[index].isSlected == true) {
-              commentLikeList[index].comment.likes =
-                  commentLikeList[index].comment.likes + 1;
+              likes = likes + 1;
               commentLikeList[index].comment.users.add(userid);
             } else if (commentLikeList[index].isSlected == false) {
-              commentLikeList[index].comment.likes =
-                  commentLikeList[index].comment.likes - 1;
-              commentLikeList[index].comment.users.remove(userid);
+              commentLikeList[index]
+                  .comment
+                  .users
+                  .removeWhere((item) => item == userid);
             }
-            await CommentService.updateComment(
-                commentLikeList[index].comment.id,
-                commentLikeList[index].comment.user,
-                commentLikeList[index].comment.title,
-                commentLikeList[index].comment.text,
-                commentLikeList[index].comment.type,
-                commentLikeList[index].comment.users,
-                commentLikeList[index].comment.likes);
-            */
           });
+          print(commentLikeList[index].comment.user.id);
+          String id = commentLikeList[index].comment.id;
+          Comment com = Comment(
+              id: id,
+              user: commentLikeList[index].comment.user,
+              title: commentLikeList[index].comment.title,
+              text: commentLikeList[index].comment.text,
+              type: commentLikeList[index].comment.type,
+              users: commentLikeList[index].comment.users,
+              likes: likes);
+          await CommentService.updateComment(
+              commentLikeList[index].comment.id, com);
+          ;
         });
   }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:html';
+import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/models/comment.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -81,8 +82,7 @@ class CommentService {
     }
   }
 
-  static Future<bool> updateComment(String id, dynamic user, String title,
-      String text, String type, List<dynamic> users, dynamic likes) async {
+  static Future<bool> updateComment(String id, Comment values) async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
         '/comment/$id';
@@ -94,17 +94,11 @@ class CommentService {
 
     final response = await http.put(url,
         headers: {
-          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Access-Control-Allow-Origin": "*",
+          "Authorization": LocalStorage('BookHub').getItem('token'),
           "Content-Type": "application/json"
         },
-        body: json.encode({
-          'user': user,
-          'title': title,
-          'text': text,
-          'type': type,
-          'users': users,
-          'likes': likes,
-        }));
+        body: json.encode(Comment.toJson(values)));
 
     if (response.statusCode == 200) {
       return true;

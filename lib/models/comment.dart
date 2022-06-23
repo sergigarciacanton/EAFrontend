@@ -3,7 +3,7 @@ import 'package:ea_frontend/models/userPopulate.dart';
 
 class Comment {
   String id;
-  dynamic user;
+  User user;
   String title;
   String text;
   String type;
@@ -23,7 +23,7 @@ class Comment {
     return Comment(
         id: json['_id'] as String,
         user: json['user'].toString().contains('{')
-            ? UserPopulate.fromJson(json['user'])
+            ? User.fromJson(json['user'])
             : json['user'],
         title: json['title'] as String,
         text: json['text'] as String,
@@ -34,12 +34,12 @@ class Comment {
 
   static Map<String, dynamic> toJson(Comment values) {
     return {
-      'user': values.user,
+      'user': User.toJson(values.user),
       'title': values.title,
       'text': values.text,
       'type': values.type,
-      'users': values.users,
-      'likes': values.likes
+      'users': values.users.toString(),
+      'likes': values.likes.toString()
     };
   }
 
