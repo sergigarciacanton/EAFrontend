@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/club.dart';
 import 'package:ea_frontend/routes/club_service.dart';
+import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/widgets/call.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -10,6 +11,9 @@ import 'dart:async';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../models/chat.dart';
+import '../routes/chat_service.dart';
 
 class ClubPage extends StatefulWidget {
   final String? elementId;
@@ -27,6 +31,21 @@ class _ClubPageState extends State<ClubPage> {
   late String idUser;
   var storage;
   ClientRole? _role = ClientRole.Broadcaster;
+  late String clubName;
+  late Chat chat;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchClub();
+    getClub();
+  }
+
+  Future<void> getClub() async {
+    Club club = await ClubService.getClub(widget.elementId!);
+    clubName = club.name;
+    chat = await ChatService.getByName(clubName);
+  }
 
   Future<Club> fetchClub() async {
     storage = LocalStorage('BookHub');
@@ -38,11 +57,15 @@ class _ClubPageState extends State<ClubPage> {
 
   Future<void> unsubscribe() async {
     await ClubService.unsubscribeClub(widget.elementId!);
+    await ChatService.leaveChat(
+        chat.id, idUser); //////////////////////////////////////////////CATY
     setState(() {});
   }
 
   Future<void> subscribe() async {
     await ClubService.subscribeClub(widget.elementId!);
+    await ChatService.joinChat(
+        chat.id, idUser); ///////////////////////////////////////////////CATY
     setState(() {});
   }
 
@@ -187,6 +210,9 @@ class _ClubPageState extends State<ClubPage> {
   }
 
   Widget _buildName(AsyncSnapshot<Club> snapshot) {
+    if (snapshot.data!.name == true) {
+      clubName = snapshot.data!.name;
+    }
     return Text(snapshot.data!.name,
         style: const TextStyle(
           fontSize: 28.0,
@@ -347,7 +373,10 @@ class _ClubPageState extends State<ClubPage> {
           children: <Widget>[
             Expanded(
               child: InkWell(
-                onTap: () => print("Go to chat"),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => new ChatPage(chat.id, idUser))),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
