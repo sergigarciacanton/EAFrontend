@@ -61,6 +61,7 @@ class _NewChatState extends State<NewChat> {
           title: Text(getTranslated(context, "newChat")!,
               style: const TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
+          backgroundColor: Theme.of(context).backgroundColor,
         ),
         body: SingleChildScrollView(
             child: Column(
@@ -79,14 +80,13 @@ class _NewChatState extends State<NewChat> {
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
                   controller: nameController,
-                  cursorColor: Colors.black,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return getTranslated(context, "fieldRequired");
                     }
                     return null;
                   },
-                  style: const TextStyle(fontSize: 20, color: Colors.black),
+                  style: const TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                       labelText: getTranslated(context, "name"),
                       hintText: getTranslated(context, "writeTheNameChat"),
@@ -153,10 +153,14 @@ class _NewChatState extends State<NewChat> {
               style: ElevatedButton.styleFrom(
                   primary: Theme.of(context).backgroundColor,
                   onPrimary: Theme.of(context).primaryColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  textStyle:
-                      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            )
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  textStyle: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
           ],
         )));
   }
@@ -176,7 +180,6 @@ class _NewChatState extends State<NewChat> {
           fontWeight: FontWeight.w500,
         ),
       ),
-      subtitle: Text(id),
       trailing: isSelected
           ? Icon(
               Icons.check_circle,

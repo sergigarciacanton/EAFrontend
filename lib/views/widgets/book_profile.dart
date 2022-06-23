@@ -9,6 +9,8 @@ import 'package:ea_frontend/localization/language_constants.dart';
 import '../../models/comment.dart';
 import '../../models/user.dart';
 import '../../routes/user_service.dart';
+import 'package:ea_frontend/models/rate.dart';
+import 'package:ea_frontend/routes/rate_service.dart';
 
 class BookPage extends StatefulWidget {
   final String? elementId;
@@ -34,6 +36,7 @@ class _BookPageState extends State<BookPage> {
   dynamic likesController = "0";
   dynamic dislikesController = "0";
   String idBook = "";
+  late Rate rate;
 
   void initState() {
     super.initState();
@@ -49,6 +52,11 @@ class _BookPageState extends State<BookPage> {
 
   Future<Book> fetchBook() async {
     return BookService.getBook(widget.elementId!);
+  }
+
+  Future<Rate> fetchRate() async {
+    rate = await RateService.getBookRate(widget.elementId!);
+    return await RateService.getBookRate(widget.elementId!);
   }
 
   Future<void> getCommentsList() async {
@@ -152,9 +160,7 @@ class _BookPageState extends State<BookPage> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   )),
-                  Row(
-                    children: stars(snapshot.data!.rate),
-                  ),
+                  setBookStars(),
                   Container(
                     alignment: Alignment.centerLeft,
                     child: TextButton(
@@ -470,25 +476,73 @@ class _BookPageState extends State<BookPage> {
     );
   }
 
-  stars(int rate) {
+  Widget setBookStars() {
+    int i = 0;
+    return FutureBuilder(
+        future: fetchRate(),
+        builder: (context, AsyncSnapshot<Rate> snapshot) {
+          print(snapshot);
+          if (snapshot.hasData) {
+            return Row(
+              children: [
+                for (i; i < ((rate.totalRate / 2) - 0.1).round(); i++)
+                  (const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 36.0,
+                  )),
+                // No funciona el detectar si es par convencional asi que esto
+                if (rate.totalRate.isOdd)
+                  (const Icon(
+                    Icons.star_half,
+                    color: Colors.amber,
+                    size: 36.0,
+                  )),
+                for (i; i < 5; i++)
+                  (const Icon(
+                    Icons.star_border,
+                    color: Colors.amber,
+                    size: 36.0,
+                  ))
+              ],
+            );
+          } else {
+            return Row(
+              children: [
+                for (int i = 0; i < 5; i++)
+                  (const Icon(
+                    Icons.star_border,
+                    color: Colors.amber,
+                    size: 36.0,
+                  ))
+              ],
+            );
+          }
+        });
+  }
+
+  stars() {
     List<Widget> lista = [];
     int i = 0;
-    for (i; i < ((rate / 2) - 0.1).round(); i++) {
-      lista.add(const Icon(
-        Icons.star,
-        color: Colors.amber,
-        size: 36.0,
-      ));
+    if (rate != null) {
+      for (i; i < ((rate.totalRate / 2) - 0.1).round(); i++) {
+        lista.add(const Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: 36.0,
+        ));
+      }
+      // No funciona el detectar si es par convencional asi que esto
+      if (rate.totalRate.isOdd) {
+        i++;
+        lista.add(const Icon(
+          Icons.star_half,
+          color: Colors.amber,
+          size: 36.0,
+        ));
+      }
     }
-    // No funciona el detectar si es par convencional asi que esto
-    if (rate.isOdd) {
-      i++;
-      lista.add(const Icon(
-        Icons.star_half,
-        color: Colors.amber,
-        size: 36.0,
-      ));
-    }
+
     for (i; i < 5; i++) {
       lista.add(const Icon(
         Icons.star_border,

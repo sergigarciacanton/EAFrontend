@@ -1,20 +1,18 @@
 import 'dart:convert';
-import 'package:ea_frontend/models/event.dart';
+import 'package:ea_frontend/models/rate.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:localstorage/localstorage.dart';
 import 'dart:io' show Platform;
 
-import '../models/newevent.dart';
-
-class EventService {
-  static Future<List<Event>> getEvents() async {
+class RateService {
+  static Future<List<Rate>> getRates() async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/event/');
+        '/rate/');
 
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/event/');
+      url = Uri.parse('http://10.0.2.2:3000/rate/');
     }
 
     final response = await http.get(
@@ -22,17 +20,17 @@ class EventService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    return Event.eventsFromSnapshot(data);
+    return Rate.ratesFromSnapshot(data);
   }
 
-  static Future<Event> getEvent(String id) async {
+  static Future<Rate> getBookRate(String id) async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/event/$id/';
+        '/rate/$id/';
     Uri url = Uri.parse(baseUrl);
 
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/event/$id');
+      url = Uri.parse('http://10.0.2.2:3000/rate/$id');
     }
 
     final response = await http.get(
@@ -40,17 +38,17 @@ class EventService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    return Event.fromJson(data);
+    print(data);
+    return Rate.fromJson(data);
   }
 
-  static Future<bool> joinEvent(String eventId) async {
-    String userId = LocalStorage('BookHub').getItem('userId');
+  static Future<bool> rateBook(String bookId) async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/event/join/$userId/$eventId');
+        '/rate/rating/$bookId');
 
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/event/join/$userId/$eventId');
+      url = Uri.parse('http://10.0.2.2:3000/event/join/$bookId');
     }
 
     final response = await http.put(
@@ -65,14 +63,13 @@ class EventService {
     return false;
   }
 
-  static Future<bool> leaveEvent(String eventId) async {
-    String userId = LocalStorage('BookHub').getItem('userId');
+  static Future<bool> unrateBook(String bookId) async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/event/leave/$userId/$eventId');
+        '/rate/deleteUserRate/$bookId');
 
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/event/leave/$userId/$eventId');
+      url = Uri.parse('http://10.0.2.2:3000/rate/deleteUserRate/$bookId');
     }
 
     final response = await http.put(
@@ -87,14 +84,13 @@ class EventService {
     return false;
   }
 
-  static Future<String> newEvent(NewEventModel values) async {
-    String userId = LocalStorage('BookHub').getItem('userId');
+  static Future<String> newRate(Rate values) async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
-        '/event/$userId');
+        '/rate/');
 
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/event/$userId');
+      url = Uri.parse('http://10.0.2.2:3000/rate/');
     }
 
     var response = await http.post(url,
@@ -102,9 +98,9 @@ class EventService {
           "Authorization": LocalStorage('BookHub').getItem('token'),
           "Content-Type": "application/json"
         },
-        body: json.encode(NewEventModel.toJson(values)));
-    if (response.statusCode == 201) {
-      return "201";
+        body: json.encode(Rate.toJson(values)));
+    if (response.statusCode == 200) {
+      return "200";
     } else {
       return Message.fromJson(await jsonDecode(response.body)).message;
     }

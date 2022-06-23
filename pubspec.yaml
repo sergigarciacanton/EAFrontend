@@ -51,9 +51,9 @@ dependencies:
   flutter_map: ^0.14.0
   flutter_map_marker_cluster: ^0.4.4
   textfield_search: ^0.10.0
+  google_sign_in: ^5.3.3
   uuid: ^3.0.6
   flutter_native_timezone: ^2.0.0
-  google_sign_in: ^5.0.1
   email_validator: "^2.0.1"
   chat_bubbles: ^1.2.0
   agora_rtc_engine: ^5.2.0
@@ -61,6 +61,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   pr_geo: ^0.0.3+5
   geolocator: ^8.2.1
+  google_maps_flutter: ^2.1.8
+  location: ^4.4.0
 
 dev_dependencies:
   flutter_test:
