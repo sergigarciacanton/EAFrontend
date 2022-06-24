@@ -8,7 +8,6 @@ import 'package:ea_frontend/views/widgets/book_profile.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/club_card.dart';
 import 'package:ea_frontend/views/widgets/event_card.dart';
-import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:ea_frontend/views/widgets/map_by_distance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -324,35 +323,19 @@ class _HomeState extends State<Home> {
                                 return GestureDetector(
                                   child: EventCard(
                                     title: _events[index].name,
-                                    date:
-                                        _events[index]
-                                                .eventDate
-                                                .day
-                                                .toString() +
-                                            "-" +
-                                            _events[index]
-                                                .eventDate
-                                                .month
-                                                .toString() +
-                                            "-" +
-                                            _events[index]
-                                                .eventDate
-                                                .year
-                                                .toString(),
-                                    numberUsers: _events[index]
-                                        .usersList
-                                        .length
-                                        .toString(),
-                                    imageUrl:
-                                        "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
+                                    date: _events[index].eventDate
+                                          .day.toString() + "-" +
+                                          _events[index].eventDate
+                                          .month.toString() + "-" +
+                                          _events[index].eventDate
+                                          .year.toString(),
+                                    numberUsers: _events[index].usersList
+                                          .length.toString(),
+                                    location: _events[index].location,
                                     admin: verifyAdminEvent(index),
+                                    setMainComponent: widget.setMainComponent,
+                                    id: _events[index].id,
                                   ),
-                                  onTap: () {
-                                    widget.setMainComponent!(EventPage(
-                                        setMainComponent:
-                                            widget.setMainComponent,
-                                        elementId: _events[index].id));
-                                  },
                                 );
                               },
                             ),
