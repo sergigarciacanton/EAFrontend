@@ -3,8 +3,10 @@ import 'dart:html';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:ea_frontend/models/location.dart';
+import 'package:ea_frontend/models/newchat.dart';
 import 'package:ea_frontend/models/newevent.dart';
 import 'package:ea_frontend/models/category.dart';
+import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/routes/event_service.dart';
 import 'package:ea_frontend/routes/management_service.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
@@ -39,6 +41,8 @@ class _NewEventState extends State<NewEvent> {
   double latitudeController = 40.410931;
   double longitudeController = -3.699313;
   List<Marker> markers = [];
+
+  List<String> usersController = List.empty(growable: true);
 
   void initState() {
     super.initState();
@@ -288,6 +292,24 @@ class _NewEventState extends State<NewEvent> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const EventList()));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Text(response.toString()),
+                                );
+                              },
+                            );
+                          }
+                          usersController.add(idController);
+                          var response2 = await ChatService.newChat(
+                              NewChatModel(
+                                  name: nameController.text,
+                                  userIds: usersController));
+                          if (response2 == "201") {
+                            print("Add new chat");
+                            ;
                           } else {
                             showDialog(
                               context: context,

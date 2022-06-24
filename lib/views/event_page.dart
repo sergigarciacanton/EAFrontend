@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:ea_frontend/models/chat.dart';
 import 'package:ea_frontend/models/event.dart';
+import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/routes/event_service.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/user_view.dart';
@@ -12,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
+
+import 'chat_page.dart';
 
 class EventPage extends StatefulWidget {
   final Function? setMainComponent;
@@ -30,6 +34,23 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   late String idUser;
   var storage;
+
+  late String eventName;
+  late Chat chat;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEvent();
+    getEvent();
+  }
+
+  Future<void> getEvent() async {
+    Event event = await EventService.getEvent(widget.elementId!);
+    eventName = event.name;
+    chat = await ChatService.getByName(eventName);
+  }
+
   //GET ELEMENTID WITH widget.elementId;
   Future<Event> fetchEvent() async {
     storage = LocalStorage('BookHub');
@@ -41,11 +62,15 @@ class _EventPageState extends State<EventPage> {
 
   Future<void> leaveEvent() async {
     await EventService.leaveEvent(widget.elementId!);
+    await ChatService.leaveChat(
+        chat.id, idUser); //////////////////////////////////////////////
     setState(() {});
   }
 
   Future<void> joinEvent() async {
     await EventService.joinEvent(widget.elementId!);
+    await ChatService.joinChat(
+        chat.id, idUser); ///////////////////////////////////////////////
     setState(() {});
   }
 
@@ -212,6 +237,9 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _buildName(AsyncSnapshot<Event> snapshot) {
+    if (snapshot.data!.name == true) {
+      eventName = snapshot.data!.name;
+    }
     return Text(snapshot.data!.name,
         style: const TextStyle(
           fontSize: 28.0,
@@ -416,7 +444,10 @@ class _EventPageState extends State<EventPage> {
           children: <Widget>[
             Expanded(
               child: InkWell(
-                onTap: () => print("Go to chat"),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => new ChatPage(chat.id, idUser))),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(

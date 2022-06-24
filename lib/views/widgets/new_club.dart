@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:ea_frontend/models/category.dart';
+import 'package:ea_frontend/models/newchat.dart';
+import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/routes/club_service.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ class _NewClubState extends State<NewClub> {
   List<CategoryList> categoryList = [];
   List<Category> _response = List.empty(growable: true);
   bool _isLoading = true;
+  List<String> usersController = List.empty(growable: true);
 
   void initState() {
     super.initState();
@@ -184,6 +187,24 @@ class _NewClubState extends State<NewClub> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const ClubList()));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Text(response.toString()),
+                                );
+                              },
+                            );
+                          }
+                          usersController.add(idController);
+                          var response2 = await ChatService.newChat(
+                              NewChatModel(
+                                  name: nameController.text,
+                                  userIds: usersController));
+                          if (response2 == "201") {
+                            print("Add new chat");
+                            ;
                           } else {
                             showDialog(
                               context: context,
