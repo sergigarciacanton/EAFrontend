@@ -46,7 +46,11 @@ class _BookPageState extends State<BookPage> {
   }
 
   Future<Book> fetchBook() async {
-    return BookService.getBook(widget.elementId!);
+    var book = await BookService.getBook(widget.elementId!);
+    if (book.writer.name == "anonymous") {
+      book.writer.name = getTranslated(context, 'anonymous')!;
+    }
+    return book;
   }
 
   Future<void> getCommentsList() async {

@@ -41,7 +41,16 @@ class BookService {
     return Book.fromJson(data);
   }
 
-  static Future<String> newBook(Book values) async {
+  static Future<String> newBook(
+    String title,
+    List<dynamic> category,
+    String ISBN,
+    String photoURL,
+    String publishedDate,
+    String description,
+    String editorial,
+    String writer,
+  ) async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
         '/book/');
@@ -49,13 +58,73 @@ class BookService {
     if (!(kIsWeb || Platform.isWindows)) {
       url = Uri.parse('http://10.0.2.2:3000/book/');
     }
+    String categoryList = "[";
+    category.forEach((element) {
+      categoryList = categoryList + "," + element.name;
+    });
+    categoryList = categoryList + "]";
 
     var response = await http.post(url,
         headers: {
           "Authorization": LocalStorage('BookHub').getItem('token'),
           "Content-Type": "application/json"
         },
-        body: json.encode(Book.toJson(values)));
+        body: json.encode({
+          'title': title,
+          'category': categoryList,
+          'ISBN': ISBN,
+          'photoURL': photoURL,
+          'publishedDate': publishedDate,
+          'description': description,
+          'rate': '0',
+          'editorial': editorial,
+          'writer': writer,
+        }));
+    if (response.statusCode == 200) {
+      return "200";
+    } else {
+      return Message.fromJson(await jsonDecode(response.body)).message;
+    }
+  }
+
+  static Future<String> editBook(
+    String id,
+    String title,
+    List<dynamic> category,
+    String ISBN,
+    String photoURL,
+    String publishedDate,
+    String description,
+    String editorial,
+    String writer,
+  ) async {
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/book/$id');
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/book/$id');
+    }
+    String categoryList = "[";
+    category.forEach((element) {
+      categoryList = categoryList + "," + element.name;
+    });
+    categoryList = categoryList + "]";
+
+    var response = await http.put(url,
+        headers: {
+          "Authorization": LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          'title': title,
+          'category': categoryList,
+          'ISBN': ISBN,
+          'photoURL': photoURL,
+          'publishedDate': publishedDate,
+          'description': description,
+          'editorial': editorial,
+        }));
     if (response.statusCode == 200) {
       return "200";
     } else {
