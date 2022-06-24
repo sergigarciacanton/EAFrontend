@@ -112,7 +112,10 @@ class _HomeState extends State<Home> {
   void findBooks(String title) {
     for (int i = 0; i < _books.length; i++) {
       if (_books[i].title == title) {
-        widget.setMainComponent!(BookPage(elementId: _books[i].id));
+        widget.setMainComponent!(BookPage(
+          elementId: _books[i].id,
+          setMainComponent: widget.setMainComponent,
+        ));
         findBooksController.text = "";
       }
     }
@@ -132,7 +135,10 @@ class _HomeState extends State<Home> {
   void findClubs(String name) {
     for (int i = 0; i < _clubs.length; i++) {
       if (_clubs[i].name == name) {
-        widget.setMainComponent!(ClubPage(elementId: _clubs[i].id));
+        widget.setMainComponent!(ClubPage(
+          elementId: _clubs[i].id,
+          setMainComponent: widget.setMainComponent,
+        ));
         findClubsController.text = "";
       }
     }
@@ -235,13 +241,17 @@ class _HomeState extends State<Home> {
                             return GestureDetector(
                               child: BookCard(
                                 title: _books[index].title,
-                                author: _books[index].writer.name,
+                                author:
+                                    (_books[index].writer.name == "anonymous")
+                                        ? getTranslated(context, 'anonymous')!
+                                        : _books[index].writer.name,
                                 rate: _books[index].rate.toString(),
                                 imageUrl: _books[index].photoURL,
                               ),
                               onTap: () {
-                                widget.setMainComponent!(
-                                    BookPage(elementId: _books[index].id));
+                                widget.setMainComponent!(BookPage(
+                                    elementId: _books[index].id,
+                                    setMainComponent: widget.setMainComponent));
                               },
                             );
                           },
@@ -463,8 +473,9 @@ class _HomeState extends State<Home> {
                                 admin: verifyAdminClub(index),
                               ),
                               onTap: () {
-                                widget.setMainComponent!(
-                                    ClubPage(elementId: _clubs[index].id));
+                                widget.setMainComponent!(ClubPage(
+                                    elementId: _clubs[index].id,
+                                    setMainComponent: widget.setMainComponent));
                               },
                             );
                           },

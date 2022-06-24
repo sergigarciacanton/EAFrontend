@@ -45,7 +45,8 @@ class _AddBookState extends State<AddBook> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Books", style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(getTranslated(context, 'books')!,
+              style: TextStyle(fontWeight: FontWeight.bold)),
           foregroundColor: Colors.black,
           centerTitle: true,
           backgroundColor: Colors.orange,
@@ -74,7 +75,8 @@ class _AddBookState extends State<AddBook> {
                             itemCount: books.length,
                             itemBuilder: (BuildContext context, int index) {
                               return BookItem(
-                                "Published Date: " +
+                                getTranslated(context, 'publishDate')! +
+                                    ": " +
                                     books[index].publishedDate.day.toString() +
                                     "/" +
                                     books[index]
@@ -97,7 +99,7 @@ class _AddBookState extends State<AddBook> {
             ),
             ElevatedButton(
               child: Text(
-                "Add books",
+                getTranslated(context, 'addBooks')!,
                 textScaleFactor: 1,
               ),
               onPressed: () async {
@@ -125,10 +127,11 @@ class _AddBookState extends State<AddBook> {
             ),
             ElevatedButton(
               child: Text(
-                "Add new book",
+                getTranslated(context, 'addNewBook')!,
                 textScaleFactor: 1,
               ),
               onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const NewBook()));
               },

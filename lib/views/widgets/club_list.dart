@@ -79,7 +79,9 @@ class _ClubListState extends State<ClubList> {
                                     onTap: () {
                                       widget.setMainComponent!(ClubPage(
                                           elementId:
-                                              snapshot.data?.clubs[index].id));
+                                              snapshot.data?.clubs[index].id,
+                                          setMainComponent:
+                                              widget.setMainComponent));
                                     },
                                     leading: const FlutterLogo(size: 56.0),
                                     title:

@@ -1,7 +1,12 @@
 import 'package:ea_frontend/models/club.dart';
+import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/models/editclub.dart';
+import 'package:ea_frontend/models/newchat.dart';
+import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/routes/club_service.dart';
+import 'package:ea_frontend/routes/management_service.dart';
 import 'package:ea_frontend/views/home_scaffold.dart';
+import 'package:ea_frontend/views/widgets/club_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import '../../localization/language_constants.dart';
@@ -24,6 +29,22 @@ class _NewClubState extends State<NewClub> {
   String idController = "";
   var storage = LocalStorage('BookHub');
   late Club club;
+  String categoriesController = "";
+  List<CategoryList> selectedCategory = List.empty(growable: true);
+  List<CategoryList> categoryList = [];
+  List<Category> _response = List.empty(growable: true);
+  bool _isLoading = true;
+  List<String> usersController = List.empty(growable: true);
+
+  @override
+  void initState() {
+    super.initState();
+    getCategories();
+    fetchUser();
+    if(widget.clubId != null) {
+      fetchClub();
+    }
+  }
 
   void fetchUser() async {
     await storage.ready;
@@ -35,25 +56,41 @@ class _NewClubState extends State<NewClub> {
     club = await ClubService.getClub(widget.clubId!);
     nameController.text = club.name;
     descriptionController.text = club.description;
+    for (int i = 0; i < categoryList.length; i++) {
+      for (var clubCategory in club.category) {
+        if (categoryList[i].id == clubCategory.id) {
+          setState(() {
+            categoryList[i].isSlected = true;
+            selectedCategory.add(CategoryList(categoryList[i].id, categoryList[i].name, true));
+            categoriesController = "";
+            for (int i = 0; i < selectedCategory.length; i++) {
+              if (i == 0) {
+                categoriesController = selectedCategory[i].name;
+              } else {
+                categoriesController =
+                    categoriesController + "," + selectedCategory[i].name;
+              }
+            }
+          });
+        }
+      }
+    }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchUser();
-    if(widget.clubId != null) {
-      fetchClub();
-    }
-    else {
-
-    }
+  Future<void> getCategories() async {
+    _response = await ManagementService.getCategories();
+    setState(() {
+      for (int i = 0; i < _response.length; i++) {
+        CategoryList category1 = CategoryList(
+            _response[i].id.toString(), _response[i].name.toString(), false);
+        categoryList.add(category1);
+      }
+      _isLoading = false;
+    });
   }
-
-  String categoryController = "";
 
   @override
   Widget build(BuildContext context) {
-    String category = "MYSTERY";
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -62,9 +99,7 @@ class _NewClubState extends State<NewClub> {
             : getTranslated(context, "editClub")!,
           style: const TextStyle(fontWeight: FontWeight.bold)
         ),
-        foregroundColor: Colors.black,
         centerTitle: true,
-        backgroundColor: Colors.orange,
       ),
       body: SingleChildScrollView(
         child: Column (
@@ -131,61 +166,43 @@ class _NewClubState extends State<NewClub> {
             const SizedBox(
               height: 10,
             ),
-            Container (
-              child: Row (
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  DropdownButton(
-                    value: category,
-                    items: const [
-                      DropdownMenuItem<String>(
-                        value: 'SCI-FI',
-                        child: Text(
-                          'SCI-FI',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ),
-                      DropdownMenuItem<String>(
-                          value: 'MYSTERY',
-                          child: Text('MYSTERY',
-                              style: TextStyle(color: Colors.white))),
-                      DropdownMenuItem<String>(
-                          value: 'THRILLER',
-                          child: Text('THRILLER',
-                              style: TextStyle(color: Colors.white))),
-                      DropdownMenuItem<String>(
-                          value: 'ROMANCE',
-                          child: Text('ROMANCE',
-                              style: TextStyle(color: Colors.white))),
-                      DropdownMenuItem<String>(
-                          value: 'WESTERN',
-                          child: Text('WESTERN',
-                              style: TextStyle(color: Colors.white))),
-                      DropdownMenuItem<String>(
-                          value: 'DYSTOPIAN',
-                          child: Text('DYSTOPIAN',
-                              style: TextStyle(color: Colors.white))),
-                      DropdownMenuItem<String>(
-                          value: 'CONTEMPORANY',
-                          child: Text('CONTEMPORANY',
-                              style: TextStyle(color: Colors.white))),
-                      DropdownMenuItem<String>(
-                        value: 'FANTASY',
-                        child: Text(
-                          'FANTASY',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      )
-                    ],
-                    onChanged: (category) =>
-                        categoryController = category.toString(),
+            Container(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  getTranslated(context, 'selectCategories')!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: SizedBox(
+                    height: 450.0,
+                    child: _isLoading
+                        ? Column(
+                            children: const [
+                              SizedBox(height: 10),
+                              LinearProgressIndicator(),
+                              SizedBox(height: 200),
+                            ],
+                          )
+                        : ListView.builder(
+                            itemCount: categoryList.length,
+                            itemBuilder:
+                                (BuildContext context, int index) {
+                              return categoryItem(
+                                categoryList[index].id,
+                                categoryList[index].name,
+                                categoryList[index].isSlected,
+                                index,
+                              );
+                            }),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                ],
-              )
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -204,16 +221,17 @@ class _NewClubState extends State<NewClub> {
                     clubName: nameController.text,
                     description: descriptionController.text,
                     idAdmin: idController,
-                    category: categoryController
+                    categories: categoriesController
                   ));
                 }
                 else {
                   response = await ClubService.editClub(widget.clubId!, EditClubModel(
                     clubName: nameController.text,
-                    description: descriptionController.text
+                    description: descriptionController.text,
+                    category: categoriesController
                   ));
                 }
-                if (response == "200") {
+                if (response == "200" || response == "201") {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -228,20 +246,78 @@ class _NewClubState extends State<NewClub> {
                     },
                   );
                 }
+                usersController.add(idController);
+                var response2 = await ChatService.newChat(
+                    NewChatModel(
+                        name: nameController.text,
+                        userIds: usersController));
+                if (response2 == "201") {
+                  print("Add new chat");
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text(response.toString()),
+                      );
+                    },
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.orange,
-                onPrimary: Colors.black,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 50, vertical: 15),
-                textStyle: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold
-                )
-              ),
-            )
+                  primary: Theme.of(context).backgroundColor,
+                  onPrimary: Theme.of(context).primaryColor,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50, vertical: 15),
+                  textStyle: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
           ]
         )
       )
+    );
+  }
+
+  Widget categoryItem(String id, String name, bool isSelected, int index) {
+    return ListTile(
+      title: Text(
+        name,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: isSelected
+          ? Icon(
+              Icons.check_circle,
+              color: Theme.of(context).backgroundColor,
+            )
+          : const Icon(
+              Icons.check_circle_outline,
+              color: Colors.grey,
+            ),
+      onTap: () {
+        setState(() {
+          categoryList[index].isSlected = !categoryList[index].isSlected;
+          if (categoryList[index].isSlected == true) {
+            selectedCategory.add(CategoryList(id, name, true));
+          } else if (categoryList[index].isSlected == false) {
+            selectedCategory
+                .removeWhere((item) => item.name == categoryList[index].name);
+          }
+          categoriesController = "";
+          for (int i = 0; i < selectedCategory.length; i++) {
+            if (i == 0) {
+              categoriesController = selectedCategory[i].name;
+            } else {
+              categoriesController =
+                  categoriesController + "," + selectedCategory[i].name;
+            }
+          }
+        });
+      },
     );
   }
 }
