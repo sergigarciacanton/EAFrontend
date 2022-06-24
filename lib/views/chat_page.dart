@@ -42,11 +42,11 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    startSocket();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   startSocket();
+  //   super.initState();
+  // }
 
   String parseUsernames(List<User> userList) {
     String s = "";
@@ -64,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     print("build chat");
 
-    //startSocket();
+    startSocket();
 
     void sendMessage(TextEditingController textEditingController) {
       print('emit on ' + widget.chatId + ' text ' + textEditingController.text);

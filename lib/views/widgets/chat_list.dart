@@ -80,11 +80,11 @@ class _ChatListState extends State<ChatList> {
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               child: ListTile(
-                                onTap: () {
-                                  if (widget.setMainComponent != null) {
-                                    widget.setMainComponent!(new ChatPage(
-                                        snapshot.data?.chats[index].id, id));
-                                  }
+                                onTap: () async {
+                                  Widget nextPage = await ChatPage(
+                                      snapshot.data?.chats[index].id, id);
+
+                                  widget.setMainComponent!(nextPage);
                                 },
                                 leading: FlutterLogo(size: 56.0),
                                 title: Text(snapshot.data?.chats[index].name),

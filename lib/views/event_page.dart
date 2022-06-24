@@ -137,11 +137,10 @@ class _EventPageState extends State<EventPage> {
             const SizedBox(
               width: 10,
             ),
-            const Image(
+            Image(
               height: 40,
               width: 40,
-              image: NetworkImage(
-                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
+              image: NetworkImage(snapshot.data?.admin.photoURL),
             )
           ],
         ));
@@ -562,7 +561,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 image: const DecorationImage(
                   //TODO Change to club image
                   image: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYdJFymvjmjacbKVMvsqzjEanEAKlEBjQkOFvJ11KtCAiXR4BnUqT4Zj7wx6fquYoLgA8&usqp=CAU'),
+                      'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656077605/images_xdx4t4.jpg'),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,
