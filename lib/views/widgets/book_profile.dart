@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:ea_frontend/routes/comment_service.dart';
+import 'package:ea_frontend/views/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
 import 'package:localstorage/localstorage.dart';
@@ -11,11 +12,9 @@ import '../../routes/user_service.dart';
 
 class BookPage extends StatefulWidget {
   final String? elementId;
+  final Function? setMainComponent;
 
-  const BookPage({
-    Key? key,
-    this.elementId,
-  });
+  const BookPage({Key? key, this.elementId, this.setMainComponent});
 
   @override
   State<BookPage> createState() => _BookPageState();
@@ -170,14 +169,30 @@ class _BookPageState extends State<BookPage> {
                         ),
                       ),
                       Expanded(
-                        child: Text(
+                          child: Row(children: [
+                        Text(
                           snapshot.data!.writer.name,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontSize: fontSize * 2,
                               fontWeight: FontWeight.bold),
                         ),
-                      ),
+                        IconButton(
+                          icon: const Icon(Icons.info),
+                          iconSize: 50,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserView(
+                                          elementId: snapshot.data!.writer.id,
+                                          isAuthor: true,
+                                          setMainComponent:
+                                              widget.setMainComponent,
+                                        )));
+                          },
+                        ),
+                      ])),
                     ],
                   ),
                   const SizedBox(height: 20),

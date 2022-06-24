@@ -15,7 +15,7 @@ class Author {
   List<dynamic> books;
   List<dynamic> categories;
   String photoURL;
-  UserPopulate user;
+  dynamic user;
 
   Author(
       {required this.id,
@@ -40,7 +40,7 @@ class Author {
         ? Category.categoriesFromSnapshot(json['categories'])
         : json['categories'];
     var photoURL = json['photoURL'] as String;
-    var user = UserPopulate.fromJson(json['user']);
+    var user = name != "anonymous" ? UserPopulate.fromJson(json['user']) : null;
     var books = json['books'].toString().contains('{')
         ? BookPopulate.booksPopulateFromSnapshot(json['books'])
         : json['books'];

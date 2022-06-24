@@ -92,7 +92,7 @@
   "addNewEvent": "Crear nou event",
   "writeTheNameEvent": "Escriu el nom de l'event",
   "selectCategories": "Seleccioneu les categories relacionades",
-  "mapIndication":"Seleccioneu clicant al mapa la ubicació de l'event",
+  "mapIndication": "Seleccioneu clicant al mapa la ubicació de l'event",
   "addNewChat": "Crear nou xat",
   "EventPage": "Event",
   "ClubPage": "Club",
@@ -108,5 +108,15 @@
   "loginGoogle": "Iniciar sessió amb Google",
   "registerGoogle": "Registra't amb Google",
   "videoconference": "Uneix-te a la videoconferència",
-  "leave_chat": "Abandona el Chat"
+  "leave_chat": "Abandona el Chat",
+  "userInfo": "Veure informació usuari",
+  "writerInfo": "Veure informació autor",
+  "events": "Events",
+  "clubs": "Clubs",
+  "biography": "Biografía",
+  "books": "Llibres",
+  "participants": "Participants",
+  "more": "Veure més",
+  "openChat": "Obrir xat",
+  "startChat": "Començar una conversa"
 }
