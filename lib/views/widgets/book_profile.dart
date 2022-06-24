@@ -3,12 +3,16 @@ import 'package:ea_frontend/routes/comment_service.dart';
 import 'package:ea_frontend/views/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import '../../models/comment.dart';
 import '../../models/user.dart';
 import '../../routes/user_service.dart';
+import 'package:ea_frontend/models/rate.dart';
+import 'package:ea_frontend/models/rating.dart';
+import 'package:ea_frontend/routes/rate_service.dart';
 
 class BookPage extends StatefulWidget {
   final String? elementId;
@@ -23,7 +27,9 @@ class BookPage extends StatefulWidget {
 class _BookPageState extends State<BookPage> {
   List<Comment> commentList = List.empty(growable: true);
   bool _nocomments = true;
-
+  bool isRated = false;
+  double rating = 0;
+  double totalRate = 0;
   String userid = "";
   final titleController = TextEditingController();
   final textController = TextEditingController();
@@ -31,6 +37,7 @@ class _BookPageState extends State<BookPage> {
   List<dynamic> usersController = List.empty(growable: true);
   dynamic likesController = "0";
   String idBook = "";
+  late Rate rate;
   List<CommentLike> commentLikeList = List.empty(growable: true);
 
   void initState() {
@@ -51,6 +58,11 @@ class _BookPageState extends State<BookPage> {
       book.writer.name = getTranslated(context, 'anonymous')!;
     }
     return book;
+  }
+
+  Future<Rate> fetchRate() async {
+    rate = await RateService.getBookRate(widget.elementId!);
+    return await RateService.getBookRate(widget.elementId!);
   }
 
   Future<void> getCommentsList() async {
@@ -158,10 +170,66 @@ class _BookPageState extends State<BookPage> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   )),
-                  Row(
-                    children: stars(snapshot.data!.rate),
+                  FutureBuilder(
+                      future: fetchRate(),
+                      builder: (context, AsyncSnapshot<Rate> snapshot) {
+                        int i = 0;
+                        if (snapshot.hasData) {
+                          totalRate = updateTotalRate().toDouble();
+                          isRated = true;
+                          return Row(
+                            children: [
+                              for (i; i < ((totalRate / 2) - 0.1).round(); i++)
+                                (const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                )),
+                              // No funciona el detectar si es par convencional asi que esto
+                              if (totalRate.toInt().isOdd)
+                                (const Icon(
+                                  Icons.star_half,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                )),
+                              for (int z = 0;
+                                  z < (5 - (totalRate / 2).round());
+                                  z++)
+                                (const Icon(
+                                  Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                )),
+                              Text("(" + rate.rating.length.toString() + ")")
+                            ],
+                          );
+                        } else {
+                          isRated = false;
+                          return Row(
+                            children: [
+                              for (int i = 0; i < 5; i++)
+                                (const Icon(
+                                  Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 36.0,
+                                ))
+                            ],
+                          );
+                        }
+                      }),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      child: Text(
+                        '(rate)',
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                      onPressed: () => showRating(),
+                    ),
                   ),
-                  const SizedBox(height: 50),
                   Row(
                     children: <Widget>[
                       const SizedBox(
@@ -513,25 +581,141 @@ class _BookPageState extends State<BookPage> {
         });
   }
 
-  stars(int rate) {
+  num updateTotalRate() {
+    num total = 0;
+    for (int x = 0; x < rate.rating.length; x++) {
+      total = total + rate.rating[x].rate;
+    }
+    total = total / rate.rating.length;
+
+    updateTotalRateAPI(total);
+    updateBookRate(total);
+
+    return total.round();
+  }
+
+  updateTotalRateAPI(dynamic total) async {
+    await RateService.updateTotalRate(widget.elementId!, total.round());
+  }
+
+  updateBookRate(dynamic total) async {
+    await BookService.updateBookRate(widget.elementId!, total.round());
+  }
+
+  userRate(double actualRate) async {
+    for (int x = 0; x < rate.rating.length; x++) {
+      if (rate.rating[x].userId.toString() ==
+          LocalStorage('BookHub').getItem('userId').toString()) {
+        if (rate.rating.length.toInt() == 1) {
+          nullSafeRate();
+        }
+        Rating userRate = Rating(
+            userId: LocalStorage('BookHub').getItem('userId'),
+            rate: rate.rating[x].rate.toDouble());
+
+        await RateService.unrateBook(widget.elementId!, userRate);
+      }
+    }
+    Rating userRate = Rating(
+        userId: LocalStorage('BookHub').getItem('userId'), rate: actualRate);
+
+    await RateService.rateBook(widget.elementId!, userRate);
+
+    nullSafeRateDel();
+  }
+
+  nullSafeRate() async {
+    Rating userRateNullSafe = Rating(userId: "1", rate: 1);
+
+    await RateService.rateBook(widget.elementId!, userRateNullSafe);
+  }
+
+  nullSafeRateDel() async {
+    Rating userRateNullSafeDel = Rating(userId: "1", rate: 1);
+
+    await RateService.unrateBook(widget.elementId!, userRateNullSafeDel);
+  }
+
+  firstRate(double actualRate) async {
+    Rating userRate = Rating(
+        userId: LocalStorage('BookHub').getItem('userId'), rate: actualRate);
+    Rate newRate = Rate(
+        id: "", bookId: widget.elementId!, rating: [], totalRate: actualRate);
+    await RateService.newRate(newRate);
+    await RateService.rateBook(widget.elementId!, userRate);
+  }
+
+  Widget buildRating() => RatingBar.builder(
+        minRating: 0.5,
+        itemPadding: const EdgeInsets.symmetric(horizontal: 3),
+        itemBuilder: (context, _) => const Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        allowHalfRating: true,
+        updateOnDrag: true,
+        onRatingUpdate: (rating) => setState(() {
+          this.rating = rating;
+        }),
+      );
+
+  void showRating() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text('Rate this book'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                buildRating(),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: const Text(
+                  'ok',
+                  style: TextStyle(fontSize: 20),
+                ),
+                onPressed: () => {
+                  Navigator.pop(context),
+                  setState(() {
+                    if (isRated) {
+                      userRate(this.rating * 2);
+                    } else if (!isRated) {
+                      firstRate(this.rating * 2);
+                      isRated = true;
+                    }
+                  })
+                },
+              )
+            ],
+          ));
+
+  /* stars() {
     List<Widget> lista = [];
     int i = 0;
-    for (i; i < ((rate / 2) - 0.1).round(); i++) {
-      lista.add(const Icon(
-        Icons.star,
-        color: Colors.amber,
-        size: 36.0,
-      ));
+    if (rate != null) {
+      for (i; i < ((rate.totalRate / 2) - 0.1).round(); i++) {
+        lista.add(const Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: 36.0,
+        ));
+      }
+      // No funciona el detectar si es par convencional asi que esto
+      if (rate.totalRate.isOdd) {
+        i++;
+        lista.add(const Icon(
+          Icons.star_half,
+          color: Colors.amber,
+          size: 36.0,
+        ));
+      }
     }
-    // No funciona el detectar si es par convencional asi que esto
-    if (rate.isOdd) {
-      i++;
-      lista.add(const Icon(
-        Icons.star_half,
-        color: Colors.amber,
-        size: 36.0,
-      ));
-    }
+
     for (i; i < 5; i++) {
       lista.add(const Icon(
         Icons.star_border,
@@ -541,4 +725,5 @@ class _BookPageState extends State<BookPage> {
     }
     return lista;
   }
+  */
 }

@@ -39,7 +39,7 @@ class CommentService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return Comment.commentsFromSnapshot(data);
   }
 
@@ -58,7 +58,7 @@ class CommentService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return Comment.commentsFromSnapshot(data);
   }
 

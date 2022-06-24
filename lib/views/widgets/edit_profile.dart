@@ -74,6 +74,7 @@ class _EditProfileState extends State<EditProfile> {
 
             return Scaffold(
               appBar: AppBar(
+                foregroundColor: Theme.of(context).primaryColor,
                 title: Text(
                   getTranslated(context, 'editProfile')!,
                 ),
