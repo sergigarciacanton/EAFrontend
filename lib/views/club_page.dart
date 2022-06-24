@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/club.dart';
 import 'package:ea_frontend/routes/club_service.dart';
+import 'package:ea_frontend/views/user_view.dart';
 import 'package:ea_frontend/views/widgets/call.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -12,11 +13,13 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ClubPage extends StatefulWidget {
+  final Function? setMainComponent;
   final String? elementId;
 
   const ClubPage({
     Key? key,
     this.elementId,
+    this.setMainComponent,
   }) : super(key: key);
 
   @override
@@ -113,35 +116,47 @@ class _ClubPageState extends State<ClubPage> {
         decoration: BoxDecoration(
             color: Theme.of(context).shadowColor,
             borderRadius: BorderRadius.circular(4.0)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const Text("Admin: ",
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-                Text(snapshot.data?.admin.userName,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-              ],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Image(
-              height: 40,
-              width: 40,
-              image: NetworkImage(
-                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
-            )
-          ],
+        child: InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Text("Admin: ",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                  Text(snapshot.data?.admin.userName,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Image(
+                height: 40,
+                width: 40,
+                image: NetworkImage(
+                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
+              )
+            ],
+          ),
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserView(
+                          elementId: snapshot.data?.admin.id,
+                          isAuthor: false,
+                          setMainComponent: widget.setMainComponent,
+                        )))
+          },
         ));
   }
 
@@ -224,44 +239,55 @@ class _ClubPageState extends State<ClubPage> {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
       if (element.id != snapshot.data!.admin.id) {
-        lista.add(_buildUser(element.userName!, element.mail!));
+        lista.add(_buildUser(element.userName!, element.mail!, element.id!));
       }
     });
     return lista;
   }
 
-  Widget _buildUser(String userName, String mail) {
+  Widget _buildUser(String userName, String mail, String id) {
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorLight,
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                height: 40,
-                width: 40,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Image.network(
-                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
-                    fit: BoxFit.contain,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColorLight,
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: InkWell(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Image.network(
+                        'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Column(
-                children: [
-                  Text('    ' + userName),
-                  Text('    (' + mail + ')'),
+                  Column(
+                    children: [
+                      Text('    ' + userName),
+                      Text('    (' + mail + ')'),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserView(
+                              elementId: id,
+                              isAuthor: false,
+                              setMainComponent: widget.setMainComponent,
+                            )));
+              },
+            )));
   }
 
   Widget _buildStatItem(String label, String count) {
