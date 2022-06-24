@@ -12,7 +12,6 @@ class Book {
   String editorial;
   dynamic rate;
   List<dynamic> category;
-  //String writer;
   AuthorPopulate writer;
 
   Book(

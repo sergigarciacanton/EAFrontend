@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:ea_frontend/routes/comment_service.dart';
+import 'package:ea_frontend/views/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_frontend/models/book.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -15,11 +16,9 @@ import 'package:ea_frontend/routes/rate_service.dart';
 
 class BookPage extends StatefulWidget {
   final String? elementId;
+  final Function? setMainComponent;
 
-  const BookPage({
-    Key? key,
-    this.elementId,
-  });
+  const BookPage({Key? key, this.elementId, this.setMainComponent});
 
   @override
   State<BookPage> createState() => _BookPageState();
@@ -37,9 +36,9 @@ class _BookPageState extends State<BookPage> {
   String typeController = "";
   List<dynamic> usersController = List.empty(growable: true);
   dynamic likesController = "0";
-  dynamic dislikesController = "0";
   String idBook = "";
   late Rate rate;
+  List<CommentLike> commentLikeList = List.empty(growable: true);
 
   void initState() {
     super.initState();
@@ -54,7 +53,11 @@ class _BookPageState extends State<BookPage> {
   }
 
   Future<Book> fetchBook() async {
-    return BookService.getBook(widget.elementId!);
+    var book = await BookService.getBook(widget.elementId!);
+    if (book.writer.name == "anonymous") {
+      book.writer.name = getTranslated(context, 'anonymous')!;
+    }
+    return book;
   }
 
   Future<Rate> fetchRate() async {
@@ -70,6 +73,10 @@ class _BookPageState extends State<BookPage> {
     setState(() {
       if (commentList.length != 0) {
         _nocomments = false;
+        for (int cont = 0; cont < commentList.length; cont++) {
+          CommentLike commentLike = CommentLike(commentList[cont], false);
+          commentLikeList.add(commentLike);
+        }
       }
     });
   }
@@ -234,14 +241,30 @@ class _BookPageState extends State<BookPage> {
                         ),
                       ),
                       Expanded(
-                        child: Text(
+                          child: Row(children: [
+                        Text(
                           snapshot.data!.writer.name,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontSize: fontSize * 2,
                               fontWeight: FontWeight.bold),
                         ),
-                      ),
+                        IconButton(
+                          icon: const Icon(Icons.info),
+                          iconSize: 50,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserView(
+                                          elementId: snapshot.data!.writer.id,
+                                          isAuthor: true,
+                                          setMainComponent:
+                                              widget.setMainComponent,
+                                        )));
+                          },
+                        ),
+                      ])),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -363,17 +386,11 @@ class _BookPageState extends State<BookPage> {
                                   ],
                                 )
                               : ListView.builder(
-                                  itemCount: commentList.length,
+                                  itemCount: commentLikeList.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return CommentItem(
-                                      commentList[index].user,
-                                      commentList[index].title,
-                                      commentList[index].text,
-                                      commentList[index].type,
-                                      commentList[index].users,
-                                      commentList[index].likes,
-                                      commentList[index].dislikes,
+                                      commentLikeList,
                                       index,
                                     );
                                   }),
@@ -448,14 +465,15 @@ class _BookPageState extends State<BookPage> {
                     ),
                     onPressed: () async {
                       print("Add new comment");
+                      /*
                       var response = await CommentService.addComment(Comment(
+                          id: "",
                           user: userid,
                           title: titleController.text,
                           text: textController.text,
                           type: typeController,
                           users: usersController,
-                          likes: likesController,
-                          dislikes: dislikesController));
+                          likes: likesController));
                       if (response == "200") {
                         print("New comment added");
                         setState(() {
@@ -472,7 +490,7 @@ class _BookPageState extends State<BookPage> {
                             );
                           },
                         );
-                      }
+                      }*/
                     },
                     style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).backgroundColor,
@@ -499,30 +517,68 @@ class _BookPageState extends State<BookPage> {
         });
   }
 
-  Widget CommentItem(dynamic user, String title, String text, String type,
-      List<dynamic> users, String likes, String dislikes, int index) {
+  Widget CommentItem(List<CommentLike> commentLikeList, int index) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Theme.of(context).backgroundColor,
-        child: Icon(
-          Icons.person_outline_outlined,
-          color: Theme.of(context).primaryColor,
+        leading: CircleAvatar(
+          backgroundColor: Theme.of(context).backgroundColor,
+          child: Icon(
+            Icons.person_outline_outlined,
+            color: Theme.of(context).primaryColor,
+          ),
         ),
-      ),
-      title: Text(
-        user.userName + ': ' + title,
-        style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: fontSize,
+        title: Text(
+          commentLikeList[index].comment.user.userName +
+              ': ' +
+              commentLikeList[index].comment.title,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: fontSize,
+          ),
         ),
-      ),
-      subtitle: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
+        subtitle: Text(
+          commentLikeList[index].comment.text,
+          style: TextStyle(
+            fontSize: fontSize,
+          ),
         ),
-      ),
-    );
+        trailing: commentLikeList[index].isSlected
+            ? Icon(
+                Icons.favorite,
+                color: Theme.of(context).backgroundColor,
+              )
+            : const Icon(
+                Icons.favorite_border_outlined,
+                color: Colors.grey,
+              ),
+        onTap: () async {
+          int likes = int.parse(commentLikeList[index].comment.likes);
+          setState(() {
+            commentLikeList[index].isSlected =
+                !commentLikeList[index].isSlected;
+            if (commentLikeList[index].isSlected == true) {
+              likes = likes + 1;
+              commentLikeList[index].comment.users.add(userid);
+            } else if (commentLikeList[index].isSlected == false) {
+              commentLikeList[index]
+                  .comment
+                  .users
+                  .removeWhere((item) => item == userid);
+            }
+          });
+          print(commentLikeList[index].comment.user.id);
+          String id = commentLikeList[index].comment.id;
+          Comment com = Comment(
+              id: id,
+              user: commentLikeList[index].comment.user,
+              title: commentLikeList[index].comment.title,
+              text: commentLikeList[index].comment.text,
+              type: commentLikeList[index].comment.type,
+              users: commentLikeList[index].comment.users,
+              likes: likes);
+          await CommentService.updateComment(
+              commentLikeList[index].comment.id, com);
+          ;
+        });
   }
 
   num updateTotalRate() {
