@@ -62,7 +62,7 @@ class CommentService {
     return Comment.commentsFromSnapshot(data);
   }
 
-  static Future<String> addComment(Comment values) async {
+  static Future<String> addComment(NewCommentModel values) async {
     Uri url = Uri.parse('http://localhost:3000/comment/');
 
     if (!kIsWeb) {
@@ -74,7 +74,7 @@ class CommentService {
           "Authorization": LocalStorage('BookHub').getItem('token'),
           "Content-Type": "application/json"
         },
-        body: json.encode(Comment.toJson(values)));
+        body: json.encode(NewCommentModel.toJson(values)));
     if (response.statusCode == 200) {
       return "200";
     } else {

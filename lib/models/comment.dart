@@ -58,3 +58,41 @@ class CommentLike {
 
   CommentLike(this.comment, this.isSlected);
 }
+
+class NewCommentModel {
+  String user;
+  String title;
+  String text;
+  String type;
+  List<dynamic> users;
+  dynamic likes;
+
+  NewCommentModel(
+      {required this.user,
+      required this.title,
+      required this.text,
+      required this.type,
+      required this.users,
+      required this.likes});
+
+  factory NewCommentModel.fromJson(Map<String, dynamic> json) {
+    return NewCommentModel(
+        user: json['user'] as String,
+        title: json['title'] as String,
+        text: json['text'] as String,
+        type: json['type'] as String,
+        users: json['users'],
+        likes: json['likes'].toString());
+  }
+
+  static Map<String, dynamic> toJson(NewCommentModel values) {
+    return {
+      'user': values.user,
+      'title': values.title,
+      'text': values.text,
+      'type': values.type,
+      'users': values.users.toString(),
+      'likes': values.likes.toString()
+    };
+  }
+}

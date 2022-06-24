@@ -61,15 +61,13 @@ class _EventPageState extends State<EventPage> {
 
   Future<void> leaveEvent() async {
     await EventService.leaveEvent(widget.elementId!);
-    await ChatService.leaveChat(
-        chat.id, idUser); //////////////////////////////////////////////
+    await ChatService.leaveChat(chat.id, idUser);
     setState(() {});
   }
 
   Future<void> joinEvent() async {
     await EventService.joinEvent(widget.elementId!);
-    await ChatService.joinChat(
-        chat.id, idUser); ///////////////////////////////////////////////
+    await ChatService.joinChat(chat.id, idUser);
     setState(() {});
   }
 

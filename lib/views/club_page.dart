@@ -57,15 +57,13 @@ class _ClubPageState extends State<ClubPage> {
 
   Future<void> unsubscribe() async {
     await ClubService.unsubscribeClub(widget.elementId!);
-    await ChatService.leaveChat(
-        chat.id, idUser); //////////////////////////////////////////////CATY
+    await ChatService.leaveChat(chat.id, idUser);
     setState(() {});
   }
 
   Future<void> subscribe() async {
     await ClubService.subscribeClub(widget.elementId!);
-    await ChatService.joinChat(
-        chat.id, idUser); ///////////////////////////////////////////////CATY
+    await ChatService.joinChat(chat.id, idUser);
     setState(() {});
   }
 
