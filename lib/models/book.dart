@@ -64,7 +64,7 @@ class Book {
       'description': values.description,
       'publishedDate': values.publishedDate.toString(),
       'editorial': values.editorial,
-      'rate': values.rate.toString(),
+      'rate': values.rate,
       'category': values.category.toString(),
       'writer': values.writer
     };

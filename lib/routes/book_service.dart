@@ -84,6 +84,29 @@ class BookService {
       return false;
     }
   }
+
+  static Future<bool> updateBookRate(String bookId, dynamic rate) async {
+    Uri url = Uri.parse(const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/book/$bookId');
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/book/$bookId');
+    }
+
+    final response = await http.put(url,
+        headers: {
+          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          'rate': rate,
+        }));
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 }
 
 class Message {

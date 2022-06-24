@@ -30,6 +30,7 @@ class _BookPageState extends State<BookPage> {
   bool _nocomments = true;
   bool isRated = false;
   double rating = 0;
+  double totalRate = 0;
   String userid = "";
   final titleController = TextEditingController();
   final textController = TextEditingController();
@@ -152,7 +153,7 @@ class _BookPageState extends State<BookPage> {
                       child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      snapshot.data!.title + rating.toString(),
+                      snapshot.data!.title,
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: fontSize * 2,
@@ -167,33 +168,32 @@ class _BookPageState extends State<BookPage> {
                       builder: (context, AsyncSnapshot<Rate> snapshot) {
                         int i = 0;
                         if (snapshot.hasData) {
+                          totalRate = updateTotalRate().toDouble();
                           isRated = true;
                           return Row(
                             children: [
-                              for (i;
-                                  i < ((updateTotalRate() / 2) - 0.1).round();
-                                  i++)
+                              for (i; i < ((totalRate / 2) - 0.1).round(); i++)
                                 (const Icon(
                                   Icons.star,
                                   color: Colors.amber,
                                   size: 36.0,
                                 )),
                               // No funciona el detectar si es par convencional asi que esto
-                              if (updateTotalRate().toInt().isOdd)
+                              if (totalRate.toInt().isOdd)
                                 (const Icon(
                                   Icons.star_half,
                                   color: Colors.amber,
                                   size: 36.0,
                                 )),
                               for (int z = 0;
-                                  z < (5 - (updateTotalRate() / 2).round());
+                                  z < (5 - (totalRate / 2).round());
                                   z++)
                                 (const Icon(
                                   Icons.star_border,
                                   color: Colors.amber,
                                   size: 36.0,
                                 )),
-                              Text(rate.rating.length.toString())
+                              Text("(" + rate.rating.length.toString() + ")")
                             ],
                           );
                         } else {
@@ -531,25 +531,62 @@ class _BookPageState extends State<BookPage> {
       total = total + rate.rating[x].rate;
     }
     total = total / rate.rating.length;
+
+    updateTotalRateAPI(total);
+    updateBookRate(total);
+
     return total.round();
   }
 
+  updateTotalRateAPI(dynamic total) async {
+    await RateService.updateTotalRate(widget.elementId!, total.round());
+  }
+
+  updateBookRate(dynamic total) async {
+    await BookService.updateBookRate(widget.elementId!, total.round());
+  }
+
   userRate(double actualRate) async {
+    for (int x = 0; x < rate.rating.length; x++) {
+      if (rate.rating[x].userId.toString() ==
+          LocalStorage('BookHub').getItem('userId').toString()) {
+        if (rate.rating.length.toInt() == 1) {
+          nullSafeRate();
+        }
+        Rating userRate = Rating(
+            userId: LocalStorage('BookHub').getItem('userId'),
+            rate: rate.rating[x].rate.toDouble());
+
+        await RateService.unrateBook(widget.elementId!, userRate);
+      }
+    }
     Rating userRate = Rating(
         userId: LocalStorage('BookHub').getItem('userId'), rate: actualRate);
 
     await RateService.rateBook(widget.elementId!, userRate);
+
+    nullSafeRateDel();
+  }
+
+  nullSafeRate() async {
+    Rating userRateNullSafe = Rating(userId: "1", rate: 1);
+
+    await RateService.rateBook(widget.elementId!, userRateNullSafe);
+  }
+
+  nullSafeRateDel() async {
+    Rating userRateNullSafeDel = Rating(userId: "1", rate: 1);
+
+    await RateService.unrateBook(widget.elementId!, userRateNullSafeDel);
   }
 
   firstRate(double actualRate) async {
     Rating userRate = Rating(
         userId: LocalStorage('BookHub').getItem('userId'), rate: actualRate);
     Rate newRate = Rate(
-        id: "",
-        bookId: widget.elementId!,
-        rating: [userRate],
-        totalRate: actualRate);
+        id: "", bookId: widget.elementId!, rating: [], totalRate: actualRate);
     await RateService.newRate(newRate);
+    await RateService.rateBook(widget.elementId!, userRate);
   }
 
   Widget buildRating() => RatingBar.builder(
@@ -593,6 +630,7 @@ class _BookPageState extends State<BookPage> {
                       userRate(this.rating * 2);
                     } else if (!isRated) {
                       firstRate(this.rating * 2);
+                      isRated = true;
                     }
                   })
                 },

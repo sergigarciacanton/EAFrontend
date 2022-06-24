@@ -43,21 +43,23 @@ class RateService {
     return Rate.fromJson(data);
   }
 
-  static Future<bool> updateTotalRate(String bookId) async {
+  static Future<bool> updateTotalRate(String bookId, dynamic totalRate) async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
         '/rate/$bookId');
 
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/event/join/$bookId');
+      url = Uri.parse('http://10.0.2.2:3000/rate/$bookId');
     }
 
-    final response = await http.put(
-      url,
-      headers: {
-        'authorization': LocalStorage('BookHub').getItem('token'),
-      },
-    );
+    final response = await http.put(url,
+        headers: {
+          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          'totalRate': totalRate,
+        }));
     if (response.statusCode == 200) {
       return true;
     }
@@ -70,7 +72,7 @@ class RateService {
         '/rate/rating/$bookId');
 
     if (!(kIsWeb || Platform.isWindows)) {
-      url = Uri.parse('http://10.0.2.2:3000/event/join/$bookId');
+      url = Uri.parse('http://10.0.2.2:3000/rate/rating/$bookId');
     }
 
     final response = await http.put(url,
@@ -87,7 +89,7 @@ class RateService {
     return false;
   }
 
-  static Future<bool> unrateBook(String bookId) async {
+  static Future<bool> unrateBook(String bookId, Rating rating) async {
     Uri url = Uri.parse(const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
         '/rate/deleteUserRate/$bookId');
@@ -96,12 +98,14 @@ class RateService {
       url = Uri.parse('http://10.0.2.2:3000/rate/deleteUserRate/$bookId');
     }
 
-    final response = await http.put(
-      url,
-      headers: {
-        'authorization': LocalStorage('BookHub').getItem('token'),
-      },
-    );
+    final response = await http.put(url,
+        headers: {
+          'authorization': LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          'rating': Rating.toJson(rating),
+        }));
     if (response.statusCode == 200) {
       return true;
     }
