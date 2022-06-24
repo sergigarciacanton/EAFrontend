@@ -242,7 +242,10 @@ class _HomeState extends State<Home> {
                             return GestureDetector(
                               child: BookCard(
                                 title: _books[index].title,
-                                author: _books[index].writer.name,
+                                author:
+                                    (_books[index].writer.name == "anonymous")
+                                        ? getTranslated(context, 'anonymous')!
+                                        : _books[index].writer.name,
                                 rate: _books[index].rate.toString(),
                                 imageUrl: _books[index].photoURL,
                               ),

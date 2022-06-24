@@ -329,7 +329,7 @@ class _ClubPageState extends State<ClubPage> {
         children: <Widget>[
           _buildStatItem(getTranslated(context, 'followers')!,
               snapshot.data!.usersList.length.toString()),
-          _buildStatItem("Comments", "58"),
+          _buildStatItem("Posts", "58"),
           _buildAdmin(snapshot)
         ],
       ),
@@ -380,10 +380,10 @@ class _ClubPageState extends State<ClubPage> {
                     border: Border.all(),
                     color: Theme.of(context).indicatorColor,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "GO TO THE CHAT",
-                      style: TextStyle(
+                      getTranslated(context, 'openChat')!.toUpperCase(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
@@ -488,9 +488,11 @@ class _ClubPageState extends State<ClubPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      getTranslated(context, 'videoconference')!,
+                      getTranslated(context, 'videoconference')!.toUpperCase(),
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, color: Colors.black),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
