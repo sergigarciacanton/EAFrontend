@@ -10,6 +10,7 @@ import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/user_view.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
+import 'package:ea_frontend/views/widgets/new_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -90,6 +91,10 @@ class _EventPageState extends State<EventPage> {
                         backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NewEvent(eventId: snapshot.data!.id)),
+                          );
                           log('editEvent');
                         },
                       )

@@ -92,7 +92,7 @@ class _EventListState extends State<EventList> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => NewEvent()),
+                          MaterialPageRoute(builder: (context) => NewEvent(eventId: null,)),
                         );
                         log('createEvent');
                       },

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ea_frontend/models/editevent.dart';
 import 'package:ea_frontend/models/event.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -105,6 +106,31 @@ class EventService {
         body: json.encode(NewEventModel.toJson(values)));
     if (response.statusCode == 201) {
       return "201";
+    } else {
+      return Message.fromJson(await jsonDecode(response.body)).message;
+    }
+  }
+
+  static Future<String> editEvent(String id, EditEventModel event) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/event/$id/';
+    Uri url = Uri.parse(baseUrl);
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/event/$id');
+    }
+
+    final response = await http.put(
+      url,
+      headers: {
+        'authorization': LocalStorage('BookHub').getItem('token'),
+        "Content-Type": "application/json"
+      },
+      body: json.encode(EditEventModel.toJson(event)),
+    );
+    if (response.statusCode == 200) {
+      return "200";
     } else {
       return Message.fromJson(await jsonDecode(response.body)).message;
     }
