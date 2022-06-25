@@ -145,6 +145,7 @@ class _NewEventState extends State<NewEvent> {
     Position position = await Geolocator.getCurrentPosition();
     latitudeController = position.latitude;
     longitudeController = position.longitude;
+    _mapController.move(LatLng(position.latitude, position.longitude), 13);
   }
 
   @override
