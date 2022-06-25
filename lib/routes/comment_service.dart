@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/models/comment.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -37,7 +38,7 @@ class CommentService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return Comment.commentsFromSnapshot(data);
   }
 
@@ -56,11 +57,11 @@ class CommentService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return Comment.commentsFromSnapshot(data);
   }
 
-  static Future<String> addComment(Comment values) async {
+  static Future<String> addComment(NewCommentModel values) async {
     Uri url = Uri.parse('http://localhost:3000/comment/');
 
     if (!kIsWeb) {
@@ -72,12 +73,36 @@ class CommentService {
           "Authorization": LocalStorage('BookHub').getItem('token'),
           "Content-Type": "application/json"
         },
-        body: json.encode(Comment.toJson(values)));
+        body: json.encode(NewCommentModel.toJson(values)));
     if (response.statusCode == 200) {
       return "200";
     } else {
       return Message.fromJson(await jsonDecode(response.body)).message;
     }
+  }
+
+  static Future<bool> updateComment(String id, Comment values) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/comment/$id';
+    Uri url = Uri.parse(baseUrl);
+
+    if (!(kIsWeb)) {
+      url = Uri.parse('http://10.0.2.2:3000/comment/$id');
+    }
+
+    final response = await http.put(url,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Authorization": LocalStorage('BookHub').getItem('token'),
+          "Content-Type": "application/json"
+        },
+        body: json.encode(Comment.toJson(values)));
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
   }
 }
 

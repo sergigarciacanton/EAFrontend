@@ -62,7 +62,7 @@ class UserService {
   }
 
   static Future<bool> updateUser(String id, String name, String userName,
-      String mail, String birthDate) async {
+      String mail, String birthDate, String photoURL) async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
         '/user/update/$id';
@@ -81,6 +81,7 @@ class UserService {
           'userName': userName,
           'mail': mail,
           'birthDate': birthDate,
+          'photoURL': photoURL
         }));
 
     if (response.statusCode == 200) {
@@ -135,5 +136,26 @@ class UserService {
       return true;
     }
     return false;
+  }
+
+  static Future<dynamic> getUserdyn(String id) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/user/$id';
+    Uri url = Uri.parse(baseUrl);
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/user/$id');
+    }
+
+    final response = await http.get(
+      url,
+      headers: {'authorization': LocalStorage('BookHub').getItem('token')},
+    );
+    Object data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return User.fromJson(data);
+    }
+    return null;
   }
 }

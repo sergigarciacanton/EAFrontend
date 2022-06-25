@@ -1,14 +1,18 @@
 import 'dart:developer';
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/author.dart';
+import 'package:ea_frontend/models/cloudinary.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/routes/author_service.dart';
 import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:ea_frontend/views/provider/theme_provider.dart';
+import 'package:ea_frontend/views/widgets/new_book.dart';
 import 'package:ea_frontend/views/widgets/writer_add_book.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
@@ -37,6 +41,8 @@ class _EditProfileState extends State<EditProfile> {
       TextEditingController(text: 'biography');
 
   String controllerBirthDay = "";
+  String userPhotoURL = "";
+
   void initState() {
     super.initState();
     fetchUser();
@@ -65,6 +71,8 @@ class _EditProfileState extends State<EditProfile> {
             controllerUserName.text = snapshot.data!.userName;
             controllerMail.text = snapshot.data!.mail;
             controllerBirthDay = snapshot.data!.birthDate.toString();
+            userPhotoURL = snapshot.data!.photoURL;
+
             if (author.runtimeType == Author) {
               controllerBiography.text = author.biography;
             } else {
@@ -73,8 +81,9 @@ class _EditProfileState extends State<EditProfile> {
 
             return Scaffold(
               appBar: AppBar(
+                foregroundColor: Theme.of(context).primaryColor,
                 title: Text(
-                  "Edit Profile",
+                  getTranslated(context, 'editProfile')!,
                 ),
                 backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 1,
@@ -117,10 +126,10 @@ class _EditProfileState extends State<EditProfile> {
                                       offset: const Offset(0, 10))
                                 ],
                                 shape: BoxShape.circle,
-                                image: const DecorationImage(
+                                image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
-                                      "https://images.pexels.com/photos/3307758/pexels-photo-3307758.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250",
+                                      snapshot.data!.photoURL,
                                     ))),
                           ),
                           Positioned(
@@ -142,8 +151,45 @@ class _EditProfileState extends State<EditProfile> {
                                     Icons.edit,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {
+                                  onTap: () async {
                                     print("change photo");
+                                    (!isEditing)
+                                        ? setState(() {
+                                            isEditing = true;
+                                          })
+                                        : null;
+                                    FilePickerResult? result =
+                                        await FilePicker.platform.pickFiles(
+                                            type: FileType.custom,
+                                            allowedExtensions: [
+                                          'png',
+                                          'jpg',
+                                          'webp',
+                                        ]);
+                                    if (result == null) {
+                                      return;
+                                    }
+
+                                    PlatformFile file = result.files.first;
+
+                                    final res = await MyCloudinary()
+                                        .cloudinary
+                                        .uploadResource(
+                                            CloudinaryUploadResource(
+                                          filePath: file.path,
+                                          fileBytes: file.bytes,
+                                          resourceType:
+                                              CloudinaryResourceType.image,
+                                        ));
+
+                                    if (res.isSuccessful) {
+                                      log("Uploaded: ${res.secureUrl}");
+
+                                      if (author != null) {
+                                        author.photoURL = res.secureUrl;
+                                      }
+                                      userPhotoURL = res.secureUrl!;
+                                    }
                                   }),
                             ),
                           )
@@ -207,7 +253,8 @@ class _EditProfileState extends State<EditProfile> {
                                         controllerName.text,
                                         controllerUserName.text,
                                         controllerMail.text,
-                                        controllerBirthDay);
+                                        controllerBirthDay,
+                                        userPhotoURL);
 
                                     if (author != null &&
                                         controllerBiography
@@ -286,7 +333,8 @@ class _EditProfileState extends State<EditProfile> {
                                 child: InkWell(
                                     child: Row(
                                       children: [
-                                        Text("Author information"),
+                                        Text(getTranslated(
+                                            context, 'authorInformation')!),
                                         Icon(
                                           Icons.add,
                                           color: Colors.white,
@@ -298,8 +346,8 @@ class _EditProfileState extends State<EditProfile> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              title:
-                                                  Text('Enter your biography'),
+                                              title: Text(getTranslated(
+                                                  context, 'enterBiography')!),
                                               content: Container(
                                                 width: MediaQuery.of(context)
                                                         .size
@@ -317,7 +365,9 @@ class _EditProfileState extends State<EditProfile> {
                                                   controller:
                                                       _textFieldController,
                                                   decoration: InputDecoration(
-                                                      hintText: "My life..."),
+                                                      hintText: getTranslated(
+                                                          context,
+                                                          'hintBiography')),
                                                 ),
                                               ),
                                               actions: <Widget>[
@@ -426,8 +476,8 @@ class _EditProfileState extends State<EditProfile> {
     return Column(
       children: [
         _buildSeparatorBig(),
-        buildEditBig("Biography", controllerBiography),
-        Text("Books"),
+        buildEditBig(getTranslated(context, 'biography')!, controllerBiography),
+        Text(getTranslated(context, 'books')!),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -446,7 +496,7 @@ class _EditProfileState extends State<EditProfile> {
             backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
           ),
           child: Text(
-            "Delete author",
+            getTranslated(context, 'deleteAuthor')!,
             style: TextStyle(
                 fontSize: 14, letterSpacing: 2.2, color: Colors.white),
           ),
@@ -503,23 +553,31 @@ class _EditProfileState extends State<EditProfile> {
               ListTile(
                 contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
                 title: Text(title),
-                subtitle: Text("Published Date: " + published),
+                subtitle: Text(
+                    getTranslated(context, 'publishDate')! + ": " + published),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ElevatedButton(onPressed: () => {}, child: Text('Edit')),
+                  ElevatedButton(
+                      onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewBook(elementId: bookId)))
+                          },
+                      child: Text(getTranslated(context, 'edit')!)),
                   Container(
                     width: 30,
                   ),
                   ElevatedButton(
-                    child: Text("Delete"),
+                    child: Text(getTranslated(context, 'delete')!),
                     onPressed: () => showDialog<String>(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        title: const Text('Delete book?'),
-                        content: const Text(
-                            'Permanently delete or change the author to anonymous?'),
+                        title: Text(getTranslated(context, 'deleteBook')!),
+                        content: Text(getTranslated(context, 'deleteBook2')!),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () => {
@@ -527,7 +585,7 @@ class _EditProfileState extends State<EditProfile> {
                               Navigator.pop(context, 'Delete'),
                               setState(() {})
                             },
-                            child: const Text('Delete'),
+                            child: Text(getTranslated(context, 'delete')!),
                           ),
                           TextButton(
                             onPressed: () => {
@@ -537,7 +595,7 @@ class _EditProfileState extends State<EditProfile> {
                                 fetchUser();
                               })
                             },
-                            child: const Text("Anonymous"),
+                            child: Text(getTranslated(context, 'anonymous')!),
                           ),
                         ],
                       ),

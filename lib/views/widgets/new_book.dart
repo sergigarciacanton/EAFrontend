@@ -1,12 +1,16 @@
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:ea_frontend/routes/book_service.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import '../../localization/language_constants.dart';
+import '../../models/book.dart';
 import '../../models/category.dart';
 import '../../routes/management_service.dart';
 import 'event_list.dart';
 
 class NewBook extends StatefulWidget {
-  const NewBook({Key? key}) : super(key: key);
+  final String? elementId;
+  const NewBook({Key? key, this.elementId}) : super(key: key);
 
   @override
   _NewBookState createState() => _NewBookState();
@@ -18,22 +22,35 @@ class _NewBookState extends State<NewBook> {
   final photoURLController = TextEditingController();
   final descriptionController = TextEditingController();
   final editorialController = TextEditingController();
-  final writerController = TextEditingController();
   String publishedDateController = "";
-  dynamic rateController = "0";
   String categoriesController = "";
   List<CategoryList> selectedCategory = List.empty(growable: true);
   List<CategoryList> categoryList = [];
   List<Category> _response = List.empty(growable: true);
   bool _isLoading = true;
   late String _locale;
-
+  bool _isEditing = true;
   void initState() {
     super.initState();
     getLocale().then((locale) {
       _locale = locale.languageCode;
     });
+    getBook();
     getCategories();
+  }
+
+  Future<void> getBook() async {
+    if (widget.elementId != null) {
+      var book = await BookService.getBook(widget.elementId!);
+      titleController.text = book.title;
+      ISBNController.text = book.ISBN;
+      photoURLController.text = book.photoURL;
+      descriptionController.text = book.description;
+      editorialController.text = book.editorial;
+      publishedDateController = book.publishedDate.toString();
+    } else {
+      _isEditing = false;
+    }
   }
 
   Future<void> getCategories() async {
@@ -62,8 +79,10 @@ class _NewBookState extends State<NewBook> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(getTranslated(context, "newBook")!,
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: (_isEditing)
+              ? Text(getTranslated(context, 'editBook')!)
+              : Text(getTranslated(context, "newBook")!,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
         ),
@@ -114,26 +133,6 @@ class _NewBookState extends State<NewBook> {
                     decoration: InputDecoration(
                         labelText: getTranslated(context, "ISBN"),
                         hintText: getTranslated(context, "writeTheISBN"),
-                        border: const OutlineInputBorder()),
-                  )),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextFormField(
-                    controller: writerController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return getTranslated(context, "fieldRequired");
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                        labelText: getTranslated(context, "writer"),
-                        hintText: getTranslated(context, "writeTheWriter"),
                         border: const OutlineInputBorder()),
                   )),
               const SizedBox(
@@ -260,30 +259,43 @@ class _NewBookState extends State<NewBook> {
                 height: 20,
               ),
               ElevatedButton(
-                child: Text(
-                  getTranslated(context, "addNewBook")!,
-                  textScaleFactor: 1,
-                ),
+                child: (_isEditing)
+                    ? Text(getTranslated(context, 'edit')!)
+                    : Text(
+                        getTranslated(context, "addNewBook")!,
+                        textScaleFactor: 1,
+                      ),
                 onPressed: () async {
-                  /*
                   print("Add new book");
-
-                  var response = await BookService.newBook(Book(
-                      id: "",
-                      title: titleController.text,
-                      ISBN: ISBNController.text,
-                      photoURL: photoURLController.text,
-                      description: descriptionController.text,
-                      editorial: editorialController.text,
-                      writer: writerController.text,
-                      category: categoriesController,
-                      publishedDate: DateTime.parse(publishedDateController),
-                      rate: rateController));
+                  var idAuthor =
+                      await LocalStorage('BookHub').getItem('idAuthor');
+                  var response;
+                  if (_isEditing) {
+                    response = await BookService.editBook(
+                      widget.elementId!,
+                      titleController.text,
+                      selectedCategory,
+                      ISBNController.text,
+                      photoURLController.text,
+                      DateTime.parse(publishedDateController).toString(),
+                      descriptionController.text,
+                      editorialController.text,
+                      idAuthor,
+                    );
+                  } else {
+                    response = await BookService.newBook(
+                      titleController.text,
+                      selectedCategory,
+                      ISBNController.text,
+                      photoURLController.text,
+                      DateTime.parse(publishedDateController).toString(),
+                      descriptionController.text,
+                      editorialController.text,
+                      idAuthor,
+                    );
+                  }
                   if (response == "200") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const EventList()));
+                    Navigator.of(context).pop();
                   } else {
                     showDialog(
                       context: context,
@@ -293,7 +305,7 @@ class _NewBookState extends State<NewBook> {
                         );
                       },
                     );
-                  }*/
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).backgroundColor,
@@ -305,44 +317,6 @@ class _NewBookState extends State<NewBook> {
               ),
               const SizedBox(
                 height: 20,
-              ),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.all(40),
-                          child: ElevatedButton(
-                            child: const Text(
-                              'Back',
-                              textScaleFactor: 1,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const EventList()),
-                              );
-                              print("backButton");
-                            },
-                            style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context).backgroundColor,
-                                onPrimary: Theme.of(context).primaryColor,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 15),
-                                textStyle: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
-                          ),
-                        )
-                      ],
-                    ),
-                  ]),
-              const SizedBox(
-                height: 30,
               ),
             ],
           ),

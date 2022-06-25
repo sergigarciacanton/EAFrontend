@@ -26,6 +26,7 @@ class _HomeState extends State<Questionnaire> {
   bool _isLoading = true;
   late User user;
   late String _locale;
+  late bool isUpdate;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _HomeState extends State<Questionnaire> {
   }
 
   Future<void> getData() async {
+
     await getLocale().then((locale) {
       _locale = locale.languageCode;
     });
@@ -43,6 +45,7 @@ class _HomeState extends State<Questionnaire> {
         LocalStorage('BookHub').getItem('userName'));
     setState(() {
       _checkedBoxes = List<bool>.filled(_categories.length, false);
+      isUpdate = _categories.isNotEmpty;
       for (int i = 0; i < _categories.length; i++) {
         for (var userCategory in user.categories) {
           if (_categories[i].id == userCategory) {
@@ -59,6 +62,7 @@ class _HomeState extends State<Questionnaire> {
     for (int i = 0; i < _checkedBoxes.length; i++) {
       if (_checkedBoxes[i]) {
         output = output + "," + _categories[i].name;
+
       }
     }
     return output.substring(1);
@@ -107,15 +111,19 @@ class _HomeState extends State<Questionnaire> {
                             fontSize: 50, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 25),
-                      Text(
-                        getTranslated(context, 'questionnaireText')!,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Theme.of(context).backgroundColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+
+                      (!isUpdate)
+                          ? Text(
+                              getTranslated(context, 'questionnaireText')!,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Theme.of(context).backgroundColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : Container(),
+
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 50.50, vertical: 0.0),
@@ -178,11 +186,15 @@ class _HomeState extends State<Questionnaire> {
                             _isLoading = false;
                           });
                           if (response == "200") {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const HomeScaffold()));
+                            if (isUpdate) {
+                              Navigator.of(context).pop();
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HomeScaffold()));
+                            }
                           } else {
                             showDialog(
                               context: context,
@@ -196,21 +208,24 @@ class _HomeState extends State<Questionnaire> {
                         },
                       ),
                       const SizedBox(height: 15),
-                      TextButton(
-                        child: Text(
-                          getTranslated(context, 'skip')!,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).backgroundColor,
-                          ),
-                        ),
-                        onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomeScaffold()));
-                        },
-                      ),
+                      (!isUpdate)
+                          ? TextButton(
+                              child: Text(
+                                getTranslated(context, 'skip')!,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Theme.of(context).backgroundColor,
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomeScaffold()));
+                              },
+                            )
+                          : Container(),
                     ],
                   ),
                 ),

@@ -9,8 +9,6 @@ import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:ea_frontend/views/widgets/new_event.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
-
-import '../new_book_page.dart';
 import 'new_book.dart';
 
 class EventList extends StatefulWidget {
@@ -94,7 +92,7 @@ class _EventListState extends State<EventList> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => NewEvent()),
+                          MaterialPageRoute(builder: (context) => NewEvent(eventId: null,)),
                         );
                         log('createEvent');
                       },
@@ -117,7 +115,11 @@ class _EventListState extends State<EventList> {
                                     setMainComponent: widget.setMainComponent,
                                   ));
                                 },
-                                leading: const FlutterLogo(size: 56.0),
+                                leading: CircleAvatar(
+                                  radius: 25, // Image radius
+                                  backgroundImage: NetworkImage(
+                                      snapshot.data!.events[index].photoURL),
+                                ),
                                 title: Text(snapshot.data?.events[index].name),
                                 subtitle: getDate(snapshot
                                     .data?.events[index].eventDate as DateTime),
