@@ -61,6 +61,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   pr_geo: ^0.0.3+5
   geolocator: ^8.2.1
+  file_picker: ^3.0.4
   google_maps_flutter: ^2.1.8
   location: ^4.4.0
 

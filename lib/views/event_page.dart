@@ -101,7 +101,9 @@ class _EventPageState extends State<EventPage> {
                       slivers: <Widget>[
                         SliverPersistentHeader(
                           delegate: MySliverAppBar(
-                              snapshot: snapshot, expandedHeight: 150),
+                              snapshot: snapshot,
+                              expandedHeight: 150,
+                              profileImage_url: snapshot.data!.photoURL),
                           pinned: true,
                         ),
                         SliverToBoxAdapter(
@@ -164,11 +166,10 @@ class _EventPageState extends State<EventPage> {
               const SizedBox(
                 width: 10,
               ),
-              const Image(
+              Image(
                 height: 40,
                 width: 40,
-                image: NetworkImage(
-                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
+                image: NetworkImage(snapshot.data?.admin.photoURL),
               )
             ],
           ),
@@ -313,8 +314,6 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _buildUser(String userName, String mail, String imageURL, String id) {
-    var image =
-        CloudinaryImage('https://res.cloudinary.com/demo/image/upload/w_100,');
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
@@ -570,8 +569,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   AsyncSnapshot<Event> snapshot;
   var image = CloudinaryImage(
-      'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
-  MySliverAppBar({required this.snapshot, required this.expandedHeight});
+      'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656078344/Events_bedvr3.jpg');
+  String profileImage_url;
+  MySliverAppBar(
+      {required this.snapshot,
+      required this.expandedHeight,
+      required this.profileImage_url});
 
   @override
   Widget build(
@@ -614,10 +617,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             opacity: (1 - shrinkOffset / expandedHeight),
             child: Container(
               decoration: BoxDecoration(
-                image: const DecorationImage(
-                  //TODO Change to club image
-                  image: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYdJFymvjmjacbKVMvsqzjEanEAKlEBjQkOFvJ11KtCAiXR4BnUqT4Zj7wx6fquYoLgA8&usqp=CAU'),
+                image: DecorationImage(
+                  image: NetworkImage(profileImage_url),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,
