@@ -177,6 +177,7 @@ class _EventPageState extends State<EventPage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
+                    maintainState: false,
                     builder: (context) => UserView(
                           elementId: snapshot.data?.admin.id,
                           isAuthor: false,
@@ -350,6 +351,7 @@ class _EventPageState extends State<EventPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
+                        maintainState: false,
                         builder: (context) => UserView(
                               elementId: id,
                               isAuthor: false,
@@ -446,7 +448,11 @@ class _EventPageState extends State<EventPage> {
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => new ChatPage(chat.id, idUser))),
+                        maintainState: false,
+                        builder: (context) => ChatPage(
+                            key: UniqueKey(),
+                            chatId: chat.id,
+                            userId: idUser))),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(

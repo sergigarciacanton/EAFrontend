@@ -96,6 +96,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   onPressed: () {
                     Route route = MaterialPageRoute(
+                        maintainState: false,
                         builder: (context) => const SettingPage());
                     Navigator.pop(context, route);
                   },
@@ -219,6 +220,7 @@ class _EditProfileState extends State<EditProfile> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
+                                  maintainState: false,
                                   builder: (context) => const Questionnaire()));
                         }),
                     const SizedBox(
@@ -522,8 +524,11 @@ class _EditProfileState extends State<EditProfile> {
     });
     list.add(InkWell(
         onTap: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AddBook()))
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      maintainState: false,
+                      builder: (context) => const AddBook()))
             },
         child: Container(
           width: 300,
@@ -564,6 +569,7 @@ class _EditProfileState extends State<EditProfile> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
+                                    maintainState: false,
                                     builder: (context) =>
                                         NewBook(elementId: bookId)))
                           },

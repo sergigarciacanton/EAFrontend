@@ -256,6 +256,7 @@ class _BookPageState extends State<BookPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
+                                    maintainState: false,
                                     builder: (context) => UserView(
                                           elementId: snapshot.data!.writer.id,
                                           isAuthor: true,

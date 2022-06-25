@@ -138,6 +138,7 @@ class _NewChatState extends State<NewChat> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
+                          maintainState: false,
                           builder: (context) => const ChatList()));
                 } else {
                   showDialog(

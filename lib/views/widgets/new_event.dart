@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:ea_frontend/models/location.dart';
 import 'package:ea_frontend/models/newchat.dart';
@@ -8,13 +9,16 @@ import 'package:ea_frontend/models/category.dart';
 import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/routes/event_service.dart';
 import 'package:ea_frontend/routes/management_service.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/widgets/event_list.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../localization/language_constants.dart';
+import '../../models/cloudinary.dart';
 import '../../models/event.dart';
 import '../../models/user.dart';
 import '../../routes/user_service.dart';
@@ -29,7 +33,7 @@ class NewEvent extends StatefulWidget {
 class _NewEventState extends State<NewEvent> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
-  String eventDateController = "";
+  String eventDateController = DateTime.now().toString();
   String idController = "";
   String categoryController = "";
   String categoriesController = "";
@@ -40,6 +44,8 @@ class _NewEventState extends State<NewEvent> {
   double latitudeController = 40.410931;
   double longitudeController = -3.699313;
   List<Marker> markers = [];
+  String profilePhoto =
+      "https://res.cloudinary.com/tonilovers-inc/image/upload/v1656077605/images_xdx4t4.jpg";
 
   List<String> usersController = List.empty(growable: true);
 
@@ -106,6 +112,91 @@ class _NewEventState extends State<NewEvent> {
                       Image.network(
                           "https://img.icons8.com/ios7/12x/calendar--v3.png",
                           height: 200),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: 160,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 4,
+                                      color: Theme.of(context).shadowColor),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        color: Colors.black.withOpacity(0.1),
+                                        offset: const Offset(0, 10))
+                                  ],
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                        profilePhoto,
+                                      ))),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context).shadowColor,
+                                  ),
+                                  color: Colors.green,
+                                ),
+                                child: InkWell(
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () async {
+                                      print("change photo");
+
+                                      FilePickerResult? result =
+                                          await FilePicker.platform.pickFiles(
+                                              type: FileType.custom,
+                                              allowedExtensions: [
+                                            'png',
+                                            'jpg',
+                                            'webp',
+                                          ]);
+                                      if (result == null) {
+                                        return;
+                                      }
+
+                                      PlatformFile file = result.files.first;
+
+                                      final res = await MyCloudinary()
+                                          .cloudinary
+                                          .uploadResource(
+                                              CloudinaryUploadResource(
+                                            filePath: file.path,
+                                            fileBytes: file.bytes,
+                                            resourceType:
+                                                CloudinaryResourceType.image,
+                                          ));
+
+                                      if (res.isSuccessful) {
+                                        log("Uploaded: ${res.secureUrl}");
+                                        setState(() {
+                                          profilePhoto = res.secureUrl!;
+                                        });
+                                      }
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -282,6 +373,7 @@ class _NewEventState extends State<NewEvent> {
                                   name: nameController.text,
                                   description: descriptionController.text,
                                   admin: idController,
+                                  photoURL: profilePhoto,
                                   eventDate:
                                       DateTime.parse(eventDateController),
                                   categories: categoriesController,
@@ -290,7 +382,9 @@ class _NewEventState extends State<NewEvent> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const EventList()));
+                                    maintainState: false,
+                                    builder: (context) =>
+                                        const HomeScaffold()));
                           } else {
                             showDialog(
                               context: context,
