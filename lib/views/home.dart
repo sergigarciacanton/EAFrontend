@@ -333,14 +333,25 @@ class _HomeState extends State<Home> {
                                 return GestureDetector(
                                   child: EventCard(
                                     title: _events[index].name,
-                                    date: _events[index].eventDate
-                                          .day.toString() + "-" +
-                                          _events[index].eventDate
-                                          .month.toString() + "-" +
-                                          _events[index].eventDate
-                                          .year.toString(),
-                                    numberUsers: _events[index].usersList
-                                          .length.toString(),
+                                    date:
+                                        _events[index]
+                                                .eventDate
+                                                .day
+                                                .toString() +
+                                            "-" +
+                                            _events[index]
+                                                .eventDate
+                                                .month
+                                                .toString() +
+                                            "-" +
+                                            _events[index]
+                                                .eventDate
+                                                .year
+                                                .toString(),
+                                    numberUsers: _events[index]
+                                        .usersList
+                                        .length
+                                        .toString(),
                                     location: _events[index].location,
                                     admin: verifyAdminEvent(index),
                                     setMainComponent: widget.setMainComponent,
@@ -468,8 +479,7 @@ class _HomeState extends State<Home> {
                                         .toString(),
                                 numberUsers:
                                     _clubs[index].usersList.length.toString(),
-                                imageUrl:
-                                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
+                                imageUrl: _clubs[index].photoURL,
                                 admin: verifyAdminClub(index),
                               ),
                               onTap: () {

@@ -465,15 +465,14 @@ class _BookPageState extends State<BookPage> {
                     ),
                     onPressed: () async {
                       print("Add new comment");
-                      /*
-                      var response = await CommentService.addComment(Comment(
-                          id: "",
-                          user: userid,
-                          title: titleController.text,
-                          text: textController.text,
-                          type: typeController,
-                          users: usersController,
-                          likes: likesController));
+                      var response = await CommentService.addComment(
+                          NewCommentModel(
+                              user: userid,
+                              title: titleController.text,
+                              text: textController.text,
+                              type: typeController,
+                              users: usersController,
+                              likes: likesController));
                       if (response == "200") {
                         print("New comment added");
                         setState(() {
@@ -490,7 +489,7 @@ class _BookPageState extends State<BookPage> {
                             );
                           },
                         );
-                      }*/
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).backgroundColor,
@@ -565,7 +564,6 @@ class _BookPageState extends State<BookPage> {
                   .removeWhere((item) => item == userid);
             }
           });
-          print(commentLikeList[index].comment.user.id);
           String id = commentLikeList[index].comment.id;
           Comment com = Comment(
               id: id,

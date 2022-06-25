@@ -62,7 +62,7 @@ class UserService {
   }
 
   static Future<bool> updateUser(String id, String name, String userName,
-      String mail, String birthDate) async {
+      String mail, String birthDate, String photoURL) async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
         '/user/update/$id';
@@ -81,6 +81,7 @@ class UserService {
           'userName': userName,
           'mail': mail,
           'birthDate': birthDate,
+          'photoURL': photoURL
         }));
 
     if (response.statusCode == 200) {
