@@ -41,7 +41,7 @@ class EventCard extends StatelessWidget {
             BlendMode.multiply,
           ),
           image: NetworkImage(imageUrl),
-          fit: BoxFit.fitWidth,
+          fit: BoxFit.cover,
         ),
       ),
       child: Stack(
@@ -50,7 +50,8 @@ class EventCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(4.0),
@@ -72,7 +73,8 @@ class EventCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 0.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(4.0),
@@ -125,36 +127,37 @@ class EventCard extends StatelessWidget {
             ),
             alignment: Alignment.bottomLeft,
           ),
-          admin ? Align(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(15),
+          admin
+              ? Align(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.orange,
+                          size: 18,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.orange,
-                    size: 18,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ],
-            ),
-            alignment: Alignment.bottomRight,
-          )
-          : const SizedBox(height: 0)
+                  alignment: Alignment.bottomRight,
+                )
+              : const SizedBox(height: 0)
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localization/demo_localization.dart';
 import 'localization/language_constants.dart';
@@ -85,6 +86,7 @@ class _MyAppState extends State<MyApp> {
                     splashIconSize: 500,
                     screenFunction: () async {
                       var storage = LocalStorage('BookHub');
+                      await dotenv.load(fileName: ".env");
                       await storage.ready;
 
                       var token = LocalStorage('BookHub').getItem('token');

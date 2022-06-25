@@ -343,8 +343,7 @@ class _HomeState extends State<Home> {
                                         .usersList
                                         .length
                                         .toString(),
-                                    imageUrl:
-                                        "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
+                                    imageUrl: _events[index].photoURL,
                                     admin: verifyAdminEvent(index),
                                   ),
                                   onTap: () {
@@ -475,8 +474,7 @@ class _HomeState extends State<Home> {
                                         .toString(),
                                 numberUsers:
                                     _clubs[index].usersList.length.toString(),
-                                imageUrl:
-                                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80",
+                                imageUrl: _clubs[index].photoURL,
                                 admin: verifyAdminClub(index),
                               ),
                               onTap: () {

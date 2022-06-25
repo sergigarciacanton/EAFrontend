@@ -7,6 +7,7 @@ class Club {
   String id;
   String name;
   String description;
+  String photoURL;
   dynamic admin;
   dynamic chat;
   List<dynamic> usersList;
@@ -16,6 +17,7 @@ class Club {
       {required this.id,
       required this.name,
       required this.description,
+      required this.photoURL,
       required this.admin,
       required this.chat,
       required this.usersList,
@@ -26,6 +28,7 @@ class Club {
         id: json['_id'] as String,
         name: json['name'] as String,
         description: json['description'] as String,
+        photoURL: json['photoURL'],
         admin: json['admin'].toString().contains('{')
             ? UserPopulate.fromJson(json['admin'])
             : json['admin'],

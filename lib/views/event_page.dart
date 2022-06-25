@@ -75,7 +75,9 @@ class _EventPageState extends State<EventPage> {
                       slivers: <Widget>[
                         SliverPersistentHeader(
                           delegate: MySliverAppBar(
-                              snapshot: snapshot, expandedHeight: 150),
+                              snapshot: snapshot,
+                              expandedHeight: 150,
+                              profileImage_url: snapshot.data!.photoURL),
                           pinned: true,
                         ),
                         SliverToBoxAdapter(
@@ -271,8 +273,6 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _buildUser(String userName, String mail, String imageURL) {
-    var image =
-        CloudinaryImage('https://res.cloudinary.com/demo/image/upload/w_100,');
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
@@ -514,8 +514,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   AsyncSnapshot<Event> snapshot;
   var image = CloudinaryImage(
-      'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
-  MySliverAppBar({required this.snapshot, required this.expandedHeight});
+      'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656078344/Events_bedvr3.jpg');
+  String profileImage_url;
+  MySliverAppBar(
+      {required this.snapshot,
+      required this.expandedHeight,
+      required this.profileImage_url});
 
   @override
   Widget build(
@@ -558,10 +562,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             opacity: (1 - shrinkOffset / expandedHeight),
             child: Container(
               decoration: BoxDecoration(
-                image: const DecorationImage(
-                  //TODO Change to club image
-                  image: NetworkImage(
-                      'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656077605/images_xdx4t4.jpg'),
+                image: DecorationImage(
+                  image: NetworkImage(profileImage_url),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,

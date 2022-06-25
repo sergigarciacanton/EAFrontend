@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/models/user.dart';
@@ -78,6 +79,105 @@ class _ChatListState extends State<ChatList> {
                           padding: const EdgeInsets.all(8),
                           itemCount: snapshot.data?.chats.length,
                           itemBuilder: (BuildContext context, int index) {
+                            final cloudinaryImage = CloudinaryImage(
+                                'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656084146/424242_bycx3c.png');
+                            String? url;
+                            switch (snapshot.data!.chats[index].users.length) {
+                              case 1:
+                                url = CloudinaryImage(snapshot
+                                        .data!.chats[index].users[0].photoURL)
+                                    .transform()
+                                    .generate();
+                                break;
+                              case 2:
+                                url = cloudinaryImage
+                                    .transform()
+                                    .height(50)
+                                    .width(50)
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[0].photoURL))
+                                    .gravity("west")
+                                    .height(50)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[1].photoURL))
+                                    .gravity("east")
+                                    .height(50)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .generate();
+                                break;
+
+                              case 3:
+                                log("photo 3");
+                                url = cloudinaryImage
+                                    .transform()
+                                    .height(50)
+                                    .width(50)
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[0].photoURL))
+                                    .gravity("north_west")
+                                    .height(24)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[1].photoURL))
+                                    .gravity("north_east")
+                                    .height(24)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[2].photoURL))
+                                    .gravity("south")
+                                    .height(24)
+                                    .width(49)
+                                    .crop("thumb")
+                                    .generate();
+                                break;
+
+                              default:
+                                url = cloudinaryImage
+                                    .transform()
+                                    .height(50)
+                                    .width(50)
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[0].photoURL))
+                                    .gravity("north_west")
+                                    .height(24)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[1].photoURL))
+                                    .gravity("north_east")
+                                    .height(24)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[2].photoURL))
+                                    .gravity("south_west")
+                                    .height(24)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .chain()
+                                    .overlay(CloudinaryImage(snapshot
+                                        .data!.chats[index].users[2].photoURL))
+                                    .gravity("south_east")
+                                    .height(24)
+                                    .width(24)
+                                    .crop("thumb")
+                                    .generate();
+                                break;
+                            }
+
                             return Card(
                               child: ListTile(
                                 onTap: () async {
@@ -86,7 +186,10 @@ class _ChatListState extends State<ChatList> {
 
                                   widget.setMainComponent!(nextPage);
                                 },
-                                leading: FlutterLogo(size: 56.0),
+                                leading: CircleAvatar(
+                                  radius: 25, // Image radius
+                                  backgroundImage: NetworkImage(url!),
+                                ),
                                 title: Text(snapshot.data?.chats[index].name),
                                 subtitle: Text(parseUsernames(snapshot
                                     .data?.chats[index].users as List<User>)),

@@ -116,7 +116,11 @@ class _EventListState extends State<EventList> {
                                     setMainComponent: widget.setMainComponent,
                                   ));
                                 },
-                                leading: const FlutterLogo(size: 56.0),
+                                leading: CircleAvatar(
+                                  radius: 25, // Image radius
+                                  backgroundImage: NetworkImage(
+                                      snapshot.data!.events[index].photoURL),
+                                ),
                                 title: Text(snapshot.data?.events[index].name),
                                 subtitle: getDate(snapshot
                                     .data?.events[index].eventDate as DateTime),

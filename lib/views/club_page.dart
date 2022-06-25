@@ -73,7 +73,9 @@ class _ClubPageState extends State<ClubPage> {
                       slivers: <Widget>[
                         SliverPersistentHeader(
                           delegate: MySliverAppBar(
-                              snapshot: snapshot, expandedHeight: 150),
+                              snapshot: snapshot,
+                              expandedHeight: 150,
+                              profileImage_url: snapshot.data!.photoURL),
                           pinned: true,
                         ),
                         SliverToBoxAdapter(
@@ -486,7 +488,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   AsyncSnapshot<Club> snapshot;
 
-  MySliverAppBar({required this.snapshot, required this.expandedHeight});
+  String profileImage_url;
+
+  MySliverAppBar(
+      {required this.snapshot,
+      required this.expandedHeight,
+      required this.profileImage_url});
 
   @override
   Widget build(
@@ -529,10 +536,9 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             opacity: (1 - shrinkOffset / expandedHeight),
             child: Container(
               decoration: BoxDecoration(
-                image: const DecorationImage(
+                image: DecorationImage(
                   //TODO Change to club image
-                  image: NetworkImage(
-                      'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656076995/istockphoto-499373254-612x612_hxhwzg.jpg'),
+                  image: NetworkImage(profileImage_url),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,

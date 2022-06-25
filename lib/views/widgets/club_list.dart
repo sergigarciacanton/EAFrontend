@@ -81,7 +81,11 @@ class _ClubListState extends State<ClubList> {
                                           elementId:
                                               snapshot.data?.clubs[index].id));
                                     },
-                                    leading: const FlutterLogo(size: 56.0),
+                                    leading: CircleAvatar(
+                                      radius: 25, // Image radius
+                                      backgroundImage: NetworkImage(
+                                          snapshot.data!.clubs[index].photoURL),
+                                    ),
                                     title:
                                         Text(snapshot.data?.clubs[index].name),
                                     subtitle: concatCategory(
