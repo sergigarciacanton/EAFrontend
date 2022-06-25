@@ -44,6 +44,7 @@ class _NewEventState extends State<NewEvent> {
   double latitudeController = 40.410931;
   double longitudeController = -3.699313;
   List<Marker> markers = [];
+  late String _locale;
 
   List<String> usersController = List.empty(growable: true);
 
@@ -55,6 +56,9 @@ class _NewEventState extends State<NewEvent> {
   @override
   void initState() {
     super.initState();
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
     getCategories();
     fetchUser();
     if(widget.eventId == null) {
@@ -80,9 +84,19 @@ class _NewEventState extends State<NewEvent> {
     _response = await ManagementService.getCategories();
     setState(() {
       for (int i = 0; i < _response.length; i++) {
-        CategoryList category1 = CategoryList(
-            _response[i].id.toString(), _response[i].name.toString(), false);
-        categoryList.add(category1);
+        if (_locale == "en") {
+          CategoryList category1 = new CategoryList(
+              _response[i].id.toString(), _response[i].en.toString(), false);
+          categoryList.add(category1);
+        } else if (_locale == "ca") {
+          CategoryList category1 = new CategoryList(
+              _response[i].id.toString(), _response[i].ca.toString(), false);
+          categoryList.add(category1);
+        } else {
+          CategoryList category1 = new CategoryList(
+              _response[i].id.toString(), _response[i].es.toString(), false);
+          categoryList.add(category1);
+        }
       }
       _isLoading = false;
     });

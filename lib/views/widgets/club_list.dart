@@ -24,6 +24,8 @@ class _ClubListState extends State<ClubList> {
   final List<int> colorCodes = <int>[600, 500, 400];
 
   late final Future<User> myfuture;
+  late String _locale;
+  List<String> categories = [];
 
   @override
   void initState() {
@@ -36,15 +38,36 @@ class _ClubListState extends State<ClubList> {
     await storage.ready;
 
     id = LocalStorage('BookHub').getItem('userId');
-    return UserService.getUser(id);
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
+    var user = await UserService.getUser(id);
+    user.clubs.forEach((element) async {
+      var txt = await concatCategory(element.category);
+      categories.add(txt);
+    });
+    return user;
   }
 
-  concatCategory(List<Category> categories) {
+  concatCategory(List<dynamic> categories) {
     String txt = "";
-    categories.forEach((element) {
-      txt = txt + element.name! + ", ";
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
     });
-    return Text(txt);
+    if (_locale == "en") {
+      categories.forEach((element) {
+        txt = txt + ", " + element.en;
+      });
+    } else if (_locale == "ca") {
+      categories.forEach((element) {
+        txt = txt + ", " + element.ca;
+      });
+    } else {
+      categories.forEach((element) {
+        txt = txt + ", " + element.es;
+      });
+    }
+    return txt.substring(1);
   }
 
   @override
@@ -90,8 +113,7 @@ class _ClubListState extends State<ClubList> {
                                     ),
                                     title:
                                         Text(snapshot.data?.clubs[index].name),
-                                    subtitle: concatCategory(
-                                        snapshot.data?.clubs[index].category)
+                                    subtitle: Text(categories[index])
                                     //trailing: Icon(Icons.more_vert),
 
                                     ));
