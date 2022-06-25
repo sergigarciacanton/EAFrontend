@@ -139,5 +139,7 @@
   "repeatPsw": "Repeat password",
   "change": "Change",
   "addBooks": "Add books",
-  "editBook": "E D I T  B O O K"
+  "editBook": "E D I T  B O O K",
+  "editEvent": "E D I T  E V E N T",
+  "submitEditEvent": "Edit event"
 }

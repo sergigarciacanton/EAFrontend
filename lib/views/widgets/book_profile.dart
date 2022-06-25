@@ -38,10 +38,14 @@ class _BookPageState extends State<BookPage> {
   dynamic likesController = "0";
   String idBook = "";
   late Rate rate;
+  late String _locale;
   List<CommentLike> commentLikeList = List.empty(growable: true);
 
   void initState() {
     super.initState();
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
     fetchBook();
     getCommentsList();
     fetchUser();
@@ -351,14 +355,7 @@ class _BookPageState extends State<BookPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      for (int i = 0; i < snapshot.data!.category.length; i++)
-                        (Text(
-                          snapshot.data?.category[i].name + "  ",
-                          style: TextStyle(
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ))
+                      caterogies(snapshot.data!.category)
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -466,15 +463,14 @@ class _BookPageState extends State<BookPage> {
                     ),
                     onPressed: () async {
                       print("Add new comment");
-                      /*
-                      var response = await CommentService.addComment(Comment(
-                          id: "",
-                          user: userid,
-                          title: titleController.text,
-                          text: textController.text,
-                          type: typeController,
-                          users: usersController,
-                          likes: likesController));
+                      var response = await CommentService.addComment(
+                          NewCommentModel(
+                              user: userid,
+                              title: titleController.text,
+                              text: textController.text,
+                              type: typeController,
+                              users: usersController,
+                              likes: likesController));
                       if (response == "200") {
                         print("New comment added");
                         setState(() {
@@ -491,7 +487,7 @@ class _BookPageState extends State<BookPage> {
                             );
                           },
                         );
-                      }*/
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).backgroundColor,
@@ -516,6 +512,24 @@ class _BookPageState extends State<BookPage> {
             ),
           );
         });
+  }
+
+  Widget caterogies(List<dynamic> category) {
+    String categories = "";
+
+    for (int i = 0; i < category.length; i++) {
+      if (_locale == "en") {
+        categories = category[i].en + " ";
+      } else if (_locale == "ca") {
+        categories = category[i].ca + " ";
+      } else {
+        categories = category[i].es + " ";
+      }
+    }
+    return Text(categories,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ));
   }
 
   Widget CommentItem(List<CommentLike> commentLikeList, int index) {
@@ -566,7 +580,6 @@ class _BookPageState extends State<BookPage> {
                   .removeWhere((item) => item == userid);
             }
           });
-          print(commentLikeList[index].comment.user.id);
           String id = commentLikeList[index].comment.id;
           Comment com = Comment(
               id: id,

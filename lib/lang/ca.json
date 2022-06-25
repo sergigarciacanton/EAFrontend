@@ -139,5 +139,7 @@
   "repeatPsw": "Repetir contrasenya",
   "change": "Canviar",
   "addBooks": "Afegir llibres",
-  "editBook": "E D I T A R  L L I B R E"
+  "editBook": "E D I T A R  L L I B R E",
+  "editEvent": "E D I T A R  E V E N T",
+  "submitEditEvent": "Editar event"
 }

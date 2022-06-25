@@ -28,10 +28,13 @@ class _NewBookState extends State<NewBook> {
   List<CategoryList> categoryList = [];
   List<Category> _response = List.empty(growable: true);
   bool _isLoading = true;
+  late String _locale;
   bool _isEditing = true;
-
   void initState() {
     super.initState();
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
     getBook();
     getCategories();
   }
@@ -54,9 +57,19 @@ class _NewBookState extends State<NewBook> {
     _response = await ManagementService.getCategories();
     setState(() {
       for (int i = 0; i < _response.length; i++) {
-        CategoryList category1 = new CategoryList(
-            _response[i].id.toString(), _response[i].name.toString(), false);
-        categoryList.add(category1);
+        if (_locale == "en") {
+          CategoryList category1 = new CategoryList(
+              _response[i].id.toString(), _response[i].en.toString(), false);
+          categoryList.add(category1);
+        } else if (_locale == "ca") {
+          CategoryList category1 = new CategoryList(
+              _response[i].id.toString(), _response[i].ca.toString(), false);
+          categoryList.add(category1);
+        } else {
+          CategoryList category1 = new CategoryList(
+              _response[i].id.toString(), _response[i].es.toString(), false);
+          categoryList.add(category1);
+        }
       }
       _isLoading = false;
     });

@@ -94,7 +94,7 @@ class _EventListState extends State<EventList> {
                           context,
                           MaterialPageRoute(
                               maintainState: false,
-                              builder: (context) => NewEvent()),
+                              builder: (context) => NewEvent(eventId: null)),
                         );
                         log('createEvent');
                       },

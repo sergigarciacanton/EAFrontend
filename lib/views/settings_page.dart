@@ -131,7 +131,7 @@ class _SettingPageState extends State<SettingPage> {
             child: Text(
               getTranslated(context, 'addReport')!,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -182,7 +182,7 @@ class _SettingPageState extends State<SettingPage> {
             child: Text(
               getTranslated(context, 'UserReportInfo')!,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 15),
             ),
           ),
         ),

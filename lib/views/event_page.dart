@@ -10,6 +10,7 @@ import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/user_view.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
+import 'package:ea_frontend/views/widgets/new_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -33,6 +34,7 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   late String idUser;
+  late String _locale;
   var storage;
 
   late String eventName;
@@ -57,20 +59,21 @@ class _EventPageState extends State<EventPage> {
     await storage.ready;
 
     idUser = LocalStorage('BookHub').getItem('userId');
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
     return EventService.getEvent(widget.elementId!);
   }
 
   Future<void> leaveEvent() async {
     await EventService.leaveEvent(widget.elementId!);
-    await ChatService.leaveChat(
-        chat.id, idUser); //////////////////////////////////////////////
+    await ChatService.leaveChat(chat.id, idUser);
     setState(() {});
   }
 
   Future<void> joinEvent() async {
     await EventService.joinEvent(widget.elementId!);
-    await ChatService.joinChat(
-        chat.id, idUser); ///////////////////////////////////////////////
+    await ChatService.joinChat(chat.id, idUser);
     setState(() {});
   }
 
@@ -90,6 +93,10 @@ class _EventPageState extends State<EventPage> {
                         backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NewEvent(eventId: snapshot.data!.id)),
+                          );
                           log('editEvent');
                         },
                       )
@@ -278,10 +285,19 @@ class _EventPageState extends State<EventPage> {
 
   concatCategory(AsyncSnapshot<Event> snapshot) {
     List<Widget> lista = [];
-    snapshot.data?.category.forEach((element) {
-      print(element.name!);
-      lista.add(_buildCategory(context, element.name!));
-    });
+    if (_locale == "en") {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.en!));
+      });
+    } else if (_locale == "ca") {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.ca!));
+      });
+    } else {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.es!));
+      });
+    }
     return lista;
   }
 

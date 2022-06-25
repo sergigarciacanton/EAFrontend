@@ -21,7 +21,7 @@ class _NewChatState extends State<NewChat> {
   final nameController = TextEditingController();
   List<String> usersController = List.empty(growable: true);
   List<UserList> selectedUsers = List.empty(growable: true);
-  String idController = "";
+  late String idController;
   List<UserList> userList = [];
 
   @override
@@ -44,7 +44,7 @@ class _NewChatState extends State<NewChat> {
     _response = await UserService.getUsers();
     setState(() {
       for (int i = 0; i < _response.length; i++) {
-        if (_response[i].id != idController) {
+        if (_response[i].id.toString() != idController) {
           UserList user1 = new UserList(_response[i].id.toString(),
               _response[i].userName.toString(), false);
           userList.add(user1);
@@ -99,7 +99,7 @@ class _NewChatState extends State<NewChat> {
               children: <Widget>[
                 Expanded(
                   child: SizedBox(
-                    height: 300.0,
+                    height: 250.0,
                     child: _isLoading
                         ? Column(
                             children: const [

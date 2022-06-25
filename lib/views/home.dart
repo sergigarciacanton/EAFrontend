@@ -43,10 +43,14 @@ class _HomeState extends State<Home> {
   bool _isLoadingEvent = true;
   List<Club> _clubs = [];
   bool _isLoadingClub = true;
+  late String _locale;
 
   @override
   void initState() {
     super.initState();
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
     getBooks();
     getEvents();
     getClubs();
@@ -79,11 +83,21 @@ class _HomeState extends State<Home> {
   }
 
   String getStringCategories(List<dynamic> categories) {
-    String output = "";
-    for (var category in categories) {
-      output = output + ", " + category.name;
+    String txt = "";
+    if (_locale == "en") {
+      categories.forEach((element) {
+        txt = txt + ", " + element.en;
+      });
+    } else if (_locale == "ca") {
+      categories.forEach((element) {
+        txt = txt + ", " + element.ca;
+      });
+    } else {
+      categories.forEach((element) {
+        txt = txt + ", " + element.es;
+      });
     }
-    return output.substring(1);
+    return txt.substring(1);
   }
 
   List<String> getBookNames() {
