@@ -131,6 +131,7 @@ class IndexState extends State<IndexPage> {
       await Navigator.push(
         context,
         MaterialPageRoute(
+          maintainState: false,
           builder: (context) => CallPage(
             channelName: _channelController.text,
             role: _role,

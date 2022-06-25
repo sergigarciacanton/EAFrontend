@@ -14,10 +14,6 @@ import 'dart:developer';
 import 'package:ea_frontend/views/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-
-
-
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -99,7 +95,6 @@ class _MyAppState extends State<MyApp> {
                       }
                       var response = await AuthService.verifyToken(token);
                       if (response == '200') {
-                        log('Load home scaffold');
                         return const HomeScaffold();
                       }
                       return const LoginPage();

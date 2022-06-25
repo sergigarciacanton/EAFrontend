@@ -192,6 +192,7 @@ class _HomeState extends State<Questionnaire> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
+                                      maintainState: false,
                                       builder: (context) =>
                                           const HomeScaffold()));
                             }
@@ -221,6 +222,7 @@ class _HomeState extends State<Questionnaire> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
+                                        maintainState: false,
                                         builder: (context) =>
                                             const HomeScaffold()));
                               },

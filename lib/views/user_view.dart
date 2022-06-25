@@ -124,11 +124,10 @@ class _UserViewState extends State<UserView> {
                                       offset: const Offset(0, 10))
                                 ],
                                 shape: BoxShape.circle,
-                                image: const DecorationImage(
+                                image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
-                                      "https://images.pexels.com/photos/3307758/pexels-photo-3307758.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250",
-                                    ))),
+                                        snapshot.data!.photoURL as String))),
                           ),
                         ],
                       ),
@@ -281,8 +280,10 @@ class _UserViewState extends State<UserView> {
           child: Text(getTranslated(context, 'openChat')!),
           onPressed: () => {
                 Navigator.of(context).pop(),
-                widget.setMainComponent!(
-                    ChatPage(chat, LocalStorage('BookHub').getItem('userId'))),
+                widget.setMainComponent!(ChatPage(
+                    key: UniqueKey(),
+                    chatId: chat,
+                    userId: LocalStorage('BookHub').getItem('userId'))),
               });
     }
 
@@ -296,8 +297,10 @@ class _UserViewState extends State<UserView> {
                   LocalStorage('BookHub').getItem('userId')),
               chatExist(),
               Navigator.of(context).pop(),
-              widget.setMainComponent!(
-                  ChatPage(chat, LocalStorage('BookHub').getItem('userId')))
+              widget.setMainComponent!(ChatPage(
+                  key: UniqueKey(),
+                  chatId: chat,
+                  userId: LocalStorage('BookHub').getItem('userId')))
             });
   }
 

@@ -76,6 +76,7 @@ class _HomeState extends State<Home> {
 
   Future<void> getClubs() async {
     _clubs = await ClubService.getClubs();
+    _clubs = _clubs.reversed.toList();
     setState(() {
       _isLoadingClub = false;
     });
