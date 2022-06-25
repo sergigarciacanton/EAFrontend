@@ -182,7 +182,7 @@ class _SettingPageState extends State<SettingPage> {
             child: Text(
               getTranslated(context, 'UserReportInfo')!,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 20),
             ),
           ),
         ),
@@ -234,15 +234,15 @@ class _SettingPageState extends State<SettingPage> {
             }
           },
           style: ElevatedButton.styleFrom(
-              primary: Colors.orange,
-              onPrimary: Colors.black,
+              primary: Theme.of(context).backgroundColor,
+              onPrimary: Theme.of(context).primaryColor,
               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         )
       ])));
 
   Widget buildEditProfile() => SimpleSettingsTile(
-        title: "View Profile",
+        title: getTranslated(context, 'viewProfile')!,
         subtitle: '',
         leading: const IconWidget(icon: Icons.face, color: Colors.orange),
         child: EditProfile(),
@@ -259,7 +259,7 @@ class _SettingPageState extends State<SettingPage> {
           });
 
   Widget buildPassword() => SimpleSettingsTile(
-      title: "Change password",
+      title: getTranslated(context, 'changePsw')!,
       subtitle: '',
       leading: const IconWidget(icon: Icons.lock, color: Colors.purpleAccent),
       onTap: () => {
@@ -277,12 +277,15 @@ class _SettingPageState extends State<SettingPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Change Password",
+                            getTranslated(context, 'changePsw')!,
                             style: TextStyle(fontSize: 20),
                           ),
-                          buildEdit("Old password", controllerOld),
-                          buildEdit("New password", controllerNew),
-                          buildEdit("Repeat password", controllerCheck),
+                          buildEdit(
+                              getTranslated(context, 'oldPsw')!, controllerOld),
+                          buildEdit(
+                              getTranslated(context, 'newPsw')!, controllerNew),
+                          buildEdit(getTranslated(context, 'repeatPsw')!,
+                              controllerCheck),
                           ElevatedButton(
                               onPressed: () {
                                 if (controllerOld.text.isEmpty &&
@@ -303,7 +306,7 @@ class _SettingPageState extends State<SettingPage> {
                                   }
                                 }
                               },
-                              child: Text("Change"))
+                              child: Text(getTranslated(context, 'change')!))
                         ],
                       ),
                     ),
@@ -355,10 +358,10 @@ class _SettingPageState extends State<SettingPage> {
       dynamic user, String title, String text, String type, int index) {
     return ListTile(
       leading: const CircleAvatar(
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.blueGrey,
         child: Icon(
           Icons.warning,
-          color: Colors.white,
+          color: Colors.yellow,
         ),
       ),
       title: Text(
