@@ -86,6 +86,46 @@ class ChatService {
       return Message.fromJson(await jsonDecode(response.body)).message;
     }
   }
+
+  static Future<String> joinChat(String chatId, String userId) async {
+    String url = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/chat/';
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = 'http://10.0.2.2:3000/chat/';
+    }
+
+    var response =
+        await http.post(Uri.parse("${url}join/$chatId/$userId"), headers: {
+      "Authorization": LocalStorage('BookHub').getItem('token'),
+      "Content-Type": "application/json"
+    });
+
+    if (response.statusCode == 200) {
+      return "200";
+    } else {
+      return Message.fromJson(await jsonDecode(response.body)).message;
+    }
+  }
+
+  static Future<Chat> getByName(String name) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/chat/name/';
+
+    if (!(kIsWeb || Platform.isWindows)) {
+      baseUrl = 'http://10.0.2.2:3000/chat/name/';
+    }
+    Uri url = Uri.parse(baseUrl + name + '/');
+
+    final response = await http.get(
+      url,
+      headers: {'authorization': LocalStorage('BookHub').getItem('token')},
+    );
+    Object data = jsonDecode(response.body);
+    return Chat.fromJson(data);
+  }
 }
 
 class Message {

@@ -2,15 +2,20 @@ import 'dart:developer';
 
 import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
+import 'package:ea_frontend/models/chat.dart';
 import 'package:ea_frontend/models/event.dart';
+import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/routes/event_service.dart';
 import 'package:ea_frontend/routes/user_service.dart';
+import 'package:ea_frontend/views/user_view.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
+
+import 'chat_page.dart';
 
 class EventPage extends StatefulWidget {
   final Function? setMainComponent;
@@ -29,6 +34,23 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   late String idUser;
   var storage;
+
+  late String eventName;
+  late Chat chat;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEvent();
+    getEvent();
+  }
+
+  Future<void> getEvent() async {
+    Event event = await EventService.getEvent(widget.elementId!);
+    eventName = event.name;
+    chat = await ChatService.getByName(eventName);
+  }
+
   //GET ELEMENTID WITH widget.elementId;
   Future<Event> fetchEvent() async {
     storage = LocalStorage('BookHub');
@@ -40,11 +62,15 @@ class _EventPageState extends State<EventPage> {
 
   Future<void> leaveEvent() async {
     await EventService.leaveEvent(widget.elementId!);
+    await ChatService.leaveChat(
+        chat.id, idUser); //////////////////////////////////////////////
     setState(() {});
   }
 
   Future<void> joinEvent() async {
     await EventService.joinEvent(widget.elementId!);
+    await ChatService.joinChat(
+        chat.id, idUser); ///////////////////////////////////////////////
     setState(() {});
   }
 
@@ -117,34 +143,46 @@ class _EventPageState extends State<EventPage> {
         decoration: BoxDecoration(
             color: Theme.of(context).shadowColor,
             borderRadius: BorderRadius.circular(4.0)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const Text("Admin: ",
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-                Text(snapshot.data?.admin.userName,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-              ],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Image(
-              height: 40,
-              width: 40,
-              image: NetworkImage(snapshot.data?.admin.photoURL),
-            )
-          ],
+        child: InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Text("Admin: ",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                  Text(snapshot.data?.admin.userName,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Image(
+                height: 40,
+                width: 40,
+                image: NetworkImage(snapshot.data?.admin.photoURL),
+              )
+            ],
+          ),
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserView(
+                          elementId: snapshot.data?.admin.id,
+                          isAuthor: false,
+                          setMainComponent: widget.setMainComponent,
+                        )))
+          },
         ));
   }
 
@@ -200,6 +238,9 @@ class _EventPageState extends State<EventPage> {
   }
 
   Widget _buildName(AsyncSnapshot<Event> snapshot) {
+    if (snapshot.data!.name == true) {
+      eventName = snapshot.data!.name;
+    }
     return Text(snapshot.data!.name,
         style: const TextStyle(
           fontSize: 28.0,
@@ -265,46 +306,57 @@ class _EventPageState extends State<EventPage> {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
       if (element.id != snapshot.data!.admin.id) {
-        lista.add(
-            _buildUser(element.userName!, element.mail!, element.photoURL!));
+        lista.add(_buildUser(
+            element.userName!, element.mail!, element.photoURL!, element.id!));
       }
     });
     return lista;
   }
 
-  Widget _buildUser(String userName, String mail, String imageURL) {
+  Widget _buildUser(String userName, String mail, String imageURL, String id) {
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorLight,
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                height: 40,
-                width: 40,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Image.network(
-                    imageURL,
-                    //image.transform().generate()!,
-                    fit: BoxFit.contain,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColorLight,
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: InkWell(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Image.network(
+                        imageURL,
+                        //image.transform().generate()!,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Column(
-                children: [
-                  Text('    ' + userName),
-                  Text('    (' + mail + ')'),
+                  Column(
+                    children: [
+                      Text('    ' + userName),
+                      Text('    (' + mail + ')'),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserView(
+                              elementId: id,
+                              isAuthor: false,
+                              setMainComponent: widget.setMainComponent,
+                            )));
+              },
+            )));
   }
 
   Widget _buildStatItem(String label, String count) {
@@ -391,7 +443,10 @@ class _EventPageState extends State<EventPage> {
           children: <Widget>[
             Expanded(
               child: InkWell(
-                onTap: () => print("Go to chat"),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => new ChatPage(chat.id, idUser))),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(

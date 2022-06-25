@@ -137,4 +137,25 @@ class UserService {
     }
     return false;
   }
+
+  static Future<dynamic> getUserdyn(String id) async {
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/user/$id';
+    Uri url = Uri.parse(baseUrl);
+    if (!(kIsWeb || Platform.isWindows)) {
+      url = Uri.parse('http://10.0.2.2:3000/user/$id');
+    }
+
+    final response = await http.get(
+      url,
+      headers: {'authorization': LocalStorage('BookHub').getItem('token')},
+    );
+    Object data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return User.fromJson(data);
+    }
+    return null;
+  }
 }

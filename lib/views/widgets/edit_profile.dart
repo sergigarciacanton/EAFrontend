@@ -10,6 +10,7 @@ import 'package:ea_frontend/routes/book_service.dart';
 import 'package:ea_frontend/routes/user_service.dart';
 import 'package:ea_frontend/views/questionnaire.dart';
 import 'package:ea_frontend/views/provider/theme_provider.dart';
+import 'package:ea_frontend/views/widgets/new_book.dart';
 import 'package:ea_frontend/views/widgets/writer_add_book.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -80,8 +81,9 @@ class _EditProfileState extends State<EditProfile> {
 
             return Scaffold(
               appBar: AppBar(
+                foregroundColor: Theme.of(context).primaryColor,
                 title: Text(
-                  "Edit Profile",
+                  getTranslated(context, 'editProfile')!,
                 ),
                 backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 1,
@@ -331,7 +333,8 @@ class _EditProfileState extends State<EditProfile> {
                                 child: InkWell(
                                     child: Row(
                                       children: [
-                                        Text("Author information"),
+                                        Text(getTranslated(
+                                            context, 'authorInformation')!),
                                         Icon(
                                           Icons.add,
                                           color: Colors.white,
@@ -343,8 +346,8 @@ class _EditProfileState extends State<EditProfile> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              title:
-                                                  Text('Enter your biography'),
+                                              title: Text(getTranslated(
+                                                  context, 'enterBiography')!),
                                               content: Container(
                                                 width: MediaQuery.of(context)
                                                         .size
@@ -362,7 +365,9 @@ class _EditProfileState extends State<EditProfile> {
                                                   controller:
                                                       _textFieldController,
                                                   decoration: InputDecoration(
-                                                      hintText: "My life..."),
+                                                      hintText: getTranslated(
+                                                          context,
+                                                          'hintBiography')),
                                                 ),
                                               ),
                                               actions: <Widget>[
@@ -471,8 +476,8 @@ class _EditProfileState extends State<EditProfile> {
     return Column(
       children: [
         _buildSeparatorBig(),
-        buildEditBig("Biography", controllerBiography),
-        Text("Books"),
+        buildEditBig(getTranslated(context, 'biography')!, controllerBiography),
+        Text(getTranslated(context, 'books')!),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -491,7 +496,7 @@ class _EditProfileState extends State<EditProfile> {
             backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
           ),
           child: Text(
-            "Delete author",
+            getTranslated(context, 'deleteAuthor')!,
             style: TextStyle(
                 fontSize: 14, letterSpacing: 2.2, color: Colors.white),
           ),
@@ -548,23 +553,31 @@ class _EditProfileState extends State<EditProfile> {
               ListTile(
                 contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
                 title: Text(title),
-                subtitle: Text("Published Date: " + published),
+                subtitle: Text(
+                    getTranslated(context, 'publishDate')! + ": " + published),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ElevatedButton(onPressed: () => {}, child: Text('Edit')),
+                  ElevatedButton(
+                      onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewBook(elementId: bookId)))
+                          },
+                      child: Text(getTranslated(context, 'edit')!)),
                   Container(
                     width: 30,
                   ),
                   ElevatedButton(
-                    child: Text("Delete"),
+                    child: Text(getTranslated(context, 'delete')!),
                     onPressed: () => showDialog<String>(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        title: const Text('Delete book?'),
-                        content: const Text(
-                            'Permanently delete or change the author to anonymous?'),
+                        title: Text(getTranslated(context, 'deleteBook')!),
+                        content: Text(getTranslated(context, 'deleteBook2')!),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () => {
@@ -572,7 +585,7 @@ class _EditProfileState extends State<EditProfile> {
                               Navigator.pop(context, 'Delete'),
                               setState(() {})
                             },
-                            child: const Text('Delete'),
+                            child: Text(getTranslated(context, 'delete')!),
                           ),
                           TextButton(
                             onPressed: () => {
@@ -582,7 +595,7 @@ class _EditProfileState extends State<EditProfile> {
                                 fetchUser();
                               })
                             },
-                            child: const Text("Anonymous"),
+                            child: Text(getTranslated(context, 'anonymous')!),
                           ),
                         ],
                       ),

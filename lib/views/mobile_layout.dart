@@ -1,7 +1,5 @@
 import 'package:ea_frontend/views/home.dart';
 import 'package:ea_frontend/views/home_scaffold.dart';
-import 'package:ea_frontend/views/new_book_page.dart';
-import 'package:ea_frontend/views/new_club_page.dart';
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';

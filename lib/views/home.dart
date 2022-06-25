@@ -8,7 +8,6 @@ import 'package:ea_frontend/views/widgets/book_profile.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/club_card.dart';
 import 'package:ea_frontend/views/widgets/event_card.dart';
-import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:ea_frontend/views/widgets/map_by_distance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +112,10 @@ class _HomeState extends State<Home> {
   void findBooks(String title) {
     for (int i = 0; i < _books.length; i++) {
       if (_books[i].title == title) {
-        widget.setMainComponent!(BookPage(elementId: _books[i].id));
+        widget.setMainComponent!(BookPage(
+          elementId: _books[i].id,
+          setMainComponent: widget.setMainComponent,
+        ));
         findBooksController.text = "";
       }
     }
@@ -133,7 +135,10 @@ class _HomeState extends State<Home> {
   void findClubs(String name) {
     for (int i = 0; i < _clubs.length; i++) {
       if (_clubs[i].name == name) {
-        widget.setMainComponent!(ClubPage(elementId: _clubs[i].id));
+        widget.setMainComponent!(ClubPage(
+          elementId: _clubs[i].id,
+          setMainComponent: widget.setMainComponent,
+        ));
         findClubsController.text = "";
       }
     }
@@ -236,13 +241,17 @@ class _HomeState extends State<Home> {
                             return GestureDetector(
                               child: BookCard(
                                 title: _books[index].title,
-                                author: _books[index].writer.name,
+                                author:
+                                    (_books[index].writer.name == "anonymous")
+                                        ? getTranslated(context, 'anonymous')!
+                                        : _books[index].writer.name,
                                 rate: _books[index].rate.toString(),
                                 imageUrl: _books[index].photoURL,
                               ),
                               onTap: () {
-                                widget.setMainComponent!(
-                                    BookPage(elementId: _books[index].id));
+                                widget.setMainComponent!(BookPage(
+                                    elementId: _books[index].id,
+                                    setMainComponent: widget.setMainComponent));
                               },
                             );
                           },
@@ -343,15 +352,11 @@ class _HomeState extends State<Home> {
                                         .usersList
                                         .length
                                         .toString(),
-                                    imageUrl: _events[index].photoURL,
+                                    location: _events[index].location,
                                     admin: verifyAdminEvent(index),
+                                    setMainComponent: widget.setMainComponent,
+                                    id: _events[index].id,
                                   ),
-                                  onTap: () {
-                                    widget.setMainComponent!(EventPage(
-                                        setMainComponent:
-                                            widget.setMainComponent,
-                                        elementId: _events[index].id));
-                                  },
                                 );
                               },
                             ),
@@ -478,8 +483,9 @@ class _HomeState extends State<Home> {
                                 admin: verifyAdminClub(index),
                               ),
                               onTap: () {
-                                widget.setMainComponent!(
-                                    ClubPage(elementId: _clubs[index].id));
+                                widget.setMainComponent!(ClubPage(
+                                    elementId: _clubs[index].id,
+                                    setMainComponent: widget.setMainComponent));
                               },
                             );
                           },

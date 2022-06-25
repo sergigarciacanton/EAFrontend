@@ -60,7 +60,7 @@ class _ClubListState extends State<ClubList> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => NewClub()),
+                    MaterialPageRoute(builder: (context) => NewClub(clubId: null)),
                   );
                   log('createClub');
                 },
@@ -79,7 +79,9 @@ class _ClubListState extends State<ClubList> {
                                     onTap: () {
                                       widget.setMainComponent!(ClubPage(
                                           elementId:
-                                              snapshot.data?.clubs[index].id));
+                                              snapshot.data?.clubs[index].id,
+                                          setMainComponent:
+                                              widget.setMainComponent));
                                     },
                                     leading: CircleAvatar(
                                       radius: 25, // Image radius

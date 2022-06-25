@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/club.dart';
 import 'package:ea_frontend/routes/club_service.dart';
+import 'package:ea_frontend/views/user_view.dart';
+import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/widgets/call.dart';
+import 'package:ea_frontend/views/widgets/new_club.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'dart:async';
@@ -11,12 +14,17 @@ import 'dart:async';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../models/chat.dart';
+import '../routes/chat_service.dart';
+
 class ClubPage extends StatefulWidget {
+  final Function? setMainComponent;
   final String? elementId;
 
   const ClubPage({
     Key? key,
     this.elementId,
+    this.setMainComponent,
   }) : super(key: key);
 
   @override
@@ -27,6 +35,21 @@ class _ClubPageState extends State<ClubPage> {
   late String idUser;
   var storage;
   ClientRole? _role = ClientRole.Broadcaster;
+  late String clubName;
+  late Chat chat;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchClub();
+    getClub();
+  }
+
+  Future<void> getClub() async {
+    Club club = await ClubService.getClub(widget.elementId!);
+    clubName = club.name;
+    chat = await ChatService.getByName(clubName);
+  }
 
   Future<Club> fetchClub() async {
     storage = LocalStorage('BookHub');
@@ -38,11 +61,15 @@ class _ClubPageState extends State<ClubPage> {
 
   Future<void> unsubscribe() async {
     await ClubService.unsubscribeClub(widget.elementId!);
+    await ChatService.leaveChat(
+        chat.id, idUser); //////////////////////////////////////////////CATY
     setState(() {});
   }
 
   Future<void> subscribe() async {
     await ClubService.subscribeClub(widget.elementId!);
+    await ChatService.joinChat(
+        chat.id, idUser); ///////////////////////////////////////////////CATY
     setState(() {});
   }
 
@@ -62,6 +89,12 @@ class _ClubPageState extends State<ClubPage> {
                         backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    NewClub(clubId: widget.elementId)),
+                          );
                           log('editClub');
                         },
                       )
@@ -109,40 +142,52 @@ class _ClubPageState extends State<ClubPage> {
 
   Widget _buildAdmin(AsyncSnapshot<Club> snapshot) {
     return Container(
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         padding: const EdgeInsets.all(5),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
             color: Theme.of(context).shadowColor,
             borderRadius: BorderRadius.circular(4.0)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const Text("Admin: ",
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-                Text(snapshot.data?.admin.userName,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-              ],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Image(
-              height: 40,
-              width: 40,
-              image: NetworkImage(snapshot.data!.admin!.photoURL),
-            )
-          ],
+        child: InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Text("Admin: ",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                  Text(snapshot.data?.admin.userName,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Image(
+                height: 40,
+                width: 40,
+                image: NetworkImage(snapshot.data!.admin!.photoURL),
+              )
+            ],
+          ),
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserView(
+                          elementId: snapshot.data?.admin.id,
+                          isAuthor: false,
+                          setMainComponent: widget.setMainComponent,
+                        )))
+          },
         ));
   }
 
@@ -188,6 +233,9 @@ class _ClubPageState extends State<ClubPage> {
   }
 
   Widget _buildName(AsyncSnapshot<Club> snapshot) {
+    if (snapshot.data!.name == true) {
+      clubName = snapshot.data!.name;
+    }
     return Text(snapshot.data!.name,
         style: const TextStyle(
           fontSize: 28.0,
@@ -225,45 +273,56 @@ class _ClubPageState extends State<ClubPage> {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
       if (element.id != snapshot.data!.admin.id) {
-        lista.add(
-            _buildUser(element.userName!, element.mail!, element.photoURL!));
+        lista.add(_buildUser(
+            element.userName!, element.mail!, element.id!, element.photoURL));
       }
     });
     return lista;
   }
 
-  Widget _buildUser(String userName, String mail, String photoURL) {
+  Widget _buildUser(String userName, String mail, String id, String photoURL) {
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorLight,
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                height: 40,
-                width: 40,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Image.network(
-                    photoURL,
-                    fit: BoxFit.contain,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColorLight,
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: InkWell(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Image.network(
+                        photoURL,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Column(
-                children: [
-                  Text('    ' + userName),
-                  Text('    (' + mail + ')'),
+                  Column(
+                    children: [
+                      Text('    ' + userName),
+                      Text('    (' + mail + ')'),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserView(
+                              elementId: id,
+                              isAuthor: false,
+                              setMainComponent: widget.setMainComponent,
+                            )));
+              },
+            )));
   }
 
   Widget _buildStatItem(String label, String count) {
@@ -305,7 +364,7 @@ class _ClubPageState extends State<ClubPage> {
         children: <Widget>[
           _buildStatItem(getTranslated(context, 'followers')!,
               snapshot.data!.usersList.length.toString()),
-          _buildStatItem("Comments", "58"),
+          _buildStatItem("Posts", "58"),
           _buildAdmin(snapshot)
         ],
       ),
@@ -349,17 +408,20 @@ class _ClubPageState extends State<ClubPage> {
           children: <Widget>[
             Expanded(
               child: InkWell(
-                onTap: () => print("Go to chat"),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => new ChatPage(chat.id, idUser))),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
                     border: Border.all(),
                     color: Theme.of(context).indicatorColor,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "GO TO THE CHAT",
-                      style: TextStyle(
+                      getTranslated(context, 'openChat')!.toUpperCase(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
@@ -464,9 +526,11 @@ class _ClubPageState extends State<ClubPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      getTranslated(context, 'videoconference')!,
+                      getTranslated(context, 'videoconference')!.toUpperCase(),
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, color: Colors.black),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -516,7 +580,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           ),
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
+          padding: const EdgeInsets.fromLTRB(30, 15, 0, 0),
           child: Opacity(
             opacity: shrinkOffset / expandedHeight,
             child: Text(
