@@ -39,7 +39,7 @@ class BookCard extends StatelessWidget {
             BlendMode.multiply,
           ),
           image: NetworkImage(imageUrl),
-          fit: BoxFit.fitWidth,
+          fit: BoxFit.cover,
         ),
       ),
       child: Stack(

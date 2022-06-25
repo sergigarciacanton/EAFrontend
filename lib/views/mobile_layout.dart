@@ -1,6 +1,5 @@
 import 'package:ea_frontend/views/home.dart';
-import 'package:ea_frontend/views/new_book_page.dart';
-import 'package:ea_frontend/views/new_club_page.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/settings_page.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:ea_frontend/views/widgets/club_list.dart';
@@ -19,11 +18,34 @@ class MobileLayout extends StatefulWidget {
 class _MobileLayoutState extends State<MobileLayout> {
   Widget mainComponent = Home();
   setMainComponent(Widget component) {
-    setState(() {
-      mainComponent = component;
-      pageController.jumpToPage(5);
-      appBarTitle = getTranslated(context, component.toString())!;
-    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: Text(getTranslated(context, component.toString())!),
+                  actions: [
+                    IconButton(
+                        icon: const Icon(Icons.home),
+                        tooltip: 'Home',
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScaffold()));
+                        })
+                  ],
+                  backgroundColor:
+                      Theme.of(context).navigationBarTheme.backgroundColor,
+                ),
+                body: component,
+              )),
+    );
+    // setState(() {
+    //   mainComponent = component;
+    //   pageController.jumpToPage(5);
+    //   appBarTitle = getTranslated(context, component.toString())!;
+    // });
   }
 
   final LocalStorage storage = LocalStorage('BookHub');

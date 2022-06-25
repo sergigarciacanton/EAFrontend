@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 import 'package:ea_frontend/models/report.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;

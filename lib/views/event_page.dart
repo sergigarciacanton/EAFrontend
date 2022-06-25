@@ -7,6 +7,7 @@ import 'package:ea_frontend/models/event.dart';
 import 'package:ea_frontend/routes/chat_service.dart';
 import 'package:ea_frontend/routes/event_service.dart';
 import 'package:ea_frontend/routes/user_service.dart';
+import 'package:ea_frontend/views/user_view.dart';
 import 'package:ea_frontend/views/widgets/calendar.dart';
 import 'package:ea_frontend/views/widgets/map.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,9 @@ class _EventPageState extends State<EventPage> {
                       slivers: <Widget>[
                         SliverPersistentHeader(
                           delegate: MySliverAppBar(
-                              snapshot: snapshot, expandedHeight: 150),
+                              snapshot: snapshot,
+                              expandedHeight: 150,
+                              profileImage_url: snapshot.data!.photoURL),
                           pinned: true,
                         ),
                         SliverToBoxAdapter(
@@ -138,35 +141,46 @@ class _EventPageState extends State<EventPage> {
         decoration: BoxDecoration(
             color: Theme.of(context).shadowColor,
             borderRadius: BorderRadius.circular(4.0)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const Text("Admin: ",
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-                Text(snapshot.data?.admin.userName,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-              ],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Image(
-              height: 40,
-              width: 40,
-              image: NetworkImage(
-                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
-            )
-          ],
+        child: InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Text("Admin: ",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                  Text(snapshot.data?.admin.userName,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Image(
+                height: 40,
+                width: 40,
+                image: NetworkImage(snapshot.data?.admin.photoURL),
+              )
+            ],
+          ),
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserView(
+                          elementId: snapshot.data?.admin.id,
+                          isAuthor: false,
+                          setMainComponent: widget.setMainComponent,
+                        )))
+          },
         ));
   }
 
@@ -290,48 +304,57 @@ class _EventPageState extends State<EventPage> {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
       if (element.id != snapshot.data!.admin.id) {
-        lista.add(
-            _buildUser(element.userName!, element.mail!, element.photoURL!));
+        lista.add(_buildUser(
+            element.userName!, element.mail!, element.photoURL!, element.id!));
       }
     });
     return lista;
   }
 
-  Widget _buildUser(String userName, String mail, String imageURL) {
-    var image =
-        CloudinaryImage('https://res.cloudinary.com/demo/image/upload/w_100,');
+  Widget _buildUser(String userName, String mail, String imageURL, String id) {
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorLight,
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                height: 40,
-                width: 40,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Image.network(
-                    imageURL,
-                    //image.transform().generate()!,
-                    fit: BoxFit.contain,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColorLight,
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: InkWell(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Image.network(
+                        imageURL,
+                        //image.transform().generate()!,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Column(
-                children: [
-                  Text('    ' + userName),
-                  Text('    (' + mail + ')'),
+                  Column(
+                    children: [
+                      Text('    ' + userName),
+                      Text('    (' + mail + ')'),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserView(
+                              elementId: id,
+                              isAuthor: false,
+                              setMainComponent: widget.setMainComponent,
+                            )));
+              },
+            )));
   }
 
   Widget _buildStatItem(String label, String count) {
@@ -544,8 +567,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   AsyncSnapshot<Event> snapshot;
   var image = CloudinaryImage(
-      'https://res.cloudinary.com/demo/image/upload/w_100,h_100,c_thumb,g_faces/couple.jpg');
-  MySliverAppBar({required this.snapshot, required this.expandedHeight});
+      'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656078344/Events_bedvr3.jpg');
+  String profileImage_url;
+  MySliverAppBar(
+      {required this.snapshot,
+      required this.expandedHeight,
+      required this.profileImage_url});
 
   @override
   Widget build(
@@ -588,10 +615,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             opacity: (1 - shrinkOffset / expandedHeight),
             child: Container(
               decoration: BoxDecoration(
-                image: const DecorationImage(
-                  //TODO Change to club image
-                  image: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYdJFymvjmjacbKVMvsqzjEanEAKlEBjQkOFvJ11KtCAiXR4BnUqT4Zj7wx6fquYoLgA8&usqp=CAU'),
+                image: DecorationImage(
+                  image: NetworkImage(profileImage_url),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,

@@ -37,38 +37,38 @@ class ThemeProvider extends ChangeNotifier {
 
 class MyThemes {
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey.shade900,
-    primaryColor: Colors.black,
-    primaryColorLight: const Color.fromARGB(181, 255, 153, 0),
-    colorScheme: const ColorScheme.dark(),
-    iconTheme: IconThemeData(color: Colors.orange.shade500),
-    indicatorColor: Colors.teal,
-    backgroundColor: Colors.orange.shade500,
-    shadowColor: const Color.fromARGB(143, 255, 153, 0),
-    appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade800),
-    navigationBarTheme:
-        NavigationBarThemeData(backgroundColor: Colors.grey.shade800),
-    bottomNavigationBarTheme:
-        BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
-    hintColor: Colors.orange,
-    toggleButtonsTheme: ToggleButtonsThemeData(color: Colors.grey.shade800),
-  );
+      scaffoldBackgroundColor: Colors.grey.shade900,
+      primaryColor: Colors.black,
+      primaryColorLight: const Color.fromARGB(181, 255, 153, 0),
+      colorScheme: const ColorScheme.dark(),
+      iconTheme: IconThemeData(color: Colors.orange.shade500),
+      indicatorColor: Colors.teal,
+      backgroundColor: Colors.orange.shade500,
+      shadowColor: const Color.fromARGB(143, 255, 153, 0),
+      appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade800),
+      navigationBarTheme:
+          NavigationBarThemeData(backgroundColor: Colors.grey.shade800),
+      bottomNavigationBarTheme:
+          BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
+      hintColor: Colors.orange,
+      toggleButtonsTheme: ToggleButtonsThemeData(color: Colors.grey.shade800),
+      textTheme: TextTheme(bodyLarge: TextStyle(color: Colors.white)));
 
   static final lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.red.shade50,
-    primaryColor: Colors.white,
-    primaryColorLight: const Color.fromARGB(153, 251, 146, 42),
-    colorScheme: const ColorScheme.light(),
-    iconTheme: const IconThemeData(color: Colors.red),
-    indicatorColor: Colors.pinkAccent,
-    backgroundColor: Colors.red,
-    shadowColor: const Color.fromARGB(153, 251, 202, 42),
-    appBarTheme: const AppBarTheme(backgroundColor: Colors.red),
-    navigationBarTheme:
-        const NavigationBarThemeData(backgroundColor: Colors.red),
-    bottomNavigationBarTheme:
-        BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
-    hintColor: Colors.red,
-    toggleButtonsTheme: ToggleButtonsThemeData(color: Colors.red.shade100),
-  );
+      scaffoldBackgroundColor: Colors.red.shade50,
+      primaryColor: Colors.white,
+      primaryColorLight: const Color.fromARGB(153, 251, 146, 42),
+      colorScheme: const ColorScheme.light(),
+      iconTheme: const IconThemeData(color: Colors.red),
+      indicatorColor: Colors.pinkAccent,
+      backgroundColor: Colors.red,
+      shadowColor: const Color.fromARGB(153, 251, 202, 42),
+      appBarTheme: const AppBarTheme(backgroundColor: Colors.red),
+      navigationBarTheme:
+          const NavigationBarThemeData(backgroundColor: Colors.red),
+      bottomNavigationBarTheme:
+          BottomNavigationBarThemeData(backgroundColor: Colors.grey.shade800),
+      hintColor: Colors.red,
+      toggleButtonsTheme: ToggleButtonsThemeData(color: Colors.red.shade100),
+      textTheme: TextTheme(bodyLarge: TextStyle(color: Colors.black)));
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/models/comment.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +38,7 @@ class CommentService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return Comment.commentsFromSnapshot(data);
   }
 
@@ -58,7 +57,7 @@ class CommentService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return Comment.commentsFromSnapshot(data);
   }
 

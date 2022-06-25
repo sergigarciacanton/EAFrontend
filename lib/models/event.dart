@@ -9,6 +9,7 @@ class Event {
   String id;
   String name;
   String description;
+  String photoURL;
   Location location;
   dynamic admin;
   dynamic chat;
@@ -20,6 +21,7 @@ class Event {
       {required this.id,
       required this.name,
       required this.description,
+      required this.photoURL,
       required this.location,
       required this.admin,
       required this.chat,
@@ -32,6 +34,7 @@ class Event {
         id: json['_id'] as String,
         name: json['name'] as String,
         description: json['description'] as String,
+        photoURL: json['photoURL'] as String,
         location: Location.fromJson(json['location']),
         admin: json['admin'].toString().contains('{')
             ? UserPopulate.fromJson(json['admin'])

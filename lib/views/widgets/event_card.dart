@@ -1,17 +1,25 @@
+import 'package:ea_frontend/models/location.dart';
+import 'package:ea_frontend/views/event_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class EventCard extends StatelessWidget {
   final String title;
   final String date;
   final String numberUsers;
-  final String imageUrl;
+  final Location location;
   final bool admin;
+  final Function? setMainComponent;
+  final String id;
   EventCard({
     required this.title,
     required this.date,
     required this.numberUsers,
-    required this.imageUrl,
+    required this.location,
     required this.admin,
+    required this.setMainComponent,
+    required this.id,
   });
 
   @override
@@ -35,22 +43,46 @@ class EventCard extends StatelessWidget {
             spreadRadius: -6.0,
           ),
         ],
-        image: DecorationImage(
-          colorFilter: ColorFilter.mode(
-            Colors.white.withOpacity(0.35),
-            BlendMode.multiply,
-          ),
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.fitWidth,
-        ),
       ),
       child: Stack(
         children: [
+          FlutterMap(
+            options: MapOptions(
+              center: LatLng(location.latitude, location.longitude),
+              zoom: 13.0,
+              onTap: (TapPosition, LatLng) {
+                setMainComponent!(EventPage(
+                    setMainComponent: setMainComponent, elementId: id));
+              },
+            ),
+            layers: [
+              TileLayerOptions(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: ['a', 'b', 'c'],
+              ),
+              MarkerLayerOptions(
+                markers: [
+                  Marker(
+                    anchorPos: AnchorPos.align(AnchorAlign.center),
+                    width: 30.0,
+                    height: 30.0,
+                    point: LatLng(location.latitude, location.longitude),
+                    builder: (ctx) => Icon(
+                      Icons.location_on,
+                      color: Theme.of(context).backgroundColor,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           Align(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(4.0),
@@ -72,7 +104,8 @@ class EventCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 0.0),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(4.0),
@@ -125,36 +158,37 @@ class EventCard extends StatelessWidget {
             ),
             alignment: Alignment.bottomLeft,
           ),
-          admin ? Align(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(15),
+          admin
+              ? Align(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.orange,
+                          size: 18,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.orange,
-                    size: 18,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ],
-            ),
-            alignment: Alignment.bottomRight,
-          )
-          : const SizedBox(height: 0)
+                  alignment: Alignment.bottomRight,
+                )
+              : const SizedBox(height: 0)
         ],
       ),
     );

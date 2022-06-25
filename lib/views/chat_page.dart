@@ -1,3 +1,4 @@
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/chat_message.dart';
 import 'package:ea_frontend/models/user.dart';
@@ -42,11 +43,11 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    startSocket();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   startSocket();
+  //   super.initState();
+  // }
 
   String parseUsernames(List<User> userList) {
     String s = "";
@@ -64,7 +65,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     print("build chat");
 
-    //startSocket();
+    startSocket();
 
     void sendMessage(TextEditingController textEditingController) {
       print('emit on ' + widget.chatId + ' text ' + textEditingController.text);
@@ -96,6 +97,95 @@ class _ChatPageState extends State<ChatPage> {
                 user = element;
               }
             });
+
+            final cloudinaryImage = CloudinaryImage(
+                'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656084146/424242_bycx3c.png');
+            String? url;
+            switch (snapshot.data!.users.length) {
+              case 1:
+                url = CloudinaryImage(snapshot.data!.users[0].photoURL)
+                    .transform()
+                    .generate();
+                break;
+              case 2:
+                url = cloudinaryImage
+                    .transform()
+                    .height(50)
+                    .width(50)
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[0].photoURL))
+                    .gravity("west")
+                    .height(50)
+                    .width(24)
+                    .crop("thumb")
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[1].photoURL))
+                    .gravity("east")
+                    .height(50)
+                    .width(24)
+                    .crop("thumb")
+                    .generate();
+                break;
+
+              case 3:
+                log("photo 3");
+                url = cloudinaryImage
+                    .transform()
+                    .height(50)
+                    .width(50)
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[0].photoURL))
+                    .gravity("north_west")
+                    .height(24)
+                    .width(24)
+                    .crop("thumb")
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[1].photoURL))
+                    .gravity("north_east")
+                    .height(24)
+                    .width(24)
+                    .crop("thumb")
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[2].photoURL))
+                    .gravity("south")
+                    .height(24)
+                    .width(49)
+                    .crop("thumb")
+                    .generate();
+                break;
+
+              default:
+                url = cloudinaryImage
+                    .transform()
+                    .height(50)
+                    .width(50)
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[0].photoURL))
+                    .gravity("north_west")
+                    .height(24)
+                    .width(24)
+                    .crop("thumb")
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[1].photoURL))
+                    .gravity("north_east")
+                    .height(24)
+                    .width(24)
+                    .crop("thumb")
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[2].photoURL))
+                    .gravity("south_west")
+                    .height(24)
+                    .width(24)
+                    .crop("thumb")
+                    .chain()
+                    .overlay(CloudinaryImage(snapshot.data!.users[2].photoURL))
+                    .gravity("south_east")
+                    .height(24)
+                    .width(24)
+                    .crop("thumb")
+                    .generate();
+                break;
+            }
             return Scaffold(
                 appBar: AppBar(
                   title: ListTile(
@@ -105,8 +195,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   leading: CircleAvatar(
                     radius: 48, // Image radius
-                    backgroundImage: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKr-4_3JHSaiKkrTwXGXdRXkpl5dl2o7EaGg&usqp=CAU'),
+                    backgroundImage: NetworkImage(url!),
                   ),
                   actions: [
                     ElevatedButton(
@@ -194,7 +283,11 @@ class _ChatPageState extends State<ChatPage> {
                             return Card(
                               child: ListTile(
                                 onTap: () {},
-                                leading: FlutterLogo(size: 56.0),
+                                leading: CircleAvatar(
+                                  radius: 25, // Image radius
+                                  backgroundImage: NetworkImage(
+                                      snapshot.data!.user.photoURL),
+                                ),
                                 title: Text(msgList[index].user.name),
                                 subtitle: Text(msgList[index].message),
                                 //trailing: Icon(Icons.more_vert),

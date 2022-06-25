@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/club.dart';
 import 'package:ea_frontend/routes/club_service.dart';
+import 'package:ea_frontend/views/user_view.dart';
 import 'package:ea_frontend/views/chat_page.dart';
 import 'package:ea_frontend/views/widgets/call.dart';
+import 'package:ea_frontend/views/widgets/new_club.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'dart:async';
@@ -16,11 +18,13 @@ import '../models/chat.dart';
 import '../routes/chat_service.dart';
 
 class ClubPage extends StatefulWidget {
+  final Function? setMainComponent;
   final String? elementId;
 
   const ClubPage({
     Key? key,
     this.elementId,
+    this.setMainComponent,
   }) : super(key: key);
 
   @override
@@ -83,6 +87,12 @@ class _ClubPageState extends State<ClubPage> {
                         backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    NewClub(clubId: widget.elementId)),
+                          );
                           log('editClub');
                         },
                       )
@@ -94,7 +104,9 @@ class _ClubPageState extends State<ClubPage> {
                       slivers: <Widget>[
                         SliverPersistentHeader(
                           delegate: MySliverAppBar(
-                              snapshot: snapshot, expandedHeight: 150),
+                              snapshot: snapshot,
+                              expandedHeight: 150,
+                              profileImage_url: snapshot.data!.photoURL),
                           pinned: true,
                         ),
                         SliverToBoxAdapter(
@@ -128,41 +140,52 @@ class _ClubPageState extends State<ClubPage> {
 
   Widget _buildAdmin(AsyncSnapshot<Club> snapshot) {
     return Container(
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         padding: const EdgeInsets.all(5),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
             color: Theme.of(context).shadowColor,
             borderRadius: BorderRadius.circular(4.0)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                const Text("Admin: ",
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-                Text(snapshot.data?.admin.userName,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                    )),
-              ],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Image(
-              height: 40,
-              width: 40,
-              image: NetworkImage(
-                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80'),
-            )
-          ],
+        child: InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Text("Admin: ",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                  Text(snapshot.data?.admin.userName,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w700,
+                      )),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Image(
+                height: 40,
+                width: 40,
+                image: NetworkImage(snapshot.data!.admin!.photoURL),
+              )
+            ],
+          ),
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserView(
+                          elementId: snapshot.data?.admin.id,
+                          isAuthor: false,
+                          setMainComponent: widget.setMainComponent,
+                        )))
+          },
         ));
   }
 
@@ -248,44 +271,56 @@ class _ClubPageState extends State<ClubPage> {
     List<Widget> lista = [];
     snapshot.data?.usersList.forEach((element) {
       if (element.id != snapshot.data!.admin.id) {
-        lista.add(_buildUser(element.userName!, element.mail!));
+        lista.add(_buildUser(
+            element.userName!, element.mail!, element.id!, element.photoURL));
       }
     });
     return lista;
   }
 
-  Widget _buildUser(String userName, String mail) {
+  Widget _buildUser(String userName, String mail, String id, String photoURL) {
     return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorLight,
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                height: 40,
-                width: 40,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Image.network(
-                    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
-                    fit: BoxFit.contain,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColorLight,
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: InkWell(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Image.network(
+                        photoURL,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Column(
-                children: [
-                  Text('    ' + userName),
-                  Text('    (' + mail + ')'),
+                  Column(
+                    children: [
+                      Text('    ' + userName),
+                      Text('    (' + mail + ')'),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserView(
+                              elementId: id,
+                              isAuthor: false,
+                              setMainComponent: widget.setMainComponent,
+                            )));
+              },
+            )));
   }
 
   Widget _buildStatItem(String label, String count) {
@@ -327,7 +362,7 @@ class _ClubPageState extends State<ClubPage> {
         children: <Widget>[
           _buildStatItem(getTranslated(context, 'followers')!,
               snapshot.data!.usersList.length.toString()),
-          _buildStatItem("Comments", "58"),
+          _buildStatItem("Posts", "58"),
           _buildAdmin(snapshot)
         ],
       ),
@@ -381,10 +416,10 @@ class _ClubPageState extends State<ClubPage> {
                     border: Border.all(),
                     color: Theme.of(context).indicatorColor,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "GO TO THE CHAT",
-                      style: TextStyle(
+                      getTranslated(context, 'openChat')!.toUpperCase(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
@@ -489,9 +524,11 @@ class _ClubPageState extends State<ClubPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      getTranslated(context, 'videoconference')!,
+                      getTranslated(context, 'videoconference')!.toUpperCase(),
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, color: Colors.black),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -513,7 +550,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   AsyncSnapshot<Club> snapshot;
 
-  MySliverAppBar({required this.snapshot, required this.expandedHeight});
+  String profileImage_url;
+
+  MySliverAppBar(
+      {required this.snapshot,
+      required this.expandedHeight,
+      required this.profileImage_url});
 
   @override
   Widget build(
@@ -530,13 +572,13 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                  'https://media.istockphoto.com/photos/old-hardcover-books-flying-on-white-background-picture-id1334803015?k=20&m=1334803015&s=612x612&w=0&h=PITeysTcf9pqDB9QBPJvo6y6GyUTa2IaM4vGxTfsNTQ='),
+                  'https://res.cloudinary.com/tonilovers-inc/image/upload/v1656076593/istockphoto-1334803015-612x612_opdkva.jpg'),
               fit: BoxFit.cover,
             ),
           ),
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
+          padding: const EdgeInsets.fromLTRB(30, 15, 0, 0),
           child: Opacity(
             opacity: shrinkOffset / expandedHeight,
             child: Text(
@@ -556,10 +598,9 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             opacity: (1 - shrinkOffset / expandedHeight),
             child: Container(
               decoration: BoxDecoration(
-                image: const DecorationImage(
+                image: DecorationImage(
                   //TODO Change to club image
-                  image: NetworkImage(
-                      'https://media.istockphoto.com/photos/group-of-friends-taking-part-in-book-club-at-home-picture-id499373254?k=20&m=499373254&s=612x612&w=0&h=Vd4LsLqIJqG6wtVVyy2590-lndlHh4j3tHn7pj4hq90='),
+                  image: NetworkImage(profileImage_url),
                   fit: BoxFit.cover,
                 ),
                 shape: BoxShape.circle,
