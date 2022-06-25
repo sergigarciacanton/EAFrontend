@@ -25,6 +25,7 @@ class ClubPage extends StatefulWidget {
 
 class _ClubPageState extends State<ClubPage> {
   late String idUser;
+  late String _locale;
   var storage;
   ClientRole? _role = ClientRole.Broadcaster;
 
@@ -33,6 +34,9 @@ class _ClubPageState extends State<ClubPage> {
     await storage.ready;
 
     idUser = LocalStorage('BookHub').getItem('userId');
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
     return ClubService.getClub(widget.elementId!);
   }
 
@@ -196,9 +200,19 @@ class _ClubPageState extends State<ClubPage> {
 
   concatCategory(AsyncSnapshot<Club> snapshot) {
     List<Widget> lista = [];
-    snapshot.data?.category.forEach((element) {
-      lista.add(_buildCategory(context, element.name!));
-    });
+    if (_locale == "en") {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.en!));
+      });
+    } else if (_locale == "ca") {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.ca!));
+      });
+    } else {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.es!));
+      });
+    }
     return lista;
   }
 
