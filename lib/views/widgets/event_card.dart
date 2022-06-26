@@ -50,6 +50,7 @@ class EventCard extends StatelessWidget {
             options: MapOptions(
               center: LatLng(location.latitude, location.longitude),
               zoom: 13.0,
+              interactiveFlags: InteractiveFlag.none,
               onTap: (TapPosition, LatLng) {
                 setMainComponent!(EventPage(
                     setMainComponent: setMainComponent, elementId: id));
