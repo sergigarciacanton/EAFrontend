@@ -236,12 +236,15 @@ class _BookPageState extends State<BookPage> {
                   ),
                   Row(
                     children: <Widget>[
-                      const SizedBox(
-                        height: 80,
-                        width: 80,
-                        child: FittedBox(
-                          fit: BoxFit.fill, // otherwise the logo will be tiny
-                          child: FlutterLogo(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: FittedBox(
+                            fit: BoxFit.fill, // otherwise the logo will be tiny
+                            child: Image.network(snapshot.data!.photoURL),
+                          ),
                         ),
                       ),
                       Expanded(
@@ -260,7 +263,6 @@ class _BookPageState extends State<BookPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    maintainState: false,
                                     builder: (context) => UserView(
                                           elementId: snapshot.data!.writer.id,
                                           isAuthor: true,
@@ -355,7 +357,7 @@ class _BookPageState extends State<BookPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      caterogies(snapshot.data!.category)
+                      caterogies((snapshot.data!.category))
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -528,7 +530,7 @@ class _BookPageState extends State<BookPage> {
     }
     return Text(categories,
         style: const TextStyle(
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.bold,
         ));
   }
 

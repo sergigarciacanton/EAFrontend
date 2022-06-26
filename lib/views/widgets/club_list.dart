@@ -84,7 +84,6 @@ class _ClubListState extends State<ClubList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        maintainState: false,
                         builder: (context) => NewClub(clubId: null)),
                   );
                   log('createClub');

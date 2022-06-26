@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'localization/demo_localization.dart';
 import 'localization/language_constants.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -88,6 +89,13 @@ class _MyAppState extends State<MyApp> {
                       var storage = LocalStorage('BookHub');
                       await dotenv.load(fileName: ".env");
                       await storage.ready;
+
+                      // SharedPreferences _pref =
+                      //     await SharedPreferences.getInstance();
+
+                      // if (_pref.getBool("theme") != null) {
+                      //   await _pref.setBool("theme", true);
+                      // }
 
                       var token = LocalStorage('BookHub').getItem('token');
                       if (token == null) {

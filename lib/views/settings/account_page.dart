@@ -21,8 +21,8 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     reload() {
-      Route route = MaterialPageRoute(
-          maintainState: false, builder: (context) => const SettingPage());
+      Route route =
+          MaterialPageRoute(builder: (context) => const SettingPage());
       Navigator.pop(context, route);
     }
 
