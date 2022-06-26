@@ -220,8 +220,11 @@ class _SettingPageState extends State<SettingPage> {
                 text: textController.text));
             if (response == "200") {
               print("New report added");
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      maintainState: false,
+                      builder: (context) => SettingPage()));
             } else {
               showDialog(
                 context: context,
@@ -254,8 +257,11 @@ class _SettingPageState extends State<SettingPage> {
       onTap: () => {
             LocalStorage('BookHub').deleteItem('token'),
             Navigator.pop(context),
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const LoginPage()))
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    maintainState: false,
+                    builder: (context) => const LoginPage()))
           });
 
   Widget buildPassword() => SimpleSettingsTile(
@@ -341,8 +347,11 @@ class _SettingPageState extends State<SettingPage> {
                 LocalStorage('BookHub').getItem('userId') as String),
             LocalStorage('BookHub').deleteItem('token'),
             Navigator.pop(context),
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const LoginPage()))
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    maintainState: false,
+                    builder: (context) => const LoginPage()))
           });
 
   Widget buildAccountTheme(BuildContext context) => Row(

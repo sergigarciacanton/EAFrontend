@@ -21,9 +21,11 @@ class _HomeState extends State<Questionnaire> {
   ScrollController _controller = ScrollController();
 
   List<Category> _categories = [];
+  List<String> _categoriesTxt = [];
   List<bool> _checkedBoxes = [];
   bool _isLoading = true;
   late User user;
+  late String _locale;
   late bool isUpdate;
 
   @override
@@ -33,7 +35,12 @@ class _HomeState extends State<Questionnaire> {
   }
 
   Future<void> getData() async {
-    _categories = await ManagementService.getCategories();
+
+    await getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
+    _categoriesTxt = await concatCategory();
+
     user = await UserService.getUserByUserName(
         LocalStorage('BookHub').getItem('userName'));
     setState(() {
@@ -54,10 +61,30 @@ class _HomeState extends State<Questionnaire> {
     String output = "";
     for (int i = 0; i < _checkedBoxes.length; i++) {
       if (_checkedBoxes[i]) {
-        output = output + "," + _categories[i].name!;
+        output = output + "," + _categories[i].name;
+
       }
     }
     return output.substring(1);
+  }
+
+  concatCategory() async {
+    _categories = await ManagementService.getCategories();
+    List<String> lista = [];
+    if (_locale == "en") {
+      _categories.forEach((element) {
+        lista.add(element.en);
+      });
+    } else if (_locale == "ca") {
+      _categories.forEach((element) {
+        lista.add(element.ca);
+      });
+    } else {
+      _categories.forEach((element) {
+        lista.add(element.es);
+      });
+    }
+    return lista;
   }
 
   @override
@@ -84,6 +111,7 @@ class _HomeState extends State<Questionnaire> {
                             fontSize: 50, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 25),
+
                       (!isUpdate)
                           ? Text(
                               getTranslated(context, 'questionnaireText')!,
@@ -95,6 +123,7 @@ class _HomeState extends State<Questionnaire> {
                               ),
                             )
                           : Container(),
+
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 50.50, vertical: 0.0),
@@ -107,7 +136,7 @@ class _HomeState extends State<Questionnaire> {
                             itemBuilder: (context, index) {
                               return ListTile(
                                 title: Text(
-                                  _categories[index].name!,
+                                  _categoriesTxt[index],
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -163,6 +192,7 @@ class _HomeState extends State<Questionnaire> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
+                                      maintainState: false,
                                       builder: (context) =>
                                           const HomeScaffold()));
                             }
@@ -192,6 +222,7 @@ class _HomeState extends State<Questionnaire> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
+                                        maintainState: false,
                                         builder: (context) =>
                                             const HomeScaffold()));
                               },

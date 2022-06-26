@@ -33,6 +33,7 @@ class ClubPage extends StatefulWidget {
 
 class _ClubPageState extends State<ClubPage> {
   late String idUser;
+  late String _locale;
   var storage;
   ClientRole? _role = ClientRole.Broadcaster;
   late String clubName;
@@ -56,6 +57,9 @@ class _ClubPageState extends State<ClubPage> {
     await storage.ready;
 
     idUser = LocalStorage('BookHub').getItem('userId');
+    getLocale().then((locale) {
+      _locale = locale.languageCode;
+    });
     return ClubService.getClub(widget.elementId!);
   }
 
@@ -90,6 +94,7 @@ class _ClubPageState extends State<ClubPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
+                                maintainState: false,
                                 builder: (context) =>
                                     NewClub(clubId: widget.elementId)),
                           );
@@ -180,6 +185,7 @@ class _ClubPageState extends State<ClubPage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
+                    maintainState: false,
                     builder: (context) => UserView(
                           elementId: snapshot.data?.admin.id,
                           isAuthor: false,
@@ -243,9 +249,19 @@ class _ClubPageState extends State<ClubPage> {
 
   concatCategory(AsyncSnapshot<Club> snapshot) {
     List<Widget> lista = [];
-    snapshot.data?.category.forEach((element) {
-      lista.add(_buildCategory(context, element.name!));
-    });
+    if (_locale == "en") {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.en!));
+      });
+    } else if (_locale == "ca") {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.ca!));
+      });
+    } else {
+      snapshot.data?.category.forEach((element) {
+        lista.add(_buildCategory(context, element.es!));
+      });
+    }
     return lista;
   }
 
@@ -314,6 +330,7 @@ class _ClubPageState extends State<ClubPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
+                        maintainState: false,
                         builder: (context) => UserView(
                               elementId: id,
                               isAuthor: false,
@@ -409,7 +426,11 @@ class _ClubPageState extends State<ClubPage> {
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => new ChatPage(chat.id, idUser))),
+                        maintainState: false,
+                        builder: (context) => ChatPage(
+                            key: UniqueKey(),
+                            chatId: chat.id,
+                            userId: idUser))),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
@@ -509,6 +530,7 @@ class _ClubPageState extends State<ClubPage> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
+                    maintainState: false,
                     builder: (context) => CallPage(
                       channelName: snapshot.data!.name,
                       role: _role,

@@ -112,6 +112,7 @@ class _AddBookState extends State<AddBook> {
                   }
                 }
                 Route route = MaterialPageRoute(
+                    maintainState: false,
                     builder: (context) => const EditProfile());
                 Navigator.pop(context, route);
               },
@@ -132,8 +133,11 @@ class _AddBookState extends State<AddBook> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const NewBook()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        maintainState: false,
+                        builder: (context) => const NewBook()));
               },
               style: ElevatedButton.styleFrom(
                   primary: Colors.orange,

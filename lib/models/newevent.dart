@@ -11,6 +11,7 @@ class NewEventModel {
   DateTime eventDate;
   String categories;
   Location location;
+  String photoURL;
 
   NewEventModel(
       {required this.name,
@@ -18,13 +19,15 @@ class NewEventModel {
       required this.admin,
       required this.eventDate,
       required this.categories,
-      required this.location});
+      required this.location,
+      required this.photoURL});
 
   factory NewEventModel.fromJson(dynamic json) {
     return NewEventModel(
         name: json['name'] as String,
         description: json['description'] as String,
         location: json['location'] as Location,
+        photoURL: json['photoURL'] as String,
         admin: json['admin'].toString().contains('{')
             ? UserPopulate.fromJson(json['admin'])
             : json['admin'],
@@ -42,7 +45,8 @@ class NewEventModel {
       'admin': values.admin,
       'eventDate': values.eventDate.toString(),
       'category': values.categories,
-      'location': Location.toJson(values.location)
+      'location': Location.toJson(values.location),
+      'photoURL': values.photoURL
     };
   }
 
