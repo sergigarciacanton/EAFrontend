@@ -62,7 +62,10 @@ class CommentService {
   }
 
   static Future<String> addComment(NewCommentModel values) async {
-    Uri url = Uri.parse('http://localhost:3000/comment/');
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/comment/';
+    Uri url = Uri.parse(baseUrl);
 
     if (!kIsWeb) {
       url = Uri.parse('http://10.0.2.2:3000/comment/');

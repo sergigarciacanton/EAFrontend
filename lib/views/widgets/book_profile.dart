@@ -538,9 +538,10 @@ class _BookPageState extends State<BookPage> {
     return ListTile(
         leading: CircleAvatar(
           backgroundColor: Theme.of(context).backgroundColor,
-          child: Icon(
-            Icons.person_outline_outlined,
-            color: Theme.of(context).primaryColor,
+          child: CircleAvatar(
+            radius: 25, // Image radius
+            backgroundImage:
+                NetworkImage(commentLikeList[index].comment.user.photoURL),
           ),
         ),
         title: Text(
