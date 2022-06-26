@@ -16,6 +16,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localstorage/localstorage.dart';
 
+import '../models/comment.dart';
+import '../routes/comment_service.dart';
 import 'chat_page.dart';
 
 class EventPage extends StatefulWidget {
@@ -39,12 +41,35 @@ class _EventPageState extends State<EventPage> {
 
   late String eventName;
   late Chat chat;
+  late String idEvent;
+  List<CommentLike> commentLikeList = List.empty(growable: true);
+  List<Comment> commentList = [];
+  bool _nocomments = true;
+  List<dynamic> usersController = List.empty(growable: true);
+  TextEditingController controllerPost = TextEditingController(text: '');
+  TextEditingController controllerPostTitle = TextEditingController(text: '');
 
   @override
   void initState() {
     super.initState();
     fetchEvent();
     getEvent();
+    getCommentsList();
+  }
+
+  Future<void> getCommentsList() async {
+    idEvent = widget.elementId!;
+    commentList = [];
+    commentList = await CommentService.getCommentByType(widget.elementId!);
+    setState(() {
+      if (commentList.length != 0) {
+        _nocomments = false;
+        for (int cont = 0; cont < commentList.length; cont++) {
+          CommentLike commentLike = CommentLike(commentList[cont], false);
+          commentLikeList.add(commentLike);
+        }
+      }
+    });
   }
 
   Future<void> getEvent() async {
@@ -95,7 +120,9 @@ class _EventPageState extends State<EventPage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => NewEvent(eventId: snapshot.data!.id)),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    NewEvent(eventId: snapshot.data!.id)),
                           );
                           log('editEvent');
                         },
@@ -232,6 +259,30 @@ class _EventPageState extends State<EventPage> {
         ),
         _buildButtons(snapshot),
         _buildSeparator(screenSize),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: SizedBox(
+                height: 150.0,
+                child: _nocomments
+                    ? Column(
+                        children: [
+                          Text(getTranslated(context, 'noPosts')!),
+                        ],
+                      )
+                    : ListView.builder(
+                        itemCount: commentLikeList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CommentItem(
+                            commentLikeList,
+                            index,
+                          );
+                        }),
+              ),
+            ),
+          ],
+        ),
+        (snapshot.data!.admin.id == idUser) ? addPost() : Container(),
         Container(
             width: screenSize.width / 1.5,
             constraints: BoxConstraints(maxHeight: screenSize.height / 3),
@@ -242,6 +293,149 @@ class _EventPageState extends State<EventPage> {
             ))
       ],
     );
+  }
+
+  Widget addPost() {
+    return FlatButton(
+        child: Text(getTranslated(context, 'newPost')!),
+        onPressed: () => {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        padding: EdgeInsets.all(30),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              getTranslated(context, 'newPost')!,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: TextField(
+                                controller: controllerPostTitle,
+                                decoration: InputDecoration(
+                                    contentPadding:
+                                        const EdgeInsets.only(bottom: 3),
+                                    labelText:
+                                        getTranslated(context, 'postTitle')!,
+                                    hintText:
+                                        getTranslated(context, 'postTitle')!,
+                                    hintStyle: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).shadowColor,
+                                    )),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: TextFormField(
+                                maxLines: 10,
+                                maxLength: 1000,
+                                controller: controllerPost,
+                                decoration: InputDecoration(
+                                    contentPadding:
+                                        const EdgeInsets.only(bottom: 3),
+                                    labelText:
+                                        getTranslated(context, 'description')!,
+                                    hintText:
+                                        getTranslated(context, 'description')!,
+                                    hintStyle: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).shadowColor,
+                                    )),
+                              ),
+                            ),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  if (controllerPost.text.isEmpty &&
+                                      controllerPostTitle.text.isEmpty) {
+                                    print("algun campo vacio");
+                                  } else {
+                                    var response =
+                                        await CommentService.addComment(
+                                            NewCommentModel(
+                                                user: idUser,
+                                                title: controllerPostTitle.text,
+                                                text: controllerPost.text,
+                                                type: widget.elementId!,
+                                                users: usersController,
+                                                likes: "0"));
+                                    Navigator.of(context).pop();
+                                    widget.setMainComponent!(EventPage(
+                                        elementId: widget.elementId!,
+                                        setMainComponent:
+                                            widget.setMainComponent));
+                                  }
+                                },
+                                child: Text(getTranslated(context, 'accept')!))
+                          ],
+                        ),
+                      ),
+                    );
+                  })
+            });
+  }
+
+  Widget CommentItem(List<CommentLike> commentLikeList, int index) {
+    return ListTile(
+        title: Text(
+          commentLikeList[index].comment.title,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 17,
+          ),
+        ),
+        subtitle: Text(
+          commentLikeList[index].comment.text,
+          style: TextStyle(
+            fontSize: 17,
+          ),
+        ),
+        trailing: commentLikeList[index].isSlected
+            ? Icon(
+                Icons.favorite,
+                color: Theme.of(context).backgroundColor,
+              )
+            : const Icon(
+                Icons.favorite_border_outlined,
+                color: Colors.grey,
+              ),
+        onTap: () async {
+          int likes = int.parse(commentLikeList[index].comment.likes);
+          setState(() {
+            commentLikeList[index].isSlected =
+                !commentLikeList[index].isSlected;
+            if (commentLikeList[index].isSlected == true) {
+              likes = likes + 1;
+              commentLikeList[index].comment.users.add(idUser);
+            } else if (commentLikeList[index].isSlected == false) {
+              commentLikeList[index]
+                  .comment
+                  .users
+                  .removeWhere((item) => item == idUser);
+            }
+          });
+          String id = commentLikeList[index].comment.id;
+          Comment com = Comment(
+              id: id,
+              user: commentLikeList[index].comment.user,
+              title: commentLikeList[index].comment.title,
+              text: commentLikeList[index].comment.text,
+              type: commentLikeList[index].comment.type,
+              users: commentLikeList[index].comment.users,
+              likes: likes);
+          await CommentService.updateComment(
+              commentLikeList[index].comment.id, com);
+        });
   }
 
   Widget _buildName(AsyncSnapshot<Event> snapshot) {
@@ -414,7 +608,7 @@ class _EventPageState extends State<EventPage> {
         children: <Widget>[
           _buildStatItem(getTranslated(context, 'followers')!,
               snapshot.data!.usersList.length.toString()),
-          _buildStatItem("Comments", "58"),
+          _buildStatItem("Posts", commentList.length.toString()),
           _buildAdmin(snapshot)
         ],
       ),

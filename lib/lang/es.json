@@ -141,5 +141,8 @@
   "addBooks": "Añadir llibros",
   "editBook": "E D I T A R  L L I B R O",
   "editEvent": "E D I T A R  E V E N T O",
-  "submitEditEvent": "Editar evento"
+  "submitEditEvent": "Editar evento",
+  "newPost": "Nuevo post",
+  "postTitle": "Titulo post",
+  "noPosts": "No hay posts"
 }
