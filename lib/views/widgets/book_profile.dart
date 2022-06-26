@@ -236,12 +236,12 @@ class _BookPageState extends State<BookPage> {
                   ),
                   Row(
                     children: <Widget>[
-                      const SizedBox(
+                      SizedBox(
                         height: 80,
                         width: 80,
                         child: FittedBox(
                           fit: BoxFit.fill, // otherwise the logo will be tiny
-                          child: FlutterLogo(),
+                          child: Image.network(snapshot.data!.photoURL),
                         ),
                       ),
                       Expanded(
