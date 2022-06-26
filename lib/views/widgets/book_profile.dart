@@ -236,12 +236,15 @@ class _BookPageState extends State<BookPage> {
                   ),
                   Row(
                     children: <Widget>[
-                      SizedBox(
-                        height: 80,
-                        width: 80,
-                        child: FittedBox(
-                          fit: BoxFit.fill, // otherwise the logo will be tiny
-                          child: Image.network(snapshot.data!.photoURL),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: FittedBox(
+                            fit: BoxFit.fill, // otherwise the logo will be tiny
+                            child: Image.network(snapshot.data!.photoURL),
+                          ),
                         ),
                       ),
                       Expanded(
