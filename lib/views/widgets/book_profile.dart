@@ -411,6 +411,10 @@ class _BookPageState extends State<BookPage> {
                             fontSize: fontSize, fontWeight: FontWeight.bold),
                       ),
                     ),
+Roles
+WRITTER
+READER
+ADMIN
                   ),
                   const SizedBox(height: 10),
                   Container(
