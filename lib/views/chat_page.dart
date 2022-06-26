@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:ea_frontend/localization/language_constants.dart';
 import 'package:ea_frontend/models/chat_message.dart';
@@ -13,41 +15,74 @@ import 'dart:convert';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatPage extends StatefulWidget {
-  ChatPage(this.chatId, this.userId);
-  String chatId;
-  String userId;
+  final String chatId;
+  final String userId;
+  ChatPage({Key? key, required this.chatId, required this.userId})
+      : super(key: key);
+
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  ChatSocket? chatSocket;
   List<ChatMessage> msgList = [];
-  IO.Socket? socket;
-
+  late Future<Chat> chat;
+  var scrollController = ScrollController();
   User? user;
 
-  void startSocket() async {
-    print("Chat start");
-    // if (socket != null) socket!.disconnect();
-    chatSocket = ChatSocket();
-    socket = chatSocket!.connectAndListen(widget.chatId);
+  late IO.Socket socket;
+  final _socketResponse = StreamController<ChatMessage>();
+  void Function(ChatMessage) get addResponse => _socketResponse.sink.add;
+  Stream<ChatMessage> get getResponse => _socketResponse.stream;
+
+  void connectAndListen(String chatId) {
+    print('Executed connectAnd Listen');
+    setState(() {
+      socket = IO.io(
+          const String.fromEnvironment('API_URL',
+              defaultValue: 'http://localhost:3000'),
+          IO.OptionBuilder().setTransports(['websocket']).build());
+    });
+
+    socket.connect();
+
+    socket.onConnect((_) {
+      print('connected websocket');
+      socket.emit('new-chat', chatId);
+    });
+
+    //When an event recieved from server, data is added to the stream
+    socket.on('textMessage', (data) {
+      print(data + ' received');
+      ChatMessage msg = ChatMessage.fromJson(jsonDecode(data));
+      addResponse(msg);
+    });
+    socket.onDisconnect((_) => print('disconnect'));
   }
 
   @override
   void dispose() {
-    print('Dispose Chat and disconnect Socket!');
-    socket!.disconnect();
-    socket!.dispose();
-    chatSocket!.dispose();
+    log('Dispose Chat and disconnect Socket! ' + widget.chatId);
+    socket.disconnect();
+    socket.dispose();
+    _socketResponse.close();
     super.dispose();
   }
 
-  // @override
-  // void initState() {
-  //   startSocket();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    print('initstate' + widget.chatId);
+    chat = fetchChat();
+
+    Future.delayed(const Duration(milliseconds: 1000),
+        () => connectAndListen(widget.chatId));
+    // connectAndListen(widget.chatId);
+    super.initState();
+  }
+
+  Future<Chat> fetchChat() async {
+    return ChatService.getChat(widget.chatId);
+  }
 
   String parseUsernames(List<User> userList) {
     String s = "";
@@ -61,32 +96,25 @@ class _ChatPageState extends State<ChatPage> {
     return s;
   }
 
+  void sendMessage(TextEditingController textEditingController) {
+    print('emit on ' + widget.chatId + ' text ' + textEditingController.text);
+    var js = json.encode(ChatMessage.toJson(ChatMessage(
+        user: user!,
+        message: textEditingController.text,
+        date: DateTime.now())));
+
+    socket!.emit(widget.chatId, js);
+    textEditingController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     print("build chat");
 
-    startSocket();
-
-    void sendMessage(TextEditingController textEditingController) {
-      print('emit on ' + widget.chatId + ' text ' + textEditingController.text);
-      var js = json.encode(ChatMessage.toJson(ChatMessage(
-          user: user!,
-          message: textEditingController.text,
-          date: DateTime.now())));
-
-      socket!.emit(widget.chatId, js);
-      textEditingController.clear();
-    }
-
-    Future<Chat> fetchChat() async {
-      return ChatService.getChat(widget.chatId);
-    }
-
     return FutureBuilder(
-        future: fetchChat(),
+        future: chat,
         builder: (context, AsyncSnapshot<Chat> snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data!);
             var l = snapshot.data!.messages;
             if (l.length > 0) {
               msgList = l as List<ChatMessage>;
@@ -128,7 +156,6 @@ class _ChatPageState extends State<ChatPage> {
                 break;
 
               case 3:
-                log("photo 3");
                 url = cloudinaryImage
                     .transform()
                     .height(50)
@@ -267,16 +294,23 @@ class _ChatPageState extends State<ChatPage> {
                   );
                 })),
                 body: StreamBuilder(
-                  stream: chatSocket!.getResponse,
+                  stream: getResponse,
                   initialData: ChatMessage(
                       message: "-1", user: user, date: DateTime.now()),
                   builder: (context, AsyncSnapshot<ChatMessage> snapshot) {
                     if (snapshot.hasData) {
                       print('has data!!' + snapshot.data!.message);
-                      if (snapshot.data!.message != "-1")
+                      if (snapshot.data!.message != "-1") {
                         msgList.add(snapshot.data!);
+                      }
+                      Future.delayed(
+                          const Duration(milliseconds: 100),
+                          (() => scrollController.animateTo(
+                              scrollController.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeIn)));
                       return ListView.builder(
-                          controller: ScrollController(),
+                          controller: scrollController,
                           padding: const EdgeInsets.all(8),
                           itemCount: msgList.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -286,7 +320,7 @@ class _ChatPageState extends State<ChatPage> {
                                 leading: CircleAvatar(
                                   radius: 25, // Image radius
                                   backgroundImage: NetworkImage(
-                                      snapshot.data!.user.photoURL),
+                                      msgList[index].user.photoURL),
                                 ),
                                 title: Text(msgList[index].user.name),
                                 subtitle: Text(msgList[index].message),

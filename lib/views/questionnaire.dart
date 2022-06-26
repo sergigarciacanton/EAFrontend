@@ -35,7 +35,6 @@ class _HomeState extends State<Questionnaire> {
   }
 
   Future<void> getData() async {
-
     await getLocale().then((locale) {
       _locale = locale.languageCode;
     });
@@ -45,7 +44,7 @@ class _HomeState extends State<Questionnaire> {
         LocalStorage('BookHub').getItem('userName'));
     setState(() {
       _checkedBoxes = List<bool>.filled(_categories.length, false);
-      isUpdate = _categories.isNotEmpty;
+      isUpdate = _categories.length != 0;
       for (int i = 0; i < _categories.length; i++) {
         for (var userCategory in user.categories) {
           if (_categories[i].id == userCategory) {
@@ -62,7 +61,6 @@ class _HomeState extends State<Questionnaire> {
     for (int i = 0; i < _checkedBoxes.length; i++) {
       if (_checkedBoxes[i]) {
         output = output + "," + _categories[i].name;
-
       }
     }
     return output.substring(1);
@@ -111,7 +109,6 @@ class _HomeState extends State<Questionnaire> {
                             fontSize: 50, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 25),
-
                       (!isUpdate)
                           ? Text(
                               getTranslated(context, 'questionnaireText')!,
@@ -123,7 +120,6 @@ class _HomeState extends State<Questionnaire> {
                               ),
                             )
                           : Container(),
-
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 50.50, vertical: 0.0),

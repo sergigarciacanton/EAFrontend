@@ -1,4 +1,5 @@
 import 'package:ea_frontend/routes/user_service.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/login_page.dart';
 import 'package:ea_frontend/views/settings/account_page.dart';
 import 'package:ea_frontend/views/widgets/edit_profile.dart';
@@ -221,7 +222,7 @@ class _SettingPageState extends State<SettingPage> {
             if (response == "200") {
               print("New report added");
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingPage()));
+                  MaterialPageRoute(builder: (context) => HomeScaffold()));
             } else {
               showDialog(
                 context: context,

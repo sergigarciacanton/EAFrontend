@@ -112,7 +112,6 @@ class _ChatListState extends State<ChatList> {
                                 break;
 
                               case 3:
-                                log("photo 3");
                                 url = cloudinaryImage
                                     .transform()
                                     .height(50)
@@ -182,7 +181,9 @@ class _ChatListState extends State<ChatList> {
                               child: ListTile(
                                 onTap: () async {
                                   Widget nextPage = await ChatPage(
-                                      snapshot.data?.chats[index].id, id);
+                                      key: UniqueKey(),
+                                      chatId: snapshot.data?.chats[index].id,
+                                      userId: id);
 
                                   widget.setMainComponent!(nextPage);
                                 },

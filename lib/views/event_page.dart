@@ -653,10 +653,8 @@ class _EventPageState extends State<EventPage> {
           children: <Widget>[
             Expanded(
               child: InkWell(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new ChatPage(chat.id, idUser))),
+                onTap: () => widget.setMainComponent!(ChatPage(
+                    key: UniqueKey(), chatId: chat.id, userId: idUser)),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(

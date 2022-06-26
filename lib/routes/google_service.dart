@@ -9,23 +9,21 @@ import 'package:localstorage/localstorage.dart';
 
 class GoogleService {
   final GoogleSignIn googleSignIn = GoogleSignIn(
-    clientId: "63306907101-ckjrt077cpejr5kh0cpa0ulusasi7m2t.apps.googleusercontent.com",
+    clientId:
+        "63306907101-ckjrt077cpejr5kh0cpa0ulusasi7m2t.apps.googleusercontent.com",
   );
   final LocalStorage storage = LocalStorage('BookHub');
   AuthService authService = AuthService();
 
   Future<void> signIn(BuildContext context) async {
     GoogleSignInAccount? account = await googleSignIn.signIn();
-    if(account?.displayName != null) {
-      var response = await authService.login(LoginModel(
-        username: account!.displayName ?? "")
-    );
-    if (response == "200") {
-      storage.setItem('userName', account.displayName);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const HomeScaffold()));
+    if (account?.displayName != null) {
+      var response = await authService
+          .login(LoginModel(username: account!.displayName ?? ""));
+      if (response == "200") {
+        storage.setItem('userName', account.displayName);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScaffold()));
       } else {
         showDialog(
           context: context,
@@ -41,23 +39,18 @@ class GoogleService {
 
   Future<void> signUp(BuildContext context) async {
     GoogleSignInAccount? account = await googleSignIn.signIn();
-    if(account?.displayName != null) {
-      String response = await authService.register(
-        RegisterModel(
-          username: account!.displayName ?? "",
-          birthDate: DateTime.now(),
-          mail: account.email,
-          name: account.displayName ?? "",
-          google: true,
-        )
-      );
+    if (account?.displayName != null) {
+      String response = await authService.register(RegisterModel(
+        username: account!.displayName ?? "",
+        birthDate: DateTime.now(),
+        mail: account.email,
+        name: account.displayName ?? "",
+        google: true,
+      ));
       if (response == "201") {
         storage.setItem('userName', account.displayName);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    const Questionnaire()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Questionnaire()));
       } else {
         showDialog(
           context: context,

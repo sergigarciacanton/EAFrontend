@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'localization/demo_localization.dart';
 import 'localization/language_constants.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -13,10 +14,6 @@ import 'package:localstorage/localstorage.dart';
 import 'dart:developer';
 import 'package:ea_frontend/views/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-
-
-
-
 
 void main() => runApp(MyApp());
 
@@ -93,13 +90,19 @@ class _MyAppState extends State<MyApp> {
                       await dotenv.load(fileName: ".env");
                       await storage.ready;
 
+                      // SharedPreferences _pref =
+                      //     await SharedPreferences.getInstance();
+
+                      // if (_pref.getBool("theme") != null) {
+                      //   await _pref.setBool("theme", true);
+                      // }
+
                       var token = LocalStorage('BookHub').getItem('token');
                       if (token == null) {
                         return const LoginPage();
                       }
                       var response = await AuthService.verifyToken(token);
                       if (response == '200') {
-                        log('Load home scaffold');
                         return const HomeScaffold();
                       }
                       return const LoginPage();

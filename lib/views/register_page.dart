@@ -63,8 +63,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   const SizedBox(height: 50),
                   darkTheme
-                  ? Image.asset("public/logowhite.png")
-                  : Image.asset("public/logo.png"),
+                      ? Image.asset("public/logowhite.png")
+                      : Image.asset("public/logo.png"),
                   Text(
                     getTranslated(context, 'register')!,
                     style: const TextStyle(
@@ -257,15 +257,13 @@ class _RegisterPageState extends State<RegisterPage> {
                             isLoading = true;
                           });
                           var response = await authService.register(
-                            RegisterModel(
-                              username: usernameController.text,
-                              password: passwordController.text,
-                              birthDate: DateTime.parse(birthDate),
-                              mail: mailController.text,
-                              name: nameController.text,
-                              google: false
-                            )
-                          );
+                              RegisterModel(
+                                  username: usernameController.text,
+                                  password: passwordController.text,
+                                  birthDate: DateTime.parse(birthDate),
+                                  mail: mailController.text,
+                                  name: nameController.text,
+                                  google: false));
                           setState(() {
                             isLoading = false;
                           });

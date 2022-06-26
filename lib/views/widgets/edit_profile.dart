@@ -184,11 +184,13 @@ class _EditProfileState extends State<EditProfile> {
 
                                     if (res.isSuccessful) {
                                       log("Uploaded: ${res.secureUrl}");
+                                      setState(() {
+                                        userPhotoURL = res.secureUrl!;
+                                      });
 
                                       if (author != null) {
                                         author.photoURL = res.secureUrl;
                                       }
-                                      userPhotoURL = res.secureUrl!;
                                     }
                                   }),
                             ),
