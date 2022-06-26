@@ -1,15 +1,18 @@
 import 'package:ea_frontend/jovo_client/models/request.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer';
 import 'dart:convert';
 
 class JovoService {
-  static var webHook = const String.fromEnvironment('JOVO_WEBHOOK',
-      defaultValue:
-          "https://webhook.jovo.cloud/3c560306-c965-4bd9-89d4-fb3c42854ddf");
+  static var webHook = dotenv.env['JOVO_WEBHOOK'];
 
   static Future<JovoRequest> sendRequest(JovoRequest req) async {
-    var res = await http.post(Uri.parse(webHook),
+    if (webHook == null) {
+      webHook =
+          "https://webhook.jovo.cloud/23098763-24ff-427e-9707-1662f1f491f1";
+    }
+    var res = await http.post(Uri.parse(webHook!),
         headers: {'content-type': 'application/json'},
         body: json.encode(req.toJson()));
 

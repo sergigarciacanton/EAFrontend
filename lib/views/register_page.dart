@@ -273,7 +273,6 @@ class _RegisterPageState extends State<RegisterPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    maintainState: false,
                                     builder: (context) => JovoQuestionaire()));
                           } else {
                             showDialog(

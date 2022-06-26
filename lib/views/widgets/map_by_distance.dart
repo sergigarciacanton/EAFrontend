@@ -187,8 +187,7 @@ class _BuildMapState extends State<BuildMapDistance> {
   @override
   Widget build(BuildContext context) {
     Future<void> reload() async {
-      Route route = MaterialPageRoute(
-          maintainState: false, builder: (context) => BuildMapDistance());
+      Route route = MaterialPageRoute(builder: (context) => BuildMapDistance());
       Navigator.push(context, route);
     }
 
@@ -247,7 +246,6 @@ class _BuildMapState extends State<BuildMapDistance> {
                             if (changeDistance) {
                               changeDistance = false;
                               Route route = MaterialPageRoute(
-                                  maintainState: false,
                                   builder: (context) => Home());
 
                               Navigator.of(context)

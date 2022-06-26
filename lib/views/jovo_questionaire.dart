@@ -124,7 +124,6 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  maintainState: false,
                                   builder: (context) => const Questionnaire()));
                         },
                       ),
@@ -141,7 +140,6 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                maintainState: false,
                                 builder: (context) => const HomeScaffold()));
                       },
                     ),
@@ -206,7 +204,6 @@ class _JovoQuestionaireState extends State<JovoQuestionaire> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                maintainState: false,
                                                 builder: (context) =>
                                                     const HomeScaffold()));
                                       },

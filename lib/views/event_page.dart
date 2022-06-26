@@ -95,7 +95,9 @@ class _EventPageState extends State<EventPage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => NewEvent(eventId: snapshot.data!.id)),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    NewEvent(eventId: snapshot.data!.id)),
                           );
                           log('editEvent');
                         },
@@ -184,7 +186,6 @@ class _EventPageState extends State<EventPage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    maintainState: false,
                     builder: (context) => UserView(
                           elementId: snapshot.data?.admin.id,
                           isAuthor: false,
@@ -367,7 +368,6 @@ class _EventPageState extends State<EventPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        maintainState: false,
                         builder: (context) => UserView(
                               elementId: id,
                               isAuthor: false,
@@ -461,14 +461,8 @@ class _EventPageState extends State<EventPage> {
           children: <Widget>[
             Expanded(
               child: InkWell(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        maintainState: false,
-                        builder: (context) => ChatPage(
-                            key: UniqueKey(),
-                            chatId: chat.id,
-                            userId: idUser))),
+                onTap: () => widget.setMainComponent!(ChatPage(
+                    key: UniqueKey(), chatId: chat.id, userId: idUser)),
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(

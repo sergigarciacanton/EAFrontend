@@ -245,7 +245,6 @@ class _ChatPageState extends State<ChatPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  maintainState: false,
                                   builder: (context) => const HomeScaffold()));
                         } else {
                           showDialog(
@@ -321,7 +320,7 @@ class _ChatPageState extends State<ChatPage> {
                                 leading: CircleAvatar(
                                   radius: 25, // Image radius
                                   backgroundImage: NetworkImage(
-                                      snapshot.data!.user.photoURL),
+                                      msgList[index].user.photoURL),
                                 ),
                                 title: Text(msgList[index].user.name),
                                 subtitle: Text(msgList[index].message),
