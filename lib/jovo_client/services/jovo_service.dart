@@ -10,7 +10,7 @@ class JovoService {
   static Future<JovoRequest> sendRequest(JovoRequest req) async {
     if (webHook == null) {
       webHook =
-          "https://webhook.jovo.cloud/23098763-24ff-427e-9707-1662f1f491f1";
+          "https://webhook.jovo.cloud/1651c792-5457-46cb-a12c-4317bbce3a81";
     }
     var res = await http.post(Uri.parse(webHook!),
         headers: {'content-type': 'application/json'},
