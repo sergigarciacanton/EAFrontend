@@ -94,7 +94,6 @@ class _NewClubState extends State<NewClub> {
     _response = await ManagementService.getCategories();
     setState(() {
       for (int i = 0; i < _response.length; i++) {
-
         if (_locale == "en") {
           CategoryList category1 = new CategoryList(
               _response[i].id.toString(), _response[i].en.toString(), false);
@@ -108,7 +107,6 @@ class _NewClubState extends State<NewClub> {
               _response[i].id.toString(), _response[i].es.toString(), false);
           categoryList.add(category1);
         }
-
       }
       _isLoading = false;
     });
@@ -332,7 +330,6 @@ class _NewClubState extends State<NewClub> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        maintainState: false,
                         builder: (context) => const HomeScaffold()));
               } else {
                 showDialog(

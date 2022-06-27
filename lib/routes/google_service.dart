@@ -22,11 +22,8 @@ class GoogleService {
           .login(LoginModel(username: account!.displayName ?? ""));
       if (response == "200") {
         storage.setItem('userName', account.displayName);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                maintainState: false,
-                builder: (context) => const HomeScaffold()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScaffold()));
       } else {
         showDialog(
           context: context,
@@ -52,11 +49,8 @@ class GoogleService {
       ));
       if (response == "201") {
         storage.setItem('userName', account.displayName);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                maintainState: false,
-                builder: (context) => const Questionnaire()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Questionnaire()));
       } else {
         showDialog(
           context: context,

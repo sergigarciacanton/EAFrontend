@@ -79,7 +79,10 @@ class ReportService {
   }
 
   static Future<String> addReport(Report values) async {
-    Uri url = Uri.parse('http://localhost:3000/report/');
+    String baseUrl = const String.fromEnvironment('API_URL',
+            defaultValue: 'http://localhost:3000') +
+        '/report/';
+    Uri url = Uri.parse(baseUrl);
 
     if (!kIsWeb) {
       url = Uri.parse('http://10.0.2.2:3000/report/');

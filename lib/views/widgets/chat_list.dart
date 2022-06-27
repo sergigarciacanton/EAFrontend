@@ -65,8 +65,7 @@ class _ChatListState extends State<ChatList> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        maintainState: false, builder: (context) => NewChat()),
+                    MaterialPageRoute(builder: (context) => NewChat()),
                   );
                   log('createChat');
                 },

@@ -1,6 +1,7 @@
 import 'package:ea_frontend/models/newchat.dart';
 import 'package:ea_frontend/models/user.dart';
 import 'package:ea_frontend/routes/chat_service.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/widgets/chat_list.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
@@ -138,8 +139,7 @@ class _NewChatState extends State<NewChat> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          maintainState: false,
-                          builder: (context) => const ChatList()));
+                          builder: (context) => const HomeScaffold()));
                 } else {
                   showDialog(
                     context: context,

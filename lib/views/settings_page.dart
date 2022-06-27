@@ -1,4 +1,5 @@
 import 'package:ea_frontend/routes/user_service.dart';
+import 'package:ea_frontend/views/home_scaffold.dart';
 import 'package:ea_frontend/views/login_page.dart';
 import 'package:ea_frontend/views/settings/account_page.dart';
 import 'package:ea_frontend/views/widgets/edit_profile.dart';
@@ -220,11 +221,8 @@ class _SettingPageState extends State<SettingPage> {
                 text: textController.text));
             if (response == "200") {
               print("New report added");
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      maintainState: false,
-                      builder: (context) => SettingPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScaffold()));
             } else {
               showDialog(
                 context: context,
@@ -257,11 +255,8 @@ class _SettingPageState extends State<SettingPage> {
       onTap: () => {
             LocalStorage('BookHub').deleteItem('token'),
             Navigator.pop(context),
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    maintainState: false,
-                    builder: (context) => const LoginPage()))
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()))
           });
 
   Widget buildPassword() => SimpleSettingsTile(
@@ -347,11 +342,8 @@ class _SettingPageState extends State<SettingPage> {
                 LocalStorage('BookHub').getItem('userId') as String),
             LocalStorage('BookHub').deleteItem('token'),
             Navigator.pop(context),
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    maintainState: false,
-                    builder: (context) => const LoginPage()))
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()))
           });
 
   Widget buildAccountTheme(BuildContext context) => Row(
