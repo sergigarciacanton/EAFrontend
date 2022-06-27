@@ -28,7 +28,9 @@ class Comment {
         title: json['title'] as String,
         text: json['text'] as String,
         type: json['type'] as String,
-        users: json['users'],
+        users: json['users'].toString().contains('{')
+            ? User.usersFromSnapshot(json['users'])
+            : json['users'],
         likes: json['likes'].toString());
   }
 

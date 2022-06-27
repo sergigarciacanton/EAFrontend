@@ -132,7 +132,6 @@ class _NewChatState extends State<NewChat> {
                 textScaleFactor: 1,
               ),
               onPressed: () async {
-                print("Add new chat");
                 var response = await ChatService.newChat(NewChatModel(
                     name: nameController.text, userIds: usersController));
                 if (response == "201") {

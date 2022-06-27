@@ -21,7 +21,7 @@ class AuthorService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     Object data = jsonDecode(response.body);
-    print(data);
+
     if (response.statusCode == 200) {
       return Author.fromJson(data);
     }
@@ -43,7 +43,7 @@ class AuthorService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return Author.authorsFromSnapshot(data);
   }
 

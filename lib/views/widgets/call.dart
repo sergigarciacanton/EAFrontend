@@ -51,8 +51,6 @@ class _CallPageState extends State<CallPage> {
       setState(() {
         token = response;
       });
-    } else {
-      print(response);
     }
   }
 

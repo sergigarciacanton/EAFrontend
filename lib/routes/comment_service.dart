@@ -24,7 +24,7 @@ class CommentService {
     return Comment.fromJson(data);
   }
 
-  static Future<List<Comment>> getCommentByType(String type) async {
+  static Future<List<Comment>?> getCommentByType(String type) async {
     String baseUrl = const String.fromEnvironment('API_URL',
             defaultValue: 'http://localhost:3000') +
         '/comment/type/$type';
@@ -37,6 +37,11 @@ class CommentService {
       url,
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
+
+    if (response.statusCode == 404) {
+      return null;
+    }
+
     List data = jsonDecode(response.body);
 
     return Comment.commentsFromSnapshot(data);

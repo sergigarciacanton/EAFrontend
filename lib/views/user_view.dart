@@ -273,7 +273,6 @@ class _UserViewState extends State<UserView> {
     if (user == null || currentUser.id == user.id) {
       return Container();
     }
-    print("hola" + chat.toString());
 
     if (chat != null) {
       return ElevatedButton(

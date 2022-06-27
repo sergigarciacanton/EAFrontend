@@ -78,6 +78,7 @@ class _ClubListState extends State<ClubList> {
           if (snapshot.hasData) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
+                heroTag: "btn7",
                 backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {

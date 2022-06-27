@@ -29,8 +29,6 @@ class _WebLayoutState extends State<WebLayout> {
   }
 
   setMainComponent(Widget component) {
-    print("set MC");
-
     setState(() {
       mainComponent = component;
     });

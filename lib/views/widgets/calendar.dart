@@ -79,6 +79,7 @@ class _BuildCalendarState extends State<BuildCalendar> {
         floatingActionButton:
             (widget.modo != "AllEvents" && widget.modo != "UserEvents")
                 ? FloatingActionButton(
+                    heroTag: "btn5",
                     backgroundColor: const Color.fromARGB(202, 255, 255, 255),
                     onPressed: () {
                       widget.setMainComponent!(EventPage(
@@ -101,7 +102,6 @@ class _BuildCalendarState extends State<BuildCalendar> {
             calendarFormat: format,
             onFormatChanged: (CalendarFormat _format) {
               setState(() {
-                print("1");
                 format = _format;
               });
             },

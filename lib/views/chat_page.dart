@@ -36,7 +36,6 @@ class _ChatPageState extends State<ChatPage> {
   Stream<ChatMessage> get getResponse => _socketResponse.stream;
 
   void connectAndListen(String chatId) {
-    print('Executed connectAnd Listen');
     setState(() {
       socket = IO.io(
           const String.fromEnvironment('API_URL',
@@ -47,17 +46,14 @@ class _ChatPageState extends State<ChatPage> {
     socket.connect();
 
     socket.onConnect((_) {
-      print('connected websocket');
       socket.emit('new-chat', chatId);
     });
 
     //When an event recieved from server, data is added to the stream
     socket.on('textMessage', (data) {
-      print(data + ' received');
       ChatMessage msg = ChatMessage.fromJson(jsonDecode(data));
       addResponse(msg);
     });
-    socket.onDisconnect((_) => print('disconnect'));
   }
 
   @override
@@ -71,7 +67,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    print('initstate' + widget.chatId);
     chat = fetchChat();
 
     Future.delayed(const Duration(milliseconds: 1000),
@@ -97,7 +92,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void sendMessage(TextEditingController textEditingController) {
-    print('emit on ' + widget.chatId + ' text ' + textEditingController.text);
     var js = json.encode(ChatMessage.toJson(ChatMessage(
         user: user!,
         message: textEditingController.text,
@@ -109,8 +103,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("build chat");
-
     return FutureBuilder(
         future: chat,
         builder: (context, AsyncSnapshot<Chat> snapshot) {
@@ -299,7 +291,6 @@ class _ChatPageState extends State<ChatPage> {
                       message: "-1", user: user, date: DateTime.now()),
                   builder: (context, AsyncSnapshot<ChatMessage> snapshot) {
                     if (snapshot.hasData) {
-                      print('has data!!' + snapshot.data!.message);
                       if (snapshot.data!.message != "-1") {
                         msgList.add(snapshot.data!);
                       }

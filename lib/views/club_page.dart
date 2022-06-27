@@ -59,7 +59,10 @@ class _ClubPageState extends State<ClubPage> {
   Future<void> getCommentsList() async {
     idClub = widget.elementId!;
     commentList = [];
-    commentList = await CommentService.getCommentByType(widget.elementId!);
+    var comments = await CommentService.getCommentByType(widget.elementId!);
+    if (comments != null) {
+      commentList = comments;
+    }
     setState(() {
       if (commentList.length != 0) {
         _nocomments = false;
@@ -113,6 +116,7 @@ class _ClubPageState extends State<ClubPage> {
             return Scaffold(
                 floatingActionButton: (snapshot.data!.admin.id == idUser)
                     ? FloatingActionButton(
+                        heroTag: "btn1",
                         backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {
@@ -746,7 +750,6 @@ class _ClubPageState extends State<ClubPage> {
 
   Future<void> _handleCameraAndMic(Permission permission) async {
     final status = await permission.request();
-    print(status);
   }
 }
 

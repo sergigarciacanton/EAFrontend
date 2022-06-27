@@ -72,8 +72,10 @@ class _BookPageState extends State<BookPage> {
   Future<void> getCommentsList() async {
     idBook = widget.elementId!;
     typeController = idBook;
-    commentList =
-        (await CommentService.getCommentByType(idBook)).cast<Comment>();
+    var comments = await CommentService.getCommentByType(widget.elementId!);
+    if (comments != null) {
+      commentList = comments;
+    }
     setState(() {
       if (commentList.length != 0) {
         _nocomments = false;
@@ -464,7 +466,6 @@ class _BookPageState extends State<BookPage> {
                       textAlign: TextAlign.center,
                     ),
                     onPressed: () async {
-                      print("Add new comment");
                       var response = await CommentService.addComment(
                           NewCommentModel(
                               user: userid,
@@ -474,7 +475,6 @@ class _BookPageState extends State<BookPage> {
                               users: usersController,
                               likes: likesController));
                       if (response == "200") {
-                        print("New comment added");
                         setState(() {
                           getCommentsList();
                           titleController.text = "";
@@ -504,7 +504,6 @@ class _BookPageState extends State<BookPage> {
               ),
             )));
           } else if (snapshot.hasError) {
-            print(snapshot);
             log(snapshot.error.toString());
             print(snapshot.error);
           }

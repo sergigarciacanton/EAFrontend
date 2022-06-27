@@ -60,6 +60,7 @@ class _ChatListState extends State<ChatList> {
           if (snapshot.hasData) {
             return Scaffold(
               floatingActionButton: FloatingActionButton(
+                heroTag: "btn6",
                 backgroundColor: Theme.of(context).backgroundColor,
                 child: const Icon(Icons.add),
                 onPressed: () {

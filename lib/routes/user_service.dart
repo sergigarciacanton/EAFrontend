@@ -57,7 +57,7 @@ class UserService {
       headers: {'authorization': LocalStorage('BookHub').getItem('token')},
     );
     List data = jsonDecode(response.body);
-    print(data);
+
     return User.usersFromSnapshot(data);
   }
 

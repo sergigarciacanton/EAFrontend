@@ -178,8 +178,6 @@ class _NewClubState extends State<NewClub> {
                           color: Colors.white,
                         ),
                         onTap: () async {
-                          print("change photo");
-
                           FilePickerResult? result = await FilePicker.platform
                               .pickFiles(
                                   type: FileType.custom,
@@ -345,7 +343,6 @@ class _NewClubState extends State<NewClub> {
               var response2 = await ChatService.newChat(NewChatModel(
                   name: nameController.text, userIds: usersController));
               if (response2 == "201") {
-                print("Add new chat");
               } else {
                 showDialog(
                   context: context,

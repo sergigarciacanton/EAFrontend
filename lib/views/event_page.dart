@@ -60,7 +60,10 @@ class _EventPageState extends State<EventPage> {
   Future<void> getCommentsList() async {
     idEvent = widget.elementId!;
     commentList = [];
-    commentList = await CommentService.getCommentByType(widget.elementId!);
+    var comments = await CommentService.getCommentByType(widget.elementId!);
+    if (comments != null) {
+      commentList = comments;
+    }
     setState(() {
       if (commentList.length != 0) {
         _nocomments = false;
@@ -115,6 +118,7 @@ class _EventPageState extends State<EventPage> {
             return Scaffold(
                 floatingActionButton: (snapshot.data!.admin.id == idUser)
                     ? FloatingActionButton(
+                        heroTag: "btn2",
                         backgroundColor: Theme.of(context).iconTheme.color,
                         child: const Icon(Icons.edit),
                         onPressed: () {

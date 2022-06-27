@@ -200,6 +200,7 @@ class _BuildMapState extends State<BuildMapDistance> {
                   FloatingActionButtonLocation.startTop,
               floatingActionButton: (widget.center != null)
                   ? FloatingActionButton(
+                      heroTag: "btn11",
                       backgroundColor: const Color.fromARGB(202, 255, 255, 255),
                       onPressed: () {
                         widget.setMainComponent!(EventPage(
@@ -310,7 +311,6 @@ class _BuildMapState extends State<BuildMapDistance> {
                           width: 200,
                           height: 100,
                           child: GestureDetector(
-                            onTap: () => debugPrint('Popup tap!'),
                             child: Container(
                               decoration: BoxDecoration(
                                   border: Border.all(width: 1),

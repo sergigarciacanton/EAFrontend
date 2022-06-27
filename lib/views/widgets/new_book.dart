@@ -266,7 +266,6 @@ class _NewBookState extends State<NewBook> {
                         textScaleFactor: 1,
                       ),
                 onPressed: () async {
-                  print("Add new book");
                   var idAuthor =
                       await LocalStorage('BookHub').getItem('idAuthor');
                   var response;

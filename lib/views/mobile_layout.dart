@@ -21,6 +21,7 @@ class _MobileLayoutState extends State<MobileLayout> {
     Navigator.push(
       context,
       MaterialPageRoute(
+          maintainState: false,
           builder: (context) => Scaffold(
                 appBar: AppBar(
                   title: Text(getTranslated(context, component.toString())!),

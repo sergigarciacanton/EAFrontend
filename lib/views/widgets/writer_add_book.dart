@@ -105,7 +105,6 @@ class _AddBookState extends State<AddBook> {
               onPressed: () async {
                 for (int i = 0; i < books.length; i++) {
                   if (isSelected[i]) {
-                    print(isSelected[i]);
                     String authorId =
                         LocalStorage('BookHub').getItem('idAuthor');
                     await AuthorService.addBook(books[i].id, authorId);

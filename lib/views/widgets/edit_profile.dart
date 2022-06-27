@@ -152,7 +152,6 @@ class _EditProfileState extends State<EditProfile> {
                                     color: Colors.white,
                                   ),
                                   onTap: () async {
-                                    print("change photo");
                                     (!isEditing)
                                         ? setState(() {
                                             isEditing = true;

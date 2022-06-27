@@ -382,6 +382,7 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   FloatingActionButton(
+                                    heroTag: "btn3",
                                     backgroundColor:
                                         Theme.of(context).indicatorColor,
                                     onPressed: () {
@@ -397,6 +398,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   const SizedBox(width: 5),
                                   FloatingActionButton(
+                                    heroTag: "btn4",
                                     backgroundColor:
                                         Theme.of(context).indicatorColor,
                                     onPressed: () {

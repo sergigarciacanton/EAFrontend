@@ -57,6 +57,7 @@ class _EventListState extends State<EventList> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     FloatingActionButton(
+                      heroTag: "btn8",
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
                         widget.setMainComponent!(BuildMap(
@@ -72,6 +73,7 @@ class _EventListState extends State<EventList> {
                           15.0, //Esto es solo para dar cierto margen entre los FAB
                     ),
                     FloatingActionButton(
+                      heroTag: "btn9",
                       backgroundColor: Theme.of(context).indicatorColor,
                       onPressed: () {
                         widget.setMainComponent!(BuildCalendar(
@@ -87,6 +89,7 @@ class _EventListState extends State<EventList> {
                           15.0, //Esto es solo para dar cierto margen entre los FAB
                     ),
                     FloatingActionButton(
+                      heroTag: "btn10",
                       backgroundColor: Theme.of(context).iconTheme.color,
                       child: const Icon(Icons.add),
                       onPressed: () {

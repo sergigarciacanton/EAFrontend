@@ -246,8 +246,6 @@ class _NewEventState extends State<NewEvent> {
                                     color: Colors.white,
                                   ),
                                   onTap: () async {
-                                    print("change photo");
-
                                     FilePickerResult? result =
                                         await FilePicker.platform.pickFiles(
                                             type: FileType.custom,
@@ -432,7 +430,6 @@ class _NewEventState extends State<NewEvent> {
                               LatLng(latitudeController, longitudeController),
                           zoom: 15.0,
                           onTap: (TapPosition, LatLng) {
-                            print(LatLng);
                             latitudeController = LatLng.latitude;
                             longitudeController = LatLng.longitude;
                             setState(() {});
@@ -513,7 +510,6 @@ class _NewEventState extends State<NewEvent> {
                                   name: nameController.text,
                                   userIds: usersController));
                           if (response2 == "201") {
-                            print("Add new chat");
                           } else {
                             showDialog(
                               context: context,
