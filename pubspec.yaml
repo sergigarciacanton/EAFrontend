@@ -75,6 +75,14 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  flutter_launcher_icons: ^0.9.3
+
+# Set the app logo
+# flutter pub run flutter_launcher_icons:main
+flutter_icons:
+  image_path: "public/logosplash.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -124,3 +132,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  # BUILD APK
+  # flutter build apk --split-per-abi
+  # (connectar telèfon amb cable al PC)
+  # flutter install
