@@ -24,7 +24,7 @@ class _MobileLayoutState extends State<MobileLayout> {
           maintainState: false,
           builder: (context) => Scaffold(
                 appBar: AppBar(
-                  title: Text(getTranslated(context, component.toString())!),
+                  //title: Text(component.key.toString()),//getTranslated(context,  component.toString())!),
                   actions: [
                     IconButton(
                         icon: const Icon(Icons.home),
